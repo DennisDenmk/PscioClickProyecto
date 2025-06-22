@@ -1,47 +1,54 @@
-<x-guest-layout>
-    <!-- Session Status -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayuLife - Iniciar Sesión</title>
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+</head>
+<body>
     <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">D</div>
+                <h1 class="login-title">DayuLife</h1>
+                <p class="login-subtitle">Accede a tu cuenta</p>
+            </div>
+            
+            <div class="login-body">
+                
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="cedula" class="form-label">Cédula</label>
+                        <input id="cedula" class="form-input" maxlength="10" type="text" name="cedula" :value="old('cedula')" required
+                               placeholder="Ingresa tu número de cédula" required autofocus>
+                        <x-input-error :messages="$errors->get('cedula')" class="mt-2" />
+                    </div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+                    <div class="form-group">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input id="password" class="form-input" type="password" name="password" 
+                               placeholder="Ingresa tu contraseña" required autocomplete="current-password">
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
 
-        <!-- Cédula -->
-        <div>
-            <x-input-label for="cedula" :value="__('Cédula')" />
-            <x-text-input id="cedula" class="block mt-1 w-full" maxlength="10" type="text" name="cedula" :value="old('cedula')" required
-                autofocus />
-            <x-input-error :messages="$errors->get('cedula')" class="mt-2" />
+                    <div class="checkbox-container">
+                        <label class="custom-checkbox">
+                            <input id="remember_me" type="checkbox" name="remember">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label for="remember_me" class="checkbox-label">Recordarme</label>
+                    </div>
+
+                    <div class="form-actions">
+                        <a class="forgot-password" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</body>
+</html>
