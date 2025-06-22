@@ -37,7 +37,15 @@ class ConfirmablePasswordController extends Controller
         }
 
         $request->session()->regenerate();
+        // Redirección según el rol
+        $user = Auth::user();
+        $rol = $user->role->nombre ?? null;
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return match ($rol) {
+            'administrador' => redirect()->route('admin.dashboard'),
+            'doctor' => redirect()->route('doctor.dashboard'),
+            'secretario' => redirect()->route('secretario.dashboard'),
+            default => redirect()->route('dashboard'),
+        };
     }
 }

@@ -19,16 +19,16 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'rol:administrador'])->group(function () {
-    
-});
+Route::middleware(['auth', 'rol:administrador'])->get('/admin/dashboard', function () {
+    return view('admin.dashboards');
+})->name('admin.dashboard');
 
-Route::middleware(['auth', 'rol:doctor'])->group(function () {
-    
-});
+Route::middleware(['auth', 'rol:doctor'])->get('/doctor/dashboard', function () {
+    return view('doctor.dashboards');
+})->name('doctor.dashboard');
 
-Route::middleware(['auth', 'rol:secretario'])->group(function () {
-    
-});
+Route::middleware(['auth', 'rol:secretario'])->get('/secretario/dashboard', function () {
+    return view('secretario.dashboards');
+})->name('secretario.dashboard');
 
 require __DIR__.'/auth.php';
