@@ -19,7 +19,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('auth.register', [
+            'roles' => \App\Models\Role::all(), // Enviar los roles al formulario
+        ]);
     }
 
     /**
@@ -30,15 +32,19 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name'     => ['required', 'string', 'max:255'],
+            'cedula'   => ['required', 'string', 'size:10', 'unique:users,cedula'],
+            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role_id'  => ['required', 'exists:roles,id'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'cedula'   => $request->cedula,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
+            'role_id'  => $request->role_id,
         ]);
 
         event(new Registered($user));

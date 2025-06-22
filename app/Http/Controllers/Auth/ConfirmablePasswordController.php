@@ -24,16 +24,19 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        if (! Auth::guard('web')->validate([
-            'email' => $request->user()->email,
-            'password' => $request->password,
-        ])) {
+        $request->validate([
+            'cedula' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
+
+        // Intenta autenticar con la cédula
+        if (!Auth::attempt(['cedula' => $request->cedula, 'password' => $request->password], $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'password' => __('auth.password'),
+                'cedula' => __('auth.failed'), // Mensaje de error
             ]);
         }
 
-        $request->session()->put('auth.password_confirmed_at', time());
+        $request->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
