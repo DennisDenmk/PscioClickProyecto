@@ -13,7 +13,7 @@ class CreateHorariosDoctorTable extends Migration
             $table->tinyInteger('hor_dia_semana')->comment('CHECK (hor_dia_semana BETWEEN 1 AND 6)');
             $table->time('hora_inicio');
             $table->time('hora_fin');
-            $table->date('hor_fecha_especifica')->nullable();
+            $table->date('hor_fecha_especifica')->default('2000-01-01');
             $table->boolean('hor_disponible')->default(true);
             $table->timestamps();
 

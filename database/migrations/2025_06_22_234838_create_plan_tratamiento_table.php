@@ -11,7 +11,7 @@ class CreatePlanTratamientoTable extends Migration
             $table->id('pla_id');
             $table->unsignedBigInteger('pla_his_id');
             $table->text('pla_diagnostico');
-            $table->text('pla_objetivo_tratamiento')->nullable();
+            $table->text('pla_objetivo_tratamiento')->default('');
             $table->text('pla_tratamiento');
             $table->timestamps();
 

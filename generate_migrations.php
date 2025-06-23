@@ -165,7 +165,8 @@ class CreateTipoHabitoTable extends Migration
     {
         Schema::create('tipo_habito', function (Blueprint $table) {
             $table->id('tipo_hab_id');
-            $table->string('tipo_hab_nombre', 20)->unique();
+            $table->string774
+            ('tipo_hab_nombre', 20)->unique();
             $table->timestamps();
         });
     }
@@ -218,7 +219,7 @@ class CreatePromocionesTable extends Migration
         Schema::create('promociones', function (Blueprint $table) {
             $table->id('prom_id');
             $table->string('prom_nombre', 50)->unique();
-            $table->text('prom_descripcion')->nullable();
+            $table->text('prom_descripcion')->default('');
             $table->decimal('prom_precio', 10, 2)->comment('CHECK (prom_precio >= 0)');
             $table->integer('prom_sesiones')->default(1)->comment('CHECK (prom_sesiones >= 1)');
             $table->timestamps();
@@ -251,11 +252,11 @@ class CreatePacientesTable extends Migration
             $table->boolean('pac_sexo');
             $table->date('pac_fecha_nacimiento');
             $table->unsignedBigInteger('estc_id');
-            $table->string('pac_profesion', 50)->nullable();
-            $table->string('pac_ocupacion', 50)->nullable();
-            $table->string('pac_telefono', 10)->nullable();
-            $table->text('pac_direccion')->nullable();
-            $table->string('pac_email', 125)->nullable();
+            $table->string('pac_profesion', 50)->default('');
+            $table->string('pac_ocupacion', 50)->default('');
+            $table->string('pac_telefono', 10)->default('');
+            $table->text('pac_direccion')->default('');
+            $table->string('pac_email', 125)->default('');
             $table->timestamps();
 
             $table->foreign('estc_id')->references('estc_id')->on('estados_civiles')->onDelete('restrict')->onUpdate('cascade');
@@ -287,7 +288,7 @@ class CreateHorariosDoctorTable extends Migration
             $table->tinyInteger('hor_dia_semana')->comment('CHECK (hor_dia_semana BETWEEN 1 AND 6)');
             $table->time('hora_inicio');
             $table->time('hora_fin');
-            $table->date('hor_fecha_especifica')->nullable();
+            $table->date('hor_fecha_especifica')->default('2000-01-01');
             $table->boolean('hor_disponible')->default(true);
             $table->timestamps();
 
@@ -347,14 +348,14 @@ class CreateCitasTable extends Migration
         Schema::create('citas', function (Blueprint $table) {
             $table->id('cit_id');
             $table->string('paciente_id', 10);
-            $table->unsignedBigInteger('his_id')->nullable();
+            $table->unsignedBigInteger('his_id');
             $table->string('doctor_id', 10);
             $table->unsignedBigInteger('tipc_id');
             $table->unsignedBigInteger('estc_id')->default(1);
             $table->date('cit_fecha');
             $table->time('cit_hora_inicio');
             $table->time('cit_hora_fin');
-            $table->text('cit_motivo_consulta')->nullable();
+            $table->text('cit_motivo_consulta')->default('');
             $table->timestamps();
 
             $table->unique(['doctor_id', 'cit_fecha', 'cit_hora_inicio'], 'idx_doctor_hora');
@@ -423,12 +424,12 @@ class CreateDetallesHistoriaTable extends Migration
             $table->date('deth_fecha_valoracion');
             $table->time('deth_hora');
             $table->text('deth_motivo_consulta');
-            $table->text('deth_tratamientos_previos')->nullable();
-            $table->decimal('deth_peso', 5, 2)->nullable();
-            $table->decimal('deth_talla', 4, 2)->nullable();
-            $table->decimal('deth_imc', 5, 2)->nullable();
-            $table->string('deth_lado_dolor', 20)->nullable();
-            $table->text('deth_exploracion_fisica')->nullable();
+            $table->text('deth_tratamientos_previos')->default('');
+            $table->decimal('deth_peso', 5, 2)->default(0.00);
+            $table->decimal('deth_talla', 4, 2)->default(0.00);
+            $table->decimal('deth_imc', 5, 2)->default(0.00);
+            $table->string('deth_lado_dolor', 20)->default('');
+            $table->text('deth_exploracion_fisica')->default('');
             $table->timestamps();
 
             $table->index('his_id', 'idx_historia_detalle');
@@ -460,7 +461,7 @@ class CreateAntecedentesTable extends Migration
             $table->unsignedBigInteger('ant_his_id');
             $table->unsignedBigInteger('tipo_ant_id');
             $table->boolean('ant_valor')->default(false);
-            $table->text('ant_detalle')->nullable();
+            $table->text('ant_detalle')->default('');
             $table->timestamps();
 
             $table->index(['ant_his_id', 'tipo_ant_id'], 'idx_antecedentes_his_tipo');
@@ -617,9 +618,9 @@ class CreateEvaluacionTable extends Migration
         Schema::create('evaluacion', function (Blueprint $table) {
             $table->id('eva_id');
             $table->unsignedBigInteger('eva_his_id');
-            $table->text('eva_evaluacion_dolor')->nullable();
+            $table->text('eva_evaluacion_dolor')->default('');
             $table->integer('eva_escala_dolor')->default(0)->comment('CHECK (eva_escala_dolor BETWEEN 0 AND 10)');
-            $table->text('eva_examenes_complementarios')->nullable();
+            $table->text('eva_examenes_complementarios')->default('');
             $table->timestamps();
 
             $table->foreign('eva_his_id')->references('his_id')->on('historia_clinica')->onDelete('cascade')->onUpdate('cascade');
@@ -649,7 +650,7 @@ class CreatePlanTratamientoTable extends Migration
             $table->id('pla_id');
             $table->unsignedBigInteger('pla_his_id');
             $table->text('pla_diagnostico');
-            $table->text('pla_objetivo_tratamiento')->nullable();
+            $table->text('pla_objetivo_tratamiento')->default('');
             $table->text('pla_tratamiento');
             $table->timestamps();
 
@@ -694,57 +695,46 @@ PHP
         'name' => 'migraciones_default',
         'content' => <<<'PHP'
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Crear tabla roles
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre',20)->unique();
+            $table->string('nombre', 20)->unique();
             $table->timestamps();
         });
 
-        // Crear tabla users con clave foránea a roles
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('cedula', 10)->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->default(now());
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles');
-            $table->rememberToken();
+            $table->string('rememberToken', 100)->default('');
             $table->timestamps();
         });
-
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamp('created_at')->default(now());
         });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
+            $table->foreignId('user_id')->constrained('users')->default(0);
+            $table->string('ip_address', 45)->default('');
+            $table->text('user_agent')->default('');
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('roles');
@@ -773,3 +763,4 @@ foreach ($migrations as $index => $migration) {
 }
 
 echo "All migrations generated successfully!\n";
+?>

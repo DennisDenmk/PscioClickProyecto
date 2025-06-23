@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RolesSeeder extends Seeder
 {
@@ -57,6 +58,36 @@ class RolesSeeder extends Seeder
             ['tipa_nombre' => 'Espasmos',                 'created_at' => now(), 'updated_at' => now()],
             ['tipa_nombre' => 'Espasmos (características)','created_at' => now(), 'updated_at' => now()],
         ]);
+        DB::table('estados_civiles')->insert([
+            ['estc_nombre' => 'Soltero', 'created_at' => now(), 'updated_at' => now()],
+            ['estc_nombre' => 'Casado', 'created_at' => now(), 'updated_at' => now()],
+            ['estc_nombre' => 'Divorciado', 'created_at' => now(), 'updated_at' => now()],
+            ['estc_nombre' => 'Viudo', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+        DB::table('users')->insert([
+            [
+                'name' => 'Administrador',
+                'cedula' => '1111111111',
+                'email' => 'admin@admin',
+                'password' =>Hash::make('123456789'),
+                'role_id' => 1,
+            ],
+            [
+                'name' => 'Secre',
+                'cedula' => '2222222222',
+                'email' => 'secre@secre',
+                'password' => Hash::make('123456789'),
+                'role_id' => 3,
+            ],
+            [
+                'name' => 'Doctor',
+                'cedula' => '3333333333',
+                'email' => 'doc@doc',
+                'password' => Hash::make('123456789'),
+                'role_id' => 2,
+            ]
+        ]);
+
          DB::table('promociones')->insert([
             [
                 'prom_nombre'     => 'Primera sesión y valoración',
@@ -107,5 +138,6 @@ class RolesSeeder extends Seeder
                 'updated_at'      => now(),
             ],
         ]);
+
     }
 }

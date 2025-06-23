@@ -9,7 +9,8 @@ class CreateTipoHabitoTable extends Migration
     {
         Schema::create('tipo_habito', function (Blueprint $table) {
             $table->id('tipo_hab_id');
-            $table->string('tipo_hab_nombre', 20)->unique();
+            $table->string
+            ('tipo_hab_nombre', 20)->unique();
             $table->timestamps();
         });
     }
