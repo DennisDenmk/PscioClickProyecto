@@ -1,54 +1,44 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        // Crear tabla roles
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique(); // Ej: 'admin', 'usuario', etc.
+            $table->string('nombre', 20)->unique();
             $table->timestamps();
         });
 
-        // Crear tabla users con clave foránea a roles
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('cedula', 10)->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('email_verified_at')->default(now());
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles');
-            $table->rememberToken();
+            $table->string('rememberToken', 100)->default('');
             $table->timestamps();
         });
-
+        
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamp('created_at')->default(now());
         });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
+            $table->foreignId('user_id')->constrained('users')->default(0);
+            $table->string('ip_address', 45)->default('');
+            $table->text('user_agent')->default('');
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('roles');

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PacienteController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,5 +31,14 @@ Route::middleware(['auth', 'rol:doctor'])->get('/doctor/dashboard', function () 
 Route::middleware(['auth', 'rol:secretario'])->get('/secretario/dashboard', function () {
     return view('secretario.dashboards');
 })->name('secretario.dashboard');
+
+
+/* Rutas para gestión de pacientes (secretario) */
+Route::middleware(['auth', 'rol:secretario'])->group(function () {
+    Route::resource('pacientes', PacienteController::class)->except(['show']);
+});
+
+/* Mostrar detalle del paciente (acceso compartido para secretario y doctor) */
+Route::middleware(['auth', 'rol:secretario,doctor'])->get('pacientes/{paciente}', [PacienteController::class, 'show'])->name('pacientes.show');
 
 require __DIR__.'/auth.php';

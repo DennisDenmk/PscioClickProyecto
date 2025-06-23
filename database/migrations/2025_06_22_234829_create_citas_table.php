@@ -10,14 +10,14 @@ class CreateCitasTable extends Migration
         Schema::create('citas', function (Blueprint $table) {
             $table->id('cit_id');
             $table->string('paciente_id', 10);
-            $table->unsignedBigInteger('his_id')->nullable();
+            $table->unsignedBigInteger('his_id');
             $table->string('doctor_id', 10);
             $table->unsignedBigInteger('tipc_id');
             $table->unsignedBigInteger('estc_id')->default(1);
             $table->date('cit_fecha');
             $table->time('cit_hora_inicio');
             $table->time('cit_hora_fin');
-            $table->text('cit_motivo_consulta')->nullable();
+            $table->text('cit_motivo_consulta')->default('');
             $table->timestamps();
 
             $table->unique(['doctor_id', 'cit_fecha', 'cit_hora_inicio'], 'idx_doctor_hora');

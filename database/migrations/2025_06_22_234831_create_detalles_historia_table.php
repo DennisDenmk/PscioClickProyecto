@@ -13,12 +13,12 @@ class CreateDetallesHistoriaTable extends Migration
             $table->date('deth_fecha_valoracion');
             $table->time('deth_hora');
             $table->text('deth_motivo_consulta');
-            $table->text('deth_tratamientos_previos')->nullable();
-            $table->decimal('deth_peso', 5, 2)->nullable();
-            $table->decimal('deth_talla', 4, 2)->nullable();
-            $table->decimal('deth_imc', 5, 2)->nullable();
-            $table->string('deth_lado_dolor', 20)->nullable();
-            $table->text('deth_exploracion_fisica')->nullable();
+            $table->text('deth_tratamientos_previos')->default('');
+            $table->decimal('deth_peso', 5, 2)->default(0.00);
+            $table->decimal('deth_talla', 4, 2)->default(0.00);
+            $table->decimal('deth_imc', 5, 2)->default(0.00);
+            $table->string('deth_lado_dolor', 20)->default('');
+            $table->text('deth_exploracion_fisica')->default('');
             $table->timestamps();
 
             $table->index('his_id', 'idx_historia_detalle');

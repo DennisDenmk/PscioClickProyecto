@@ -12,7 +12,7 @@ class CreateAntecedentesTable extends Migration
             $table->unsignedBigInteger('ant_his_id');
             $table->unsignedBigInteger('tipo_ant_id');
             $table->boolean('ant_valor')->default(false);
-            $table->text('ant_detalle')->nullable();
+            $table->text('ant_detalle')->default('');
             $table->timestamps();
 
             $table->index(['ant_his_id', 'tipo_ant_id'], 'idx_antecedentes_his_tipo');
