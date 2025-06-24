@@ -21,7 +21,7 @@ class RolMiddleware
         $user = $request->user();
 
         if (!$user || !$user->role || !in_array($user->role->nombre, $roles)) {
-            abort(403, 'Permisos insuficientes. :c');
+            return redirect()->route('acceso.denegado');
         }
 
         return $next($request);

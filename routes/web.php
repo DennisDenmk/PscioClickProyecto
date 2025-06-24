@@ -9,7 +9,10 @@ use App\Models\HistoriaClinica;
 Route::get('/', function () {
     return view('welcome');
 });
-
+// routes/web.php
+Route::get('/acceso-denegado', function () {
+    return view('acceso_denegado'); 
+})->name('acceso.denegado'); 
 
 
 Route::get('/dashboard', function () {
