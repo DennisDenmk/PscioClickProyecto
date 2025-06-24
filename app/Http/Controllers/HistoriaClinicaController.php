@@ -175,4 +175,35 @@ class HistoriaClinicaController extends Controller
 
         return view('historia_clinica.habitos.show', compact('historia'));
     }
+    public function createAntecedente($his_id)
+    {
+        $tiposAntecedentes = \App\Models\TipoAntecedente::all();
+        return view('historia_clinica.antecedentes.create', compact('his_id', 'tiposAntecedentes'));
+    }
+
+    public function storeAntecedente(Request $request, $his_id)
+    {
+        $antecedentes = $request->input('antecedentes');
+        $valor = $request->ant_valor === 'Sí' ? true : false;
+        foreach ($antecedentes as $tipo_ant_id => $data) {
+            if (!isset($data['ant_valor'])) {
+                continue;
+            }
+
+            \App\Models\Antecedente::create([
+                'ant_his_id' => $his_id,
+                'tipo_ant_id' => $tipo_ant_id,
+                'ant_valor' => $valor,
+                'ant_detalle' => $data['ant_detalle'] ?? null,
+            ]);
+        }
+
+        return redirect()->route('historias.show', $his_id)->with('success', 'Antecedentes guardados.');
+    }
+    public function showAntecedente($his_id)
+    {
+        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente'])->findOrFail($his_id);
+
+        return view('historia_clinica.antecedentes.show', compact('historia'));
+    }
 }

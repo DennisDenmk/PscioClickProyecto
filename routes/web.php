@@ -7,7 +7,7 @@ use App\Http\Controllers\HistoriaClinicaController;
 use App\Models\HistoriaClinica;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 // routes/web.php
 Route::get('/acceso-denegado', function () {
@@ -81,6 +81,11 @@ Route::middleware(['auth', 'rol:doctor'])
         Route::get('{his_id}/habitos/create', [HistoriaClinicaController::class, 'createHabito'])->name('habitos.create');
         Route::post('{his_id}/habitos', [HistoriaClinicaController::class, 'storeHabito'])->name('habitos.store');
         Route::get('/historia-clinica/{his_id}/habitos/show', [HistoriaClinicaController::class, 'showHabitos'])->name('habitos.show');
+
+        //Antedentes
+        Route::get('/{his_id}/antecedentes/create', [HistoriaClinicaController::class, 'createAntecedente'])->name('antecedentes.create');
+        Route::post('/{his_id}/antecedentes', [HistoriaClinicaController::class, 'storeAntecedente'])->name('antecedentes.store');
+        Route::get('/historia-clinica/{his_id}/antecedentes/show', [HistoriaClinicaController::class, 'showAntecedente'])->name('antecedentes.show');
 
     });
 

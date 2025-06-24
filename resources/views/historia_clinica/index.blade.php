@@ -32,8 +32,6 @@
                                 <td class="px-4 py-2">
                                     <a href="{{ route('historias.show', $historia->his_id) }}"
                                         class="text-blue-600 hover:underline">Ver</a>
-                                    <a href="{{ route('detalles.create', $historia->his_id) }}"
-                                        class="text-blue-600 hover:underline">Crear Detalle historia</a>
                                 </td>
                             </tr>
                         @endforeach
