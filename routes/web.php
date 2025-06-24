@@ -80,6 +80,8 @@ Route::middleware(['auth', 'rol:doctor'])
         //Habitos
         Route::get('{his_id}/habitos/create', [HistoriaClinicaController::class, 'createHabito'])->name('habitos.create');
         Route::post('{his_id}/habitos', [HistoriaClinicaController::class, 'storeHabito'])->name('habitos.store');
+        Route::get('/historia-clinica/{his_id}/habitos/show', [HistoriaClinicaController::class, 'showHabitos'])->name('habitos.show');
+
     });
 
 require __DIR__ . '/auth.php';

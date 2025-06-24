@@ -169,4 +169,10 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('historias.show', $his_id)->with('success', 'Hábito registrado correctamente.');
     }
+    public function showHabitos($his_id)
+    {
+        $historia = HistoriaClinica::with(['paciente', 'habitos.tipoHabito'])->findOrFail($his_id);
+
+        return view('historia_clinica.habitos.show', compact('historia'));
+    }
 }
