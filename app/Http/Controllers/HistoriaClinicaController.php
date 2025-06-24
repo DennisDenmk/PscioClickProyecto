@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Paciente;
 use App\Models\HistoriaClinica;
 use App\Models\DetalleHistoria;
+use App\Models\SignoVital;
 
 use Illuminate\Http\Request;
 
@@ -95,5 +96,77 @@ class HistoriaClinicaController extends Controller
         DetalleHistoria::destroy($deth_id);
 
         return redirect()->back()->with('success', 'Detalle eliminado.');
+    }
+    public function crearSignoVital($his_id)
+    {
+        return view('historia_clinica.signos.create', compact('his_id'));
+    }
+
+    public function guardarSignoVital(Request $request, $his_id)
+    {
+        $request->validate([
+            'sig_tension_arterial_sistolica' => 'required|integer|min:0',
+            'sig_tension_arterial_diastolica' => 'required|integer|min:0',
+            'sig_frecuencia_cardiaca' => 'required|integer|min:0',
+            'sig_frecuencia_respiratoria' => 'required|integer|min:0',
+            'sig_saturacion_oxigeno' => 'required|integer|min:0',
+            'sig_temperatura' => 'required|numeric|min:0',
+        ]);
+
+        SignoVital::create(array_merge($request->all(), ['sig_his_id' => $his_id]));
+
+        return redirect()->route('historias.show', $his_id)->with('success', 'Signos vitales guardados.');
+    }
+
+    public function editarSignoVital($id)
+    {
+        $signo = SignoVital::findOrFail($id);
+        return view('historia_clinica.signos.edit', compact('signo'));
+    }
+
+    public function actualizarSignoVital(Request $request, $id)
+    {
+        $signo = SignoVital::findOrFail($id);
+
+        $request->validate([
+            'sig_tension_arterial_sistolica' => 'required|integer|min:0',
+            'sig_tension_arterial_diastolica' => 'required|integer|min:0',
+            'sig_frecuencia_cardiaca' => 'required|integer|min:0',
+            'sig_frecuencia_respiratoria' => 'required|integer|min:0',
+            'sig_saturacion_oxigeno' => 'required|integer|min:0',
+            'sig_temperatura' => 'required|numeric|min:0',
+        ]);
+
+        $signo->update($request->all());
+
+        return redirect()->route('historias.show', $signo->sig_his_id)->with('success', 'Signos vitales actualizados.');
+    }
+
+    public function eliminarSignoVital($id)
+    {
+        $signo = SignoVital::findOrFail($id);
+        $his_id = $signo->sig_his_id;
+        $signo->delete();
+
+        return redirect()->route('historia_clinica.show', $his_id)->with('success', 'Signos vitales eliminados.');
+    }
+    //Habito
+    public function createHabito($his_id)
+    {
+        $tiposHabitos = \App\Models\TipoHabito::all();
+        return view('historia_clinica.habitos.create', compact('his_id', 'tiposHabitos'));
+    }
+    public function storeHabito(Request $request, $his_id)
+    {
+        $request->validate([
+            'tipo_hab_id' => 'required|exists:tipo_habito,tipo_hab_id',
+        ]);
+
+        \App\Models\Habito::create([
+            'hab_his_id' => $his_id,
+            'tipo_hab_id' => $request->tipo_hab_id,
+        ]);
+
+        return redirect()->route('historias.show', $his_id)->with('success', 'Hábito registrado correctamente.');
     }
 }

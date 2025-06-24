@@ -7,7 +7,8 @@
 
     <div class="py-10 max-w-7xl mx-auto px-4">
         <div class="bg-white shadow rounded-lg p-6">
-            @if($historias->isEmpty())
+
+            @if ($historias->isEmpty())
                 <p class="text-gray-600">No hay historias clínicas registradas.</p>
             @else
                 <table class="min-w-full divide-y divide-gray-200">
@@ -21,16 +22,18 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        @foreach($historias as $historia)
+                        @foreach ($historias as $historia)
                             <tr>
                                 <td class="px-4 py-2">{{ $historia->his_id }}</td>
-                                <td class="px-4 py-2">{{ $historia->paciente->pac_nombres }} {{ $historia->paciente->pac_apellidos }}</td>
+                                <td class="px-4 py-2">{{ $historia->paciente->pac_nombres }}
+                                    {{ $historia->paciente->pac_apellidos }}</td>
                                 <td class="px-4 py-2">{{ $historia->paciente->pac_cedula }}</td>
                                 <td class="px-4 py-2">{{ $historia->created_at->format('d/m/Y') }}</td>
                                 <td class="px-4 py-2">
-                                    <a href="{{ route('historias.show', $historia->his_id) }}" class="text-blue-600 hover:underline">Ver</a>
-                                    <a href="{{ route('detalles.create', $historia->his_id) }}" class="text-blue-600 hover:underline">Crear</a>
-                                    
+                                    <a href="{{ route('historias.show', $historia->his_id) }}"
+                                        class="text-blue-600 hover:underline">Ver</a>
+                                    <a href="{{ route('detalles.create', $historia->his_id) }}"
+                                        class="text-blue-600 hover:underline">Crear Detalle historia</a>
                                 </td>
                             </tr>
                         @endforeach

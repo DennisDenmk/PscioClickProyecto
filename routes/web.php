@@ -11,13 +11,14 @@ Route::get('/', function () {
 });
 // routes/web.php
 Route::get('/acceso-denegado', function () {
-    return view('acceso_denegado'); 
-})->name('acceso.denegado'); 
-
+    return view('acceso_denegado');
+})->name('acceso.denegado');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -25,45 +26,60 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'rol:administrador'])
+    ->get('/admin/dashboard', function () {
+        return view('admin.dashboards');
+    })
+    ->name('admin.dashboard');
 
-Route::middleware(['auth', 'rol:administrador'])->get('/admin/dashboard', function () {
-    return view('admin.dashboards');
-})->name('admin.dashboard');
+Route::middleware(['auth', 'rol:doctor'])
+    ->get('/doctor/dashboard', function () {
+        return view('doctor.dashboards');
+    })
+    ->name('doctor.dashboard');
 
-Route::middleware(['auth', 'rol:doctor'])->get('/doctor/dashboard', function () {
-    return view('doctor.dashboards');
-})->name('doctor.dashboard');
-
-Route::middleware(['auth', 'rol:secretario'])->get('/secretario/dashboard', function () {
-    return view('secretario.dashboards');
-})->name('secretario.dashboard');
-
+Route::middleware(['auth', 'rol:secretario'])
+    ->get('/secretario/dashboard', function () {
+        return view('secretario.dashboards');
+    })
+    ->name('secretario.dashboard');
 
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
     Route::resource('pacientes', PacienteController::class)->except(['show']);
 });
 
-Route::middleware(['auth', 'rol:secretario,doctor'])->get('pacientes/{paciente}', [PacienteController::class, 'show'])->name('pacientes.show');
-
+Route::middleware(['auth', 'rol:secretario,doctor'])
+    ->get('pacientes/{paciente}', [PacienteController::class, 'show'])
+    ->name('pacientes.show');
 
 //HistoriaClinica
 
-Route::middleware(['auth', 'rol:doctor,secretario'])->prefix('historia-clinica')->group(function () {
+Route::middleware(['auth', 'rol:doctor'])
+    ->prefix('historia-clinica')
+    ->group(function () {
+        // Historias clínicas
+        Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
+        Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
 
-    // Historias clínicas
-    Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
-    Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
-    Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
+        // Detalles de historias clínicas
+        Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');
+        Route::post('{his_id}/detalles', [HistoriaClinicaController::class, 'storeDetalle'])->name('detalles.store');
+        Route::get('detalles/{deth_id}/edit', [HistoriaClinicaController::class, 'editDetalle'])->name('detalles.edit');
+        Route::put('detalles/{deth_id}', [HistoriaClinicaController::class, 'updateDetalle'])->name('detalles.update');
+        Route::delete('detalles/{deth_id}', [HistoriaClinicaController::class, 'destroyDetalle'])->name('detalles.destroy');
+        Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
 
-    // Detalles de historias clínicas
-    Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');
-    Route::post('{his_id}/detalles', [HistoriaClinicaController::class, 'storeDetalle'])->name('detalles.store');
-    Route::get('detalles/{deth_id}/edit', [HistoriaClinicaController::class, 'editDetalle'])->name('detalles.edit');
-    Route::put('detalles/{deth_id}', [HistoriaClinicaController::class, 'updateDetalle'])->name('detalles.update');
-    Route::delete('detalles/{deth_id}', [HistoriaClinicaController::class, 'destroyDetalle'])->name('detalles.destroy');
-    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
-});
+        // Signos vitales
+        Route::get('{his_id}/signos/create', [HistoriaClinicaController::class, 'crearSignoVital'])->name('signos.create');
+        Route::post('{his_id}/signos', [HistoriaClinicaController::class, 'guardarSignoVital'])->name('signos.store');
+        Route::get('signos/{id}/edit', [HistoriaClinicaController::class, 'editarSignoVital'])->name('signos.edit');
+        Route::put('signos/{id}', [HistoriaClinicaController::class, 'actualizarSignoVital'])->name('signos.update');
+        Route::get('signos/{id}', [HistoriaClinicaController::class, 'mostrarSignoVital'])->name('signos.show');
 
+        //Habitos
+        Route::get('{his_id}/habitos/create', [HistoriaClinicaController::class, 'createHabito'])->name('habitos.create');
+        Route::post('{his_id}/habitos', [HistoriaClinicaController::class, 'storeHabito'])->name('habitos.store');
+    });
 
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
