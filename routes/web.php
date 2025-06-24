@@ -9,6 +9,7 @@ Route::get('/', function () {
 });
 
 
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -33,12 +34,10 @@ Route::middleware(['auth', 'rol:secretario'])->get('/secretario/dashboard', func
 })->name('secretario.dashboard');
 
 
-/* Rutas para gestión de pacientes (secretario) */
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
     Route::resource('pacientes', PacienteController::class)->except(['show']);
 });
 
-/* Mostrar detalle del paciente (acceso compartido para secretario y doctor) */
 Route::middleware(['auth', 'rol:secretario,doctor'])->get('pacientes/{paciente}', [PacienteController::class, 'show'])->name('pacientes.show');
 
 require __DIR__.'/auth.php';
