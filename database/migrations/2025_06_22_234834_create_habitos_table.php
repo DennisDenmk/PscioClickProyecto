@@ -11,6 +11,7 @@ class CreateHabitosTable extends Migration
             $table->id('hab_id');
             $table->unsignedBigInteger('hab_his_id');
             $table->unsignedBigInteger('tipo_hab_id');
+            $table->text('hab_detalle')->nullable();
             $table->timestamps();
 
             $table->foreign('hab_his_id')->references('his_id')->on('historia_clinica')->onDelete('cascade')->onUpdate('cascade');

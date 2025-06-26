@@ -18,7 +18,7 @@
                     </select>
 
                     <x-input-label value="Detalle (opcional)" class="mt-2" />
-                    <x-text-input type="text" name="antecedentes[{{ $tipo->tipa_id }}][ant_detalle]" class="w-full" />
+                    <x-text-input type="text" name="antecedentes[{{ $tipo->hab_detalle }}][ant_detalle]" class="w-full" />
                 </div>
             @endforeach
 

@@ -11,11 +11,33 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configurar Tailwind para modo oscuro
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+
+<script>
+    // Inicializar tema inmediatamente para evitar flash
+    (function() {
+        const savedTheme = localStorage.getItem('theme');
+
+        if (!savedTheme) {
+            // Siempre inicia en modo claro
+            document.documentElement.classList.remove('dark');
+        } else if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })();
+</script>
 
 
     <body class = "body bg-white dark:bg-[#0F172A]">
     <div class="fixed w-full z-30 flex bg-white dark:bg-[#0F172A] p-2 items-center justify-center h-16 px-10">
-    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="flex items-center space-x-4 ml-12">
+    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="flex items-center space-x-2 ml-12">
     <div class="logo dark:text-white transform ease-in-out duration-500 flex-none h-full flex items-center justify-center cursor-pointer">
         DayJuLIfe
     </div>
@@ -25,11 +47,11 @@
     </div>
 </x-nav-link>
 
-    
+
     <!-- SPACER -->
     <div class="grow h-full flex items-center justify-center"></div>
-    
-    
+
+
     <!-- User Dropdown Menu -->
     <div class="flex-none h-full text-center flex items-center justify-center relative" x-data="{ open: false }">
         <!-- User Profile Button -->
@@ -47,7 +69,7 @@
         </button>
 
         <!-- Dropdown Menu -->
-        <div x-show="open" 
+        <div x-show="open"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 transform scale-95"
              x-transition:enter-end="opacity-100 transform scale-100"
@@ -56,11 +78,11 @@
              x-transition:leave-end="opacity-0 transform scale-95"
              @click.away="open = false"
              class="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-[#1E293B] rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-            
+
             <!-- Dashboard Link (visible on small screens) -->
             <div class="block sm:hidden border-b border-gray-200 dark:border-gray-600">
                 <div class="pt-2 pb-3 space-y-1">
-                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" 
+                    <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
                                           class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md mx-2">
                         {{ __('Dashboard') }}
                     </x-responsive-nav-link>
@@ -77,7 +99,7 @@
 
             <!-- Menu Options -->
             <div class="py-1">
-                <x-responsive-nav-link :href="route('profile.edit')" 
+                <x-responsive-nav-link :href="route('profile.edit')"
                                       class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition duration-150 ease-in-out">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
@@ -98,18 +120,18 @@
     <aside class = "w-60 -translate-x-48 fixed transition transform ease-in-out duration-1000 z-50 flex h-screen bg-[#1E293B] ">
         <!-- open sidebar button -->
         <div class = "max-toolbar translate-x-24 scale-x-0 w-full -right-6 transition transform ease-in duration-300 flex items-center justify-between border-4 border-white dark:border-[#0F172A] bg-[#1E293B]  absolute top-2 rounded-full h-12">
-            
+
             <div class="flex pl-4 items-center space-x-2 ">
                 <div>
-                <div onclick="setDark('dark')" class="moon text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
+                <div onclick="setDark('dark')" class="moon cursor-pointer text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" class="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                     </svg>
                 </div>
-                <div onclick="setDark('light')" class = "sun hidden text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
+                <div onclick="setDark('light')" class = "sun cursor-pointer hidden text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                      </svg>                      
+                      </svg>
                 </div>
             </div >
                 <div class = "text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
@@ -134,7 +156,19 @@
             <div class =  "hover:ml-4 w-full text-white hover:text-purple-500 dark:hover:text-blue-500 bg-[#1E293B] p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                </svg>    
+                </svg>
+                 <!-- Navigation Links -->
+                <div>
+                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-inherit font-normal p-0 hover:underline">
+                       Home
+                     </x-nav-link>
+                </div>
+
+            </div>
+            <div class =  "hover:ml-4 w-full text-white hover:text-purple-500 dark:hover:text-blue-500 bg-[#1E293B] p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" class="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                </svg>
                  <!-- Navigation Links -->
                 <div>
                      <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-inherit font-normal p-0 hover:underline">
@@ -146,7 +180,7 @@
             <div class =  "hover:ml-4 w-full text-white hover:text-purple-500 dark:hover:text-blue-500 bg-[#1E293B] p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-                </svg>                      
+                </svg>
                 <div>
                     Table
                 </div>
@@ -155,7 +189,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                </svg>                      
+                </svg>
                 <div>
                     Graph
                 </div>
@@ -163,11 +197,11 @@
         </div>
         <!-- MINI SIDEBAR-->
         <div class= "mini mt-20 flex flex-col space-y-2 w-full h-[calc(100vh)]">
-             <x-nav-link 
-              :href="route('dashboard')" 
-              :active="request()->routeIs('dashboard')" 
+             <x-nav-link
+              :href="route('dashboard')"
+              :active="request()->routeIs('dashboard')"
               class="hover:ml-4 justify-end pr-5 text-white hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex">
-    
+
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                 </svg>
@@ -177,16 +211,16 @@
             <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-                </svg>                 
+                </svg>
             </div>
             <div class= "hover:ml-4 justify-end pr-5 text-white hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
-                </svg>           
+                </svg>
             </div>
         </div>
-        
+
     </aside>
     <!-- CONTENT -->
     <div class = "content ml-12 transform ease-in-out duration-500 pt-20 px-2 md:px-5 pb-4 ">
@@ -279,8 +313,8 @@
         </div>
 
 
-       
-        
+
+
     </div>
 
     <script>
@@ -294,21 +328,10 @@
         const moon = document.querySelector(".moon")
         const sun = document.querySelector(".sun")
 
-        function setDark(val){
-            if(val === "dark"){
-                document.documentElement.classList.add('dark')
-                moon.classList.add("hidden")
-                sun.classList.remove("hidden")
-            }else{
-                document.documentElement.classList.remove('dark')
-                sun.classList.add("hidden")
-                moon.classList.remove("hidden")
-            }
-        }
 
         function openNav() {
             if(sidebar.classList.contains('-translate-x-48')){
-                // max sidebar 
+                // max sidebar
                 sidebar.classList.remove("-translate-x-48")
                 sidebar.classList.add("translate-x-none")
                 maxSidebar.classList.remove("hidden")
@@ -317,7 +340,7 @@
                 miniSidebar.classList.add("hidden")
                 maxToolbar.classList.add("translate-x-0")
                 maxToolbar.classList.remove("translate-x-24","scale-x-0")
-                logo.classList.remove("ml-12")
+
                 content.classList.remove("ml-12")
                 content.classList.add("ml-12","md:ml-60")
             }else{
@@ -330,13 +353,44 @@
                 miniSidebar.classList.remove("hidden")
                 maxToolbar.classList.add("translate-x-24","scale-x-0")
                 maxToolbar.classList.remove("translate-x-0")
-                logo.classList.add('ml-12')
+
                 content.classList.remove("ml-12","md:ml-60")
                 content.classList.add("ml-12")
 
             }
 
         }
+        function setDark(val){
+    if(val === "dark"){
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+        moon.classList.add("hidden")
+        sun.classList.remove("hidden")
+    }else{
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+        sun.classList.add("hidden")
+        moon.classList.remove("hidden")
+    }
+    updateToggleVisibility(); // Actualizar visibilidad de botones
+}
+
+// Función para actualizar la visibilidad de los botones
+function updateToggleVisibility() {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+        moon.classList.add("hidden")
+        sun.classList.remove("hidden")
+    } else {
+        sun.classList.add("hidden")
+        moon.classList.remove("hidden")
+    }
+}
+
+// Inicializar visibilidad de botones cuando la página cargue
+document.addEventListener('DOMContentLoaded', function() {
+    updateToggleVisibility();
+});
     </script>
 
 </body>

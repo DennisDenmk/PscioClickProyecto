@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight" style="color: #1a5555;">
-            Detalles de Historia Clínica #{{ $historia->his_id }}
+            Detalles de Historia Clínica #{{ $historia->his_id }}   
         </h2>
     </x-slot>
 
