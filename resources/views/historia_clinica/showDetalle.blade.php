@@ -16,6 +16,7 @@
 
         <!-- Botones de Acción -->
         <div class="mb-6 flex flex-wrap gap-3">
+            @rol('doctor')
             <a href="{{ route('detalles.create', $historia->his_id) }}"
                 class="px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
                 style="background-color: #2d7a6b; border: 1px solid #1a5555;"
@@ -51,6 +52,7 @@
                 onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#7bb899'">
                 Mostrar Antecedentes
             </a>
+            @endrol
             
         </div>
 

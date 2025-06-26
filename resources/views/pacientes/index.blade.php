@@ -34,11 +34,6 @@
                                 <td class="border px-4 py-2">
                                     <a href="{{ route('pacientes.show', $paciente->pac_cedula) }}" class="text-blue-600 hover:underline">Ver</a> |
                                     <a href="{{ route('pacientes.edit', $paciente->pac_cedula) }}" class="text-yellow-600 hover:underline">Editar</a> |
-                                    <form action="{{ route('pacientes.destroy', $paciente->pac_cedula) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('¿Estás seguro?')" class="text-red-600 hover:underline">Eliminar</button>
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach

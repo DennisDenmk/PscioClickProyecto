@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PacienteController extends Controller
 {
-   public function __construct()
+    public function __construct()
     {
         // Solo secretarios pueden gestionar pacientes
         $this->middleware(['auth', 'rol:secretario']);
@@ -69,6 +69,10 @@ class PacienteController extends Controller
         ];
 
         $request->validate($rules);
-    } 
-    
+    }
+    public function show($cedula)
+    {
+        $paciente = Paciente::with(['estadoCivil', 'historiaClinica'])->findOrFail($cedula);
+        return view('pacientes.show', compact('paciente'));
+    }
 }

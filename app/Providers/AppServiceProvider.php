@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+         Blade::directive('rol', function ($rol) {
+        return "<?php if(auth()->check() && auth()->user()->role && auth()->user()->role->nombre === $rol): ?>";
+    });
+
+        Blade::directive('endrol', function () {
+        return "<?php endif; ?>";
+    });
+    
     }
 }

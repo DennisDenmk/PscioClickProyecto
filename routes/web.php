@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
+use App\Models\Doctor;
 use App\Models\HistoriaClinica;
 
 Route::get('/', function () {
@@ -44,49 +45,49 @@ Route::middleware(['auth', 'rol:secretario'])
     })
     ->name('secretario.dashboard');
 
-Route::middleware(['auth', 'rol:secretario'])->group(function () {
-    Route::resource('pacientes', PacienteController::class)->except(['show']);
+//Secretario
+Route::middleware(['auth', 'rol:secretario'])->group(function () {});
+
+// Rutas accesibles por doctor y secretario
+Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
+    Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
+    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
 });
 
-Route::middleware(['auth', 'rol:secretario,doctor'])
-    ->get('pacientes/{paciente}', [PacienteController::class, 'show'])
-    ->name('pacientes.show');
+// Solo secretario
+Route::middleware(['auth', 'rol:secretario'])->group(function () {
+    Route::resource('pacientes', PacienteController::class);
+});
 
-//HistoriaClinica
+// Solo doctor
+Route::middleware(['auth', 'rol:doctor'])->group(function () {
+    // Crear historia clínica
+    Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
+    Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
 
-Route::middleware(['auth', 'rol:doctor'])
-    ->prefix('historia-clinica')
-    ->group(function () {
-        // Historias clínicas
-        Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
-        Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
+    // Detalles
+    Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');
+    Route::post('{his_id}/detalles', [HistoriaClinicaController::class, 'storeDetalle'])->name('detalles.store');
+    Route::get('detalles/{deth_id}/edit', [HistoriaClinicaController::class, 'editDetalle'])->name('detalles.edit');
+    Route::put('detalles/{deth_id}', [HistoriaClinicaController::class, 'updateDetalle'])->name('detalles.update');
+    Route::delete('detalles/{deth_id}', [HistoriaClinicaController::class, 'destroyDetalle'])->name('detalles.destroy');
 
-        // Detalles de historias clínicas
-        Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');
-        Route::post('{his_id}/detalles', [HistoriaClinicaController::class, 'storeDetalle'])->name('detalles.store');
-        Route::get('detalles/{deth_id}/edit', [HistoriaClinicaController::class, 'editDetalle'])->name('detalles.edit');
-        Route::put('detalles/{deth_id}', [HistoriaClinicaController::class, 'updateDetalle'])->name('detalles.update');
-        Route::delete('detalles/{deth_id}', [HistoriaClinicaController::class, 'destroyDetalle'])->name('detalles.destroy');
-        Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
+    // Signos vitales
+    Route::get('{his_id}/signos/create', [HistoriaClinicaController::class, 'crearSignoVital'])->name('signos.create');
+    Route::post('{his_id}/signos', [HistoriaClinicaController::class, 'guardarSignoVital'])->name('signos.store');
+    Route::get('signos/{id}/edit', [HistoriaClinicaController::class, 'editarSignoVital'])->name('signos.edit');
+    Route::put('signos/{id}', [HistoriaClinicaController::class, 'actualizarSignoVital'])->name('signos.update');
+    Route::get('signos/{id}', [HistoriaClinicaController::class, 'mostrarSignoVital'])->name('signos.show');
 
-        // Signos vitales
-        Route::get('{his_id}/signos/create', [HistoriaClinicaController::class, 'crearSignoVital'])->name('signos.create');
-        Route::post('{his_id}/signos', [HistoriaClinicaController::class, 'guardarSignoVital'])->name('signos.store');
-        Route::get('signos/{id}/edit', [HistoriaClinicaController::class, 'editarSignoVital'])->name('signos.edit');
-        Route::put('signos/{id}', [HistoriaClinicaController::class, 'actualizarSignoVital'])->name('signos.update');
-        Route::get('signos/{id}', [HistoriaClinicaController::class, 'mostrarSignoVital'])->name('signos.show');
+    // Hábitos
+    Route::get('{his_id}/habitos/create', [HistoriaClinicaController::class, 'createHabito'])->name('habitos.create');
+    Route::post('{his_id}/habitos', [HistoriaClinicaController::class, 'storeHabito'])->name('habitos.store');
+    Route::get('/historia-clinica/{his_id}/habitos/show', [HistoriaClinicaController::class, 'showHabitos'])->name('habitos.show');
 
-        //Habitos
-        Route::get('{his_id}/habitos/create', [HistoriaClinicaController::class, 'createHabito'])->name('habitos.create');
-        Route::post('{his_id}/habitos', [HistoriaClinicaController::class, 'storeHabito'])->name('habitos.store');
-        Route::get('/historia-clinica/{his_id}/habitos/show', [HistoriaClinicaController::class, 'showHabitos'])->name('habitos.show');
-
-        //Antedentes
-        Route::get('/{his_id}/antecedentes/create', [HistoriaClinicaController::class, 'createAntecedente'])->name('antecedentes.create');
-        Route::post('/{his_id}/antecedentes', [HistoriaClinicaController::class, 'storeAntecedente'])->name('antecedentes.store');
-        Route::get('/historia-clinica/{his_id}/antecedentes/show', [HistoriaClinicaController::class, 'showAntecedente'])->name('antecedentes.show');
-
-    });
+    // Antecedentes
+    Route::get('/{his_id}/antecedentes/create', [HistoriaClinicaController::class, 'createAntecedente'])->name('antecedentes.create');
+    Route::post('/{his_id}/antecedentes', [HistoriaClinicaController::class, 'storeAntecedente'])->name('antecedentes.store');
+    Route::get('/historia-clinica/{his_id}/antecedentes/show', [HistoriaClinicaController::class, 'showAntecedente'])->name('antecedentes.show');
+});
 
 require __DIR__ . '/auth.php';
