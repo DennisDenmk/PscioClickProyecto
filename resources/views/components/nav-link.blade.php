@@ -19,4 +19,6 @@ $classes = ($active ?? false)
 
 <a href="{{ $url }}" {{ $attributes->merge(['class' => $classes]) }}>
     {{ $slot }}
+    
 </a>
+

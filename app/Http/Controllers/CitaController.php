@@ -15,15 +15,21 @@ class CitaController extends Controller
     }
     public function storeTipoCita(Request $request)
     {
-        $request->validate([
-            'tipc_nombre' => 'required|string|max:100',
-            'tipc_duracion_minutos' => 'required|integer|min:1',
-        ]);
+        $request->validate(
+            [
+                'tipc_nombre' => 'required|string|max:100|unique:tipo_citas,tipc_nombre',
+                'tipc_duracion_minutos' => 'required|integer|min:1',
+            ],
+            [
+                'tipc_nombre.unique' => 'Ya existe un tipo de cita con ese nombre.',
+            ],
+        );
 
         TipoCita::create($request->all());
 
-        return redirect()->route('tiposcita.index')->with('success', 'Tipo de cita creado correctamente.');
+        return redirect()->route('tipocita.index')->with('success', 'Tipo de cita creado correctamente.');
     }
+
     public function indexTipoCita()
     {
         $tipos = TipoCita::all();
@@ -46,7 +52,7 @@ class CitaController extends Controller
         $tipo = TipoCita::findOrFail($id);
         $tipo->update($request->all());
 
-        return redirect()->route('tipocita.index')->with('success', 'Tipo de cita añadido correctamente.');
+        return redirect()->route('tipocita.index')->with('success', 'Tipo de cita actualizado correctamente.');
     }
     //Promociones
     public function indexPromocion()

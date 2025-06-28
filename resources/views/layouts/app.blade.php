@@ -16,6 +16,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-[#0F172A]">
+            <x-notification />
             @livewire('navigation')
             
             <!-- Page Content - Ajustado para ser responsive con la sidebar -->
@@ -73,5 +74,6 @@
             // También ejecutar después de que Livewire se haya inicializado
             document.addEventListener('livewire:load', adjustMainContent);
         </script>
+        
     </body>
 </html>
