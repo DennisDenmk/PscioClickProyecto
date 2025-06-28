@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TipoCita;
+use App\Models\Promocion;
 
 use Illuminate\Http\Request;
 
@@ -46,5 +47,49 @@ class CitaController extends Controller
         $tipo->update($request->all());
 
         return redirect()->route('tipocita.index')->with('success', 'Tipo de cita añadido correctamente.');
+    }
+    //Promociones
+    public function indexPromocion()
+    {
+        $promociones = Promocion::all();
+        return view('citas.promocion.index', compact('promociones'));
+    }
+
+    public function createPromocion()
+    {
+        return view('citas.promocion.create');
+    }
+
+    public function storePromocion(Request $request)
+    {
+        $request->validate([
+            'prom_nombre' => 'required|string|max:100',
+            'prom_descripcion' => 'nullable|string',
+            'prom_precio' => 'required|numeric',
+            'prom_sesiones' => 'required|integer|min:1',
+        ]);
+
+        Promocion::create($request->all());
+        return redirect()->route('promociones.index')->with('success', 'Promoción creada correctamente.');
+    }
+
+    public function editPromocion($id)
+    {
+        $promocion = Promocion::findOrFail($id);
+        return view('citas.promocion.edit', compact('promocion'));
+    }
+
+    public function updatePromocion(Request $request, $id)
+    {
+        $request->validate([
+            'prom_nombre' => 'required|string|max:100',
+            'prom_descripcion' => 'nullable|string',
+            'prom_precio' => 'required|numeric',
+            'prom_sesiones' => 'required|integer|min:1',
+        ]);
+
+        $promocion = Promocion::findOrFail($id);
+        $promocion->update($request->all());
+        return redirect()->route('promociones.index')->with('success', 'Promoción actualizada correctamente.');
     }
 }

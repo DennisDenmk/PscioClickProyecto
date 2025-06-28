@@ -34,6 +34,10 @@
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
                     Tipo de cita
                 </a>
+                <a href="{{route('promociones.index')}}"
+                   class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
+                    Promociones
+                </a>
             </div>
         </div>
     </div>
