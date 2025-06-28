@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\TipoCita;
 use App\Models\Promocion;
+use App\Models\PromocionCita;
+use App\Models\Cita;
 
 use Illuminate\Http\Request;
 
@@ -97,5 +99,53 @@ class CitaController extends Controller
         $promocion = Promocion::findOrFail($id);
         $promocion->update($request->all());
         return redirect()->route('promociones.index')->with('success', 'Promoción actualizada correctamente.');
+    }
+    public function indexPromocionCita()
+    {
+        $promocionesCitas = PromocionCita::with('cita', 'promocion')->get();
+        return view('citas.promocioncita.index', compact('promocionesCitas'));
+    }
+
+    public function createPromocionCita()
+    {
+        $citas = Cita::all();
+        $promociones = Promocion::all();
+        return view('citas.promocioncita.create', compact('citas', 'promociones'));
+    }
+
+    public function storePromocionCita(Request $request)
+    {
+        $request->validate([
+            'cit_id' => 'required|exists:citas,cit_id',
+            'proc_id' => 'required|exists:promociones,prom_id',
+            'proc_sesiones_usadas' => 'required|integer|min:0',
+        ]);
+
+        PromocionCita::create($request->all());
+
+        return redirect()->route('promocioncita.index')->with('success', 'Registro creado exitosamente');
+    }
+
+    public function editPromocionCita($id)
+    {
+        $promocionCita = PromocionCita::findOrFail($id);
+        $citas = Cita::all();
+        $promociones = Promocion::all();
+
+        return view('citas.promocioncita.edit', compact('promocionCita', 'citas', 'promociones'));
+    }
+
+    public function updatePromocionCita(Request $request, $id)
+    {
+        $request->validate([
+            'cit_id' => 'required|exists:citas,cit_id',
+            'proc_id' => 'required|exists:promociones,prom_id',
+            'proc_sesiones_usadas' => 'required|integer|min:0',
+        ]);
+
+        $promocionCita = PromocionCita::findOrFail($id);
+        $promocionCita->update($request->all());
+
+        return redirect()->route('promocioncita.index')->with('success', 'Registro actualizado correctamente');
     }
 }

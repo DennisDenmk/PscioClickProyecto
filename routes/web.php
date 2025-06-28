@@ -68,6 +68,14 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
     Route::post('promociones/', [CitaController::class, 'storePromocion'])->name('promociones.store');
     Route::get('promociones/{id}/edit', [CitaController::class, 'editPromocion'])->name('promociones.edit');
     Route::put('promociones/{id}', [CitaController::class, 'updatePromocion'])->name('promociones.update');
+
+    Route::prefix('promocion-cita')->group(function () {
+    Route::get('/', [CitaController::class, 'indexPromocionCita'])->name('promocioncita.index');
+    Route::get('/create', [CitaController::class, 'createPromocionCita'])->name('promocioncita.create');
+    Route::post('/', [CitaController::class, 'storePromocionCita'])->name('promocioncita.store');
+    Route::get('/{id}/edit', [CitaController::class, 'editPromocionCita'])->name('promocioncita.edit');
+    Route::put('/{id}', [CitaController::class, 'updatePromocionCita'])->name('promocioncita.update');
+});
 });
 
 // Solo doctor

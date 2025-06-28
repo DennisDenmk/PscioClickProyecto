@@ -38,6 +38,10 @@
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
                     Promociones
                 </a>
+                <a href="{{route('promocioncita.index')}}"
+                   class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
+                    Promociones-Citas
+                </a>
             </div>
         </div>
     </div>
