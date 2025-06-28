@@ -4,8 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
-use App\Models\Doctor;
-use App\Models\HistoriaClinica;
+use App\Http\Controllers\CitaController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -24,29 +23,19 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::middleware(['auth', 'rol:administrador'])
-    ->get('/admin/dashboard', function () {
+//Solo Administrador
+Route::middleware(['auth', 'rol:administrador']) -> group(function(){
+    Route::get('/admin/dashboard', function () {
         return view('admin.dashboards');
-    })
-    ->name('admin.dashboard');
+    })->name('admin.dashboard');
 
-Route::middleware(['auth', 'rol:doctor'])
-    ->get('/doctor/dashboard', function () {
-        return view('doctor.dashboards');
-    })
-    ->name('doctor.dashboard');
+});
+   
 
-Route::middleware(['auth', 'rol:secretario'])
-    ->get('/secretario/dashboard', function () {
-        return view('secretario.dashboards');
-    })
-    ->name('secretario.dashboard');
 
-//Secretario
-Route::middleware(['auth', 'rol:secretario'])->group(function () {});
+
+
 
 // Rutas accesibles por doctor y secretario
 Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
@@ -56,16 +45,37 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
 
 // Solo secretario
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
+    
+    Route::get('/secretario/dashboard', function () {
+        return view('secretario.dashboards');
+    })->name('secretario.dashboard');
+    Route::get('/secretario/dashboard', function () {
+        return view('secretario.dashboards');
+    })->name('secretario.dashboard');
+    
     Route::resource('pacientes', PacienteController::class);
+
+    //Tipo cita
+    Route::get('/tipos-citas/create', [CitaController::class, 'createTipoCita'])->name('tipocita.create');
+    Route::post('/tipos-citas', [CitaController::class, 'storeTipoCita'])->name('tipocita.store');
+    Route::get('/tipos-citas', [CitaController::class, 'indexTipoCita'])->name('tipocita.index');
+    Route::get('/tipos-citas/{id}/edit', [CitaController::class, 'editTipoCita'])->name('tipocita.edit');
+    Route::put('/tipos-citas/{id}', [CitaController::class, 'updateTipoCita'])->name('tipocita.update');
+    
 });
 
 // Solo doctor
 Route::middleware(['auth', 'rol:doctor'])->group(function () {
+
+    Route::get('/doctor/dashboard', function () {
+        return view('doctor.dashboards');
+    })->name('doctor.dashboard');
+
     // Crear historia clínica
     Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
     Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
 
-    // Detalles
+    // Detalles de historia clinica
     Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');
     Route::post('{his_id}/detalles', [HistoriaClinicaController::class, 'storeDetalle'])->name('detalles.store');
     Route::get('detalles/{deth_id}/edit', [HistoriaClinicaController::class, 'editDetalle'])->name('detalles.edit');
