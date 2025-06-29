@@ -67,6 +67,7 @@ class RolesSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'Administrador',
+                'apellido' => 'Administrador',
                 'cedula' => '1111111111',
                 'email' => 'admin@admin',
                 'telefono' => '0000000001',
@@ -76,6 +77,7 @@ class RolesSeeder extends Seeder
             ],
             [
                 'name' => 'Secre',
+                'apellido' => 'Secre',
                 'cedula' => '2222222222',
                 'email' => 'secre@secre',
                 'telefono' => '0000000002',
@@ -85,6 +87,7 @@ class RolesSeeder extends Seeder
             ],
             [
                 'name' => 'Doctor',
+                'apellido' => 'Secre',
                 'cedula' => '3333333333',
                 'email' => 'doc@doc',
                 'telefono' => '0000000003',

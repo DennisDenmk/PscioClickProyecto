@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Doctor extends Model
 {
     protected $primaryKey = 'doc_cedula';
+    protected $table = 'doctores';
     public $incrementing = false;
     protected $keyType = 'string';
 

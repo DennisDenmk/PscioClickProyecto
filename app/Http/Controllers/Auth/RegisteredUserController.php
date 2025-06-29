@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Doctor;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +34,8 @@ class RegisteredUserController extends Controller
     {
         $request->validate(
             [
-                'name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:30'],
+                'apellido' => ['required', 'string', 'max:30'],
                 'cedula' => ['required', 'string', 'size:10', 'unique:users,cedula'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'telefono' => ['required', 'string', 'size:10', 'unique:users,telefono'],
@@ -42,21 +44,35 @@ class RegisteredUserController extends Controller
             ],
             [
                 'cedula.unique' => 'Cédula ya registrada.',
-                'email.unique' => 'Correo ya registrado..',
-                'telefono.unique' => 'Teléfono ya registrado..',
-
+                'email.unique' => 'Correo ya registrado.',
+                'telefono.unique' => 'Teléfono ya registrado.',
             ],
         );
 
         $user = User::create([
             'name' => $request->name,
+            'apellido' => $request->apellido,
             'cedula' => $request->cedula,
             'email' => $request->email,
-            'telefono' =>$request ->telefono,
+            'telefono' => $request->telefono,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
         ]);
 
-        return redirect(route('admin.dashboard'));
+        if ($request->role_id == 2) {
+            $doctorExistente = Doctor::where('doc_cedula', $request->cedula)->first();
+
+            if (!$doctorExistente) {
+                Doctor::create([
+                    'doc_nombres' => $request->name,
+                    'doc_apellidos' => $request->apellido,
+                    'doc_cedula' => $request->cedula,
+                    'doc_email' => $request->email,
+                    'doc_telefono' => $request->telefono,
+                ]);
+            }
+        }
+
+        return redirect(route('admin.dashboard'))->with('success', 'Usuario creado correctamente.');
     }
 }

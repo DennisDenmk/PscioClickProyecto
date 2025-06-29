@@ -18,6 +18,13 @@
             </div>
 
             <div class="mb-4">
+                <x-input-label for="apellido" value="Apellido" />
+                <x-text-input id="apellido" name="apellido" type="text" class="mt-1 block w-full"
+                    value="{{ old('apellido', $user->apellido) }}" />
+                <x-input-error :messages="$errors->get('apellido')" />
+            </div>
+
+            <div class="mb-4">
                 <x-input-label for="cedula" value="Cédula" />
                 <x-text-input id="cedula" name="cedula" type="text" class="mt-1 block w-full"
                     value="{{ old('cedula', $user->cedula) }}" />

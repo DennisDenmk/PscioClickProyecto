@@ -18,6 +18,7 @@
                     <tr>
                         <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">#</th>
                         <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Nombre</th>
+                        <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Apellido</th>
                         <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Cédula</th>
                         <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Email</th>
                         <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Rol</th>
@@ -30,6 +31,7 @@
                         <tr>
                             <td class="px-4 py-2">{{ $user->id }}</td>
                             <td class="px-4 py-2">{{ $user->name }}</td>
+                            <td class="px-4 py-2">{{ $user->apellido }}</td>
                             <td class="px-4 py-2">{{ $user->cedula }}</td>
                             <td class="px-4 py-2">{{ $user->email }}</td>
                             <td class="px-4 py-2">{{ $user->role->nombre ?? 'Sin Rol' }}</td>

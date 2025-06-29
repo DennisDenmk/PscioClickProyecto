@@ -16,6 +16,12 @@
                         name="name" :value="old('name')" required autofocus autocomplete="name" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
+                <div>
+                    <x-input-label for="apellido" :value="__('Apellido')" />
+                    <x-text-input id="apellido" class="block mt-1 w-full" type="text"
+                        name="apellido" :value="old('apellido')" required autofocus autocomplete="apellido" />
+                    <x-input-error :messages="$errors->get('apellido')" class="mt-2" />
+                </div>
 
                 <!-- Cedula -->
                 <div class="mt-4">
