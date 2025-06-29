@@ -8,6 +8,7 @@ use App\Models\SignoVital;
 use App\Models\TipoAntecedente;
 use App\Models\EnfermedadActual;
 use App\Models\TipoEnfermedadActual;
+use App\Models\PlanTratamiento;
 use Illuminate\Http\Request;
 
 class HistoriaClinicaController extends Controller
@@ -331,5 +332,52 @@ class HistoriaClinicaController extends Controller
         $tipo->update($request->only('tipo_enf_nombre'));
 
         return redirect()->route('tipo_enfermedad_actual.index')->with('success', 'Tipo actualizado correctamente.');
+    }
+    public function indexPlanTratamiento()
+    {
+        $planes = PlanTratamiento::with('historiaClinica')->get();
+        return view('historia_clinica.plan_tratamiento.index', compact('planes'));
+    }
+
+    public function createPlanTratamiento()
+    {
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.plan_tratamiento.create', compact('historias'));
+    }
+
+    public function storePlanTratamiento(Request $request)
+    {
+        $request->validate([
+            'pla_his_id' => 'required|exists:historia_clinica,his_id',
+            'pla_diagnostico' => 'required|string|max:255',
+            'pla_objetivo_tratamiento' => 'required|string|max:255',
+            'pla_tratamiento' => 'required|string|max:255',
+        ]);
+
+        PlanTratamiento::create($request->all());
+
+        return redirect()->route('plan_tratamiento.index')->with('success', 'Plan creado correctamente.');
+    }
+
+    public function editPlanTratamiento($id)
+    {
+        $plan = PlanTratamiento::findOrFail($id);
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.plan_tratamiento.edit', compact('plan', 'historias'));
+    }
+
+    public function updatePlanTratamiento(Request $request, $id)
+    {
+        $request->validate([
+            'pla_his_id' => 'required|exists:historia_clinica,his_id',
+            'pla_diagnostico' => 'required|string|max:255',
+            'pla_objetivo_tratamiento' => 'required|string|max:255',
+            'pla_tratamiento' => 'required|string|max:255',
+        ]);
+
+        $plan = PlanTratamiento::findOrFail($id);
+        $plan->update($request->all());
+
+        return redirect()->route('plan_tratamiento.index')->with('success', 'Plan actualizado correctamente.');
     }
 }

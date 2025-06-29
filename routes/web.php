@@ -137,6 +137,15 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoEnfermedadActual'])->name('tipo_enfermedad_actual.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoEnfermedadActual'])->name('tipo_enfermedad_actual.update');
     });
+    //Plan de tratamiento
+    Route::prefix('plan-tratamiento')->group(function () {
+        Route::get('/', [HistoriaClinicaController::class, 'indexPlanTratamiento'])->name('plan_tratamiento.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createPlanTratamiento'])->name('plan_tratamiento.create');
+        Route::post('/', [HistoriaClinicaController::class, 'storePlanTratamiento'])->name('plan_tratamiento.store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('plan_tratamiento.edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('plan_tratamiento.update');
+    });
+
 });
 
 require __DIR__ . '/auth.php';
