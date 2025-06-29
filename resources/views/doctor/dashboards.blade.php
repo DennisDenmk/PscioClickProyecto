@@ -19,6 +19,10 @@
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Ver Historias Clínicas
                 </a>
+                 <a href="{{ route('tipo_antecedente.index') }}"
+                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
+                    Tipo antecedentes
+                </a>
                 
 
 

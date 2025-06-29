@@ -5,6 +5,7 @@ use App\Models\Paciente;
 use App\Models\HistoriaClinica;
 use App\Models\DetalleHistoria;
 use App\Models\SignoVital;
+use App\Models\TipoAntecedente;
 
 use Illuminate\Http\Request;
 
@@ -205,5 +206,44 @@ class HistoriaClinicaController extends Controller
         $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente'])->findOrFail($his_id);
 
         return view('historia_clinica.antecedentes.show', compact('historia'));
+    }
+     public function indexTipoAntecedente()
+    {
+        $tipos = TipoAntecedente::all();
+        return view('historia_clinica.tipoantecedentes.index', compact('tipos'));
+    }
+
+    public function createTipoAntecedente()
+    {
+        return view('historia_clinica.tipoantecedentes.create');
+    }
+
+    public function storeTipoAntecedente(Request $request)
+    {
+        $request->validate([
+            'tipa_nombre' => 'required|string|max:100|unique:tipo_antecedente,tipa_nombre',
+        ]);
+
+        TipoAntecedente::create($request->only('tipa_nombre'));
+
+        return redirect()->route('tipo_antecedente.index')->with('success', 'Tipo de antecedente creado correctamente.');
+    }
+
+    public function editTipoAntecedente($id)
+    {
+        $tipo = TipoAntecedente::findOrFail($id);
+        return view('historia_clinica.tipoantecedentes.edit', compact('tipo'));
+    }
+
+    public function updateTipoAntecedente(Request $request, $id)
+    {
+        $request->validate([
+            'tipa_nombre' => 'required|string|max:100|unique:tipo_antecedente,tipa_nombre,' . $id . ',tipa_id',
+        ]);
+
+        $tipo = TipoAntecedente::findOrFail($id);
+        $tipo->update($request->only('tipa_nombre'));
+
+        return redirect()->route('tipo_antecedente.index')->with('success', 'Tipo de antecedente actualizado correctamente.');
     }
 }

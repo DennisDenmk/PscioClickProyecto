@@ -18,30 +18,26 @@ Route::get('/acceso-denegado', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 //Solo Administrador
-Route::middleware(['auth', 'rol:administrador']) -> group(function(){
+Route::middleware(['auth', 'rol:administrador'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboards');
     })->name('admin.dashboard');
-    
+
     Route::prefix('administrador')->group(function () {
-    Route::get('/', [AdminController::class, 'indexUser'])->name('usuarios.index');
-    Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
-    Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
+        Route::get('/', [AdminController::class, 'indexUser'])->name('usuarios.index');
+        Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
+        Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
+    });
 });
-
-});
-   
-
-
-
-
 
 // Rutas accesibles por doctor y secretario
 Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
@@ -51,14 +47,13 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
 
 // Solo secretario
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
-    
     Route::get('/secretario/dashboard', function () {
         return view('secretario.dashboards');
     })->name('secretario.dashboard');
     Route::get('/secretario/dashboard', function () {
         return view('secretario.dashboards');
     })->name('secretario.dashboard');
-    
+
     Route::resource('pacientes', PacienteController::class);
 
     //Tipo cita
@@ -67,7 +62,7 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
     Route::get('/tipos-citas', [CitaController::class, 'indexTipoCita'])->name('tipocita.index');
     Route::get('/tipos-citas/{id}/edit', [CitaController::class, 'editTipoCita'])->name('tipocita.edit');
     Route::put('/tipos-citas/{id}', [CitaController::class, 'updateTipoCita'])->name('tipocita.update');
-    
+
     //Promociones
     Route::get('promociones/', [CitaController::class, 'indexPromocion'])->name('promociones.index');
     Route::get('promociones/create', [CitaController::class, 'createPromocion'])->name('promociones.create');
@@ -76,17 +71,16 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
     Route::put('promociones/{id}', [CitaController::class, 'updatePromocion'])->name('promociones.update');
 
     Route::prefix('promocion-cita')->group(function () {
-    Route::get('/', [CitaController::class, 'indexPromocionCita'])->name('promocioncita.index');
-    Route::get('/create', [CitaController::class, 'createPromocionCita'])->name('promocioncita.create');
-    Route::post('/', [CitaController::class, 'storePromocionCita'])->name('promocioncita.store');
-    Route::get('/{id}/edit', [CitaController::class, 'editPromocionCita'])->name('promocioncita.edit');
-    Route::put('/{id}', [CitaController::class, 'updatePromocionCita'])->name('promocioncita.update');
-});
+        Route::get('/', [CitaController::class, 'indexPromocionCita'])->name('promocioncita.index');
+        Route::get('/create', [CitaController::class, 'createPromocionCita'])->name('promocioncita.create');
+        Route::post('/', [CitaController::class, 'storePromocionCita'])->name('promocioncita.store');
+        Route::get('/{id}/edit', [CitaController::class, 'editPromocionCita'])->name('promocioncita.edit');
+        Route::put('/{id}', [CitaController::class, 'updatePromocionCita'])->name('promocioncita.update');
+    });
 });
 
 // Solo doctor
 Route::middleware(['auth', 'rol:doctor'])->group(function () {
-
     Route::get('/doctor/dashboard', function () {
         return view('doctor.dashboards');
     })->name('doctor.dashboard');
@@ -118,6 +112,14 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     Route::get('/{his_id}/antecedentes/create', [HistoriaClinicaController::class, 'createAntecedente'])->name('antecedentes.create');
     Route::post('/{his_id}/antecedentes', [HistoriaClinicaController::class, 'storeAntecedente'])->name('antecedentes.store');
     Route::get('/historia-clinica/{his_id}/antecedentes/show', [HistoriaClinicaController::class, 'showAntecedente'])->name('antecedentes.show');
-});
+    //Tipos antecedentes
+    Route::prefix('tipo-antecedente')->group(function(){
+        Route::get('/', [HistoriaClinicaController::class, 'indexTipoAntecedente'])->name('tipo_antecedente.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createTipoAntecedente'])->name('tipo_antecedente.create');
+        Route::post('/', [HistoriaClinicaController::class, 'storeTipoAntecedente'])->name('tipo_antecedente.store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoAntecedente'])->name('tipo_antecedente.edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoAntecedente'])->name('tipo_antecedente.update');
+        });
+    });
 
 require __DIR__ . '/auth.php';
