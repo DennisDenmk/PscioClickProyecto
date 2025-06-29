@@ -26,7 +26,7 @@
                 </a>
 
                 <!-- Agendar Cita -->
-                <a href="#"
+                <a href="{{route('citas.index')}}"
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-yellow-800 font-semibold rounded-lg p-6 shadow text-center">
                     Agendar Cita
                 </a>

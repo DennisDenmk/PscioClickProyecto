@@ -92,6 +92,13 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::get('/{id}/edit', [SecretarioController::class, 'editHorarioDoctor'])->name('horarios_doctor.edit');
         Route::put('/{id}', [SecretarioController::class, 'updateHorarioDoctor'])->name('horarios_doctor.update');
     });
+    Route::prefix('citas')->group(function () {
+        Route::get('/', [CitaController::class, 'indexCita'])->name('citas.index');
+        Route::get('/create', [CitaController::class, 'createCita'])->name('citas.create');
+        Route::post('/', [CitaController::class, 'storeCita'])->name('citas.store');
+        Route::get('/{id}/edit', [CitaController::class, 'editCita'])->name('citas.edit');
+        Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
+    });
 });
 
 // Solo doctor
