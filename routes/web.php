@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\SecretarioController;
 use Monolog\Registry;
 
 Route::get('/', function () {
@@ -83,6 +84,13 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::post('/', [PacienteController::class, 'storeEstadoCivil'])->name('estado_civil.store');
         Route::get('/{id}/edit', [PacienteController::class, 'editEstadoCivil'])->name('estado_civil.edit');
         Route::put('/{id}', [PacienteController::class, 'updateEstadoCivil'])->name('estado_civil.update');
+    });
+    Route::prefix('horarios')->group(function () {
+        Route::get('/', [SecretarioController::class, 'indexHorarioDoctor'])->name('horarios_doctor.index');
+        Route::get('/create', [SecretarioController::class, 'createHorarioDoctor'])->name('horarios_doctor.create');
+        Route::post('/', [SecretarioController::class, 'storeHorarioDoctor'])->name('horarios_doctor.store');
+        Route::get('/{id}/edit', [SecretarioController::class, 'editHorarioDoctor'])->name('horarios_doctor.edit');
+        Route::put('/{id}', [SecretarioController::class, 'updateHorarioDoctor'])->name('horarios_doctor.update');
     });
 });
 
