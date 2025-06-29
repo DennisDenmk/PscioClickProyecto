@@ -36,12 +36,15 @@ class RegisteredUserController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'cedula' => ['required', 'string', 'size:10', 'unique:users,cedula'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'telefono' => ['required', 'string', 'size:10', 'unique:users,telefono'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'role_id' => ['required', 'exists:roles,id'],
             ],
             [
                 'cedula.unique' => 'Cédula ya registrada.',
                 'email.unique' => 'Correo ya registrado..',
+                'telefono.unique' => 'Teléfono ya registrado..',
+
             ],
         );
 
@@ -49,14 +52,11 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'cedula' => $request->cedula,
             'email' => $request->email,
+            'telefono' =>$request ->telefono,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('admin.dashboards', absolute: false));
+        return redirect(route('admin.dashboard'));
     }
 }

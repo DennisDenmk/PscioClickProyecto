@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('cedula', 10)->unique();
             $table->string('email')->unique();
+            $table->string('telefono', 10)->unique();
             $table->timestamp('email_verified_at')->default(now());
             $table->string('password');
             $table->foreignId('role_id')->constrained('roles');
