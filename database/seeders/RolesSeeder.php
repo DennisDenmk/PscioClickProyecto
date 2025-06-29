@@ -71,6 +71,7 @@ class RolesSeeder extends Seeder
                 'email' => 'admin@admin',
                 'password' =>Hash::make('123456789'),
                 'role_id' => 1,
+                'estado' => true,
             ],
             [
                 'name' => 'Secre',
@@ -78,6 +79,7 @@ class RolesSeeder extends Seeder
                 'email' => 'secre@secre',
                 'password' => Hash::make('123456789'),
                 'role_id' => 3,
+                'estado' => true,
             ],
             [
                 'name' => 'Doctor',
@@ -85,6 +87,7 @@ class RolesSeeder extends Seeder
                 'email' => 'doc@doc',
                 'password' => Hash::make('123456789'),
                 'role_id' => 2,
+                'estado' => true,
             ]
         ]);
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
@@ -29,6 +30,11 @@ Route::middleware(['auth', 'rol:administrador']) -> group(function(){
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboards');
     })->name('admin.dashboard');
+    Route::prefix('administrador')->group(function () {
+    Route::get('/', [AdminController::class, 'indexUser'])->name('usuarios.index');
+    Route::get('/{id}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
+    Route::put('/{id}', [AdminController::class, 'updateUser'])->name('usuarios.update');
+});
 
 });
    

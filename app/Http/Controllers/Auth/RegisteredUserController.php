@@ -31,26 +31,32 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'cedula'   => ['required', 'string', 'size:10', 'unique:users,cedula'],
-            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role_id'  => ['required', 'exists:roles,id'],
-        ]);
+        $request->validate(
+            [
+                'name' => ['required', 'string', 'max:255'],
+                'cedula' => ['required', 'string', 'size:10', 'unique:users,cedula'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'role_id' => ['required', 'exists:roles,id'],
+            ],
+            [
+                'cedula.unique' => 'Cédula ya registrada.',
+                'email.unique' => 'Correo ya registrado..',
+            ],
+        );
 
         $user = User::create([
-            'name'     => $request->name,
-            'cedula'   => $request->cedula,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'cedula' => $request->cedula,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id'  => $request->role_id,
+            'role_id' => $request->role_id,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('/admin/dashboard', absolute: false));
+        return redirect(route('admin.dashboards', absolute: false));
     }
 }

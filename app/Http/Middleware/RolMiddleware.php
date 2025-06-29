@@ -20,8 +20,8 @@ class RolMiddleware
     {
         $user = $request->user();
 
-        if (!$user || !$user->role || !in_array($user->role->nombre, $roles)) {
-            return redirect()->route('acceso.denegado');
+        if (!$user || !$user->role ||$user->estado !== true ||!in_array($user->role->nombre, $roles)) {
+            return redirect()->route('login');
         }
 
         return $next($request);

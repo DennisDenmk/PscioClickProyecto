@@ -20,6 +20,11 @@
                    class="block bg-purple-100 hover:bg-purple-200 border border-purple-400 text-purple-800 font-semibold rounded-lg p-6 shadow text-center">
                     Registrar Usuario
                 </a>
+                <a href="{{ route('usuarios.index') }}"
+                   class="block bg-purple-100 hover:bg-purple-200 border border-purple-400 text-purple-800 font-semibold rounded-lg p-6 shadow text-center">
+                    Control de usuarios
+                </a>
+
 
                 
             </div>

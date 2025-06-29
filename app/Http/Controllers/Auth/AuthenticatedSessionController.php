@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use function Laravel\Prompts\error;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -26,11 +28,16 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        $user = $request->user();
+        if ($user->estado === false) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back() ->with('error','Cuenta no inactiva');
+        }
+
         $request->session()->regenerate();
 
-        $user = $request->user(); // Usuario autenticado
-
-        // Asumiendo relación user->role->nombre
         $rol = $user->role->nombre ?? null;
 
         return match ($rol) {
