@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\CitaController;
+use Monolog\Registry;
 
 Route::get('/', function () {
     return view('auth.login');

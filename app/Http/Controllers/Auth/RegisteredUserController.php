@@ -75,4 +75,14 @@ class RegisteredUserController extends Controller
 
         return redirect(route('admin.dashboard'))->with('success', 'Usuario creado correctamente.');
     }
+     public function resetPasswordToCedula($id)
+    {
+        $user = User::findOrFail($id);
+
+        $user->update([
+            'password' => Hash::make($user->cedula),
+        ]);
+
+        return back()->with('success', 'Contraseña restablecida correctamente a la cédula.');
+    }
 }

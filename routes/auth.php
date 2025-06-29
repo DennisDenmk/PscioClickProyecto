@@ -57,4 +57,5 @@ Route::middleware('rol:administrador')->group(function () {
         ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+    Route::post('/usuarios/{id}/reset-password', [RegisteredUserController::class, 'resetPasswordToCedula'])->name('usuarios.reset-password');
 });
