@@ -64,6 +64,10 @@
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Estado Reproductivo
             </a>
+            <a href="{{ route('evaluaciones.index') }}"
+                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
+                    Evaluaciones
+            </a>
             @endrol
             
         </div>

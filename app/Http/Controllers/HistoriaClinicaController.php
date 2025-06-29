@@ -10,6 +10,9 @@ use App\Models\EnfermedadActual;
 use App\Models\TipoEnfermedadActual;
 use App\Models\PlanTratamiento;
 use App\Models\EstadoReproductivo;
+use App\Models\Evaluacion;
+
+
 use Illuminate\Http\Request;
 
 class HistoriaClinicaController extends Controller
@@ -426,5 +429,52 @@ class HistoriaClinicaController extends Controller
         $estado->update($request->all());
 
         return redirect()->route('estado_reproductivo.index')->with('success', 'Estado reproductivo actualizado.');
+    }
+    public function indexEvaluacion()
+    {
+        $evaluaciones = Evaluacion::with('historiaClinica')->get();
+        return view('historia_clinica.evaluaciones.index', compact('evaluaciones'));
+    }
+
+    public function createEvaluacion()
+    {
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.evaluaciones.create', compact('historias'));
+    }
+
+    public function storeEvaluacion(Request $request)
+    {
+        $request->validate([
+            'eva_his_id' => 'required|exists:historia_clinica,his_id',
+            'eva_evaluacion_dolor' => 'required|string',
+            'eva_escala_dolor' => 'required|integer|min:0|max:10',
+            'eva_examenes_complementarios' => 'required|string',
+        ]);
+
+        Evaluacion::create($request->all());
+
+        return redirect()->route('evaluaciones.index')->with('success', 'Evaluación creada correctamente.');
+    }
+
+    public function editEvaluacion($id)
+    {
+        $evaluacion = Evaluacion::findOrFail($id);
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.evaluaciones.edit', compact('evaluacion', 'historias'));
+    }
+
+    public function updateEvaluacion(Request $request, $id)
+    {
+        $request->validate([
+            'eva_his_id' => 'required|exists:historia_clinica,his_id',
+            'eva_evaluacion_dolor' => 'required|string',
+            'eva_escala_dolor' => 'required|integer|min:0|max:10',
+            'eva_examenes_complementarios' => 'required|string'
+        ]);
+
+        $evaluacion = Evaluacion::findOrFail($id);
+        $evaluacion->update($request->all());
+
+        return redirect()->route('evaluaciones.index')->with('success', 'Evaluación actualizada correctamente.');
     }
 }
