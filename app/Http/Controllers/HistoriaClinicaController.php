@@ -9,6 +9,7 @@ use App\Models\TipoAntecedente;
 use App\Models\EnfermedadActual;
 use App\Models\TipoEnfermedadActual;
 use App\Models\PlanTratamiento;
+use App\Models\EstadoReproductivo;
 use Illuminate\Http\Request;
 
 class HistoriaClinicaController extends Controller
@@ -379,5 +380,51 @@ class HistoriaClinicaController extends Controller
         $plan->update($request->all());
 
         return redirect()->route('plan_tratamiento.index')->with('success', 'Plan actualizado correctamente.');
+    }
+    //Estado  reprodictivo
+     public function indexEstadoReproductivo()
+    {
+        $estados = EstadoReproductivo::with('historiaClinica')->get();
+        return view('historia_clinica.estado_reproductivo.index', compact('estados'));
+    }
+
+    public function createEstadoReproductivo()
+    {
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.estado_reproductivo.create', compact('historias'));
+    }
+
+    public function storeEstadoReproductivo(Request $request)
+    {
+        $request->validate([
+            'est_his_id' => 'required|exists:historia_clinica,his_id',
+            'est_esta_embarazada' => 'required|in:si,no',
+            'est_cantidad_hijos' => 'required|integer|min:0',
+        ]);
+
+        EstadoReproductivo::create($request->all());
+
+        return redirect()->route('estado_reproductivo.index')->with('success', 'Estado reproductivo registrado.');
+    }
+
+    public function editEstadoReproductivo($id)
+    {
+        $estado = EstadoReproductivo::findOrFail($id);
+        $historias = HistoriaClinica::all();
+        return view('historia_clinica.estado_reproductivo.edit', compact('estado', 'historias'));
+    }
+
+    public function updateEstadoReproductivo(Request $request, $id)
+    {
+        $request->validate([
+            'est_his_id' => 'required|exists:historia_clinica,his_id',
+            'est_esta_embarazada' => 'required|in:si,no',
+            'est_cantidad_hijos' => 'required|integer|min:0',
+        ]);
+
+        $estado = EstadoReproductivo::findOrFail($id);
+        $estado->update($request->all());
+
+        return redirect()->route('estado_reproductivo.index')->with('success', 'Estado reproductivo actualizado.');
     }
 }

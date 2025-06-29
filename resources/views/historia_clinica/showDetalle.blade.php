@@ -60,6 +60,10 @@
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Plan de tratamiento
             </a>
+            <a href="{{ route('estado_reproductivo.index') }}"
+                    class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
+                    Estado Reproductivo
+            </a>
             @endrol
             
         </div>

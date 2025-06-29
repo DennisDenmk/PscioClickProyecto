@@ -145,6 +145,15 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('plan_tratamiento.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('plan_tratamiento.update');
     });
+    Route::prefix('estado-reproductivo')->group(function () {
+        Route::get('/', [HistoriaClinicaController::class, 'indexEstadoReproductivo'])->name('estado_reproductivo.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createEstadoReproductivo'])->name('estado_reproductivo.create');
+        Route::post('/', [HistoriaClinicaController::class, 'storeEstadoReproductivo'])->name('estado_reproductivo.store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEstadoReproductivo'])->name('estado_reproductivo.edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updateEstadoReproductivo'])->name('estado_reproductivo.update');
+    });
+
+
 
 });
 
