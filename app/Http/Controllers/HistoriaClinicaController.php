@@ -6,7 +6,8 @@ use App\Models\HistoriaClinica;
 use App\Models\DetalleHistoria;
 use App\Models\SignoVital;
 use App\Models\TipoAntecedente;
-
+use App\Models\EnfermedadActual;
+use App\Models\TipoEnfermedadActual;
 use Illuminate\Http\Request;
 
 class HistoriaClinicaController extends Controller
@@ -245,5 +246,90 @@ class HistoriaClinicaController extends Controller
         $tipo->update($request->only('tipa_nombre'));
 
         return redirect()->route('tipo_antecedente.index')->with('success', 'Tipo de antecedente actualizado correctamente.');
+    }
+    public function indexEnfermedadActual()
+    {
+        $enfermedades = EnfermedadActual::with('tipoEnfermedad', 'historiaClinica')->get();
+        return view('historia_clinica.enfermedad_actual.index', compact('enfermedades'));
+    }
+
+    public function createEnfermedadActual()
+    {
+        $tipos = TipoEnfermedadActual::all();
+        return view('historia_clinica.enfermedad_actual.create', compact('tipos'));
+    }
+
+    public function storeEnfermedadActual(Request $request)
+    {
+        $request->validate([
+            'enf_his_id' => 'required|exists:historia_clinica,his_id',
+            'enf_tipo_id' => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
+            'enf_descripcion' => 'required|string|max:255',
+        ]);
+
+        EnfermedadActual::create($request->only('enf_his_id', 'enf_tipo_id', 'enf_descripcion'));
+
+        return redirect()->route('enfermedad_actual.index')->with('success', 'Enfermedad actual registrada.');
+    }
+
+    public function editEnfermedadActual($id)
+    {
+        $enfermedad = EnfermedadActual::findOrFail($id);
+        $tipos = TipoEnfermedadActual::all();
+
+        return view('historia_clinica.enfermedad_actual.edit', compact('enfermedad', 'tipos'));
+    }
+
+    public function updateEnfermedadActual(Request $request, $id)
+    {
+        $request->validate([
+            'enf_tipo_id' => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
+            'enf_descripcion' => 'required|string|max:255',
+        ]);
+
+        $enfermedad = EnfermedadActual::findOrFail($id);
+        $enfermedad->update($request->only('enf_tipo_id', 'enf_descripcion'));
+
+        return redirect()->route('enfermedad_actual.index')->with('success', 'Registro actualizado.');
+    }
+    //Tipo de enfermadad actual
+    public function indexTipoEnfermedadActual()
+    {
+        $tipos = TipoEnfermedadActual::all();
+        return view('historia_clinica.tipo_enfermedad_actual.index', compact('tipos'));
+    }
+
+    public function createTipoEnfermedadActual()
+    {
+        return view('historia_clinica.tipo_enfermedad_actual.create');
+    }
+
+    public function storeTipoEnfermedadActual(Request $request)
+    {
+        $request->validate([
+            'tipo_enf_nombre' => 'required|string|max:100|unique:tipo_enfermedad_actual,tipo_enf_nombre',
+        ]);
+
+        TipoEnfermedadActual::create($request->only('tipo_enf_nombre'));
+
+        return redirect()->route('tipo_enfermedad_actual.index')->with('success', 'Tipo creado correctamente.');
+    }
+
+    public function editTipoEnfermedadActual($id)
+    {
+        $tipo = TipoEnfermedadActual::findOrFail($id);
+        return view('historia_clinica.tipo_enfermedad_actual.edit', compact('tipo'));
+    }
+
+    public function updateTipoEnfermedadActual(Request $request, $id)
+    {
+        $request->validate([
+            'tipo_enf_nombre' => 'required|string|max:100|unique:tipo_enfermedad_actual,tipo_enf_nombre,' . $id . ',tipo_enf_id',
+        ]);
+
+        $tipo = TipoEnfermedadActual::findOrFail($id);
+        $tipo->update($request->only('tipo_enf_nombre'));
+
+        return redirect()->route('tipo_enfermedad_actual.index')->with('success', 'Tipo actualizado correctamente.');
     }
 }

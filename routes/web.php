@@ -113,13 +113,30 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     Route::post('/{his_id}/antecedentes', [HistoriaClinicaController::class, 'storeAntecedente'])->name('antecedentes.store');
     Route::get('/historia-clinica/{his_id}/antecedentes/show', [HistoriaClinicaController::class, 'showAntecedente'])->name('antecedentes.show');
     //Tipos antecedentes
-    Route::prefix('tipo-antecedente')->group(function(){
+    Route::prefix('tipo-antecedente')->group(function () {
         Route::get('/', [HistoriaClinicaController::class, 'indexTipoAntecedente'])->name('tipo_antecedente.index');
         Route::get('/create', [HistoriaClinicaController::class, 'createTipoAntecedente'])->name('tipo_antecedente.create');
         Route::post('/', [HistoriaClinicaController::class, 'storeTipoAntecedente'])->name('tipo_antecedente.store');
         Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoAntecedente'])->name('tipo_antecedente.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoAntecedente'])->name('tipo_antecedente.update');
-        });
     });
+    //Enfermedad Actual
+    Route::prefix('enfermedad-actual')->group(function () {
+        Route::get('/', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
+        Route::post('/', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updateEnfermedadActual'])->name('enfermedad_actual.update');
+    });
+
+    //Tipo de enfermedad
+    Route::prefix('tipo-enfermedad')->group(function () {
+        Route::get('/', [HistoriaClinicaController::class, 'indexTipoEnfermedadActual'])->name('tipo_enfermedad_actual.index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createTipoEnfermedadActual'])->name('tipo_enfermedad_actual.create');
+        Route::post('/', [HistoriaClinicaController::class, 'storeTipoEnfermedadActual'])->name('tipo_enfermedad_actual.store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoEnfermedadActual'])->name('tipo_enfermedad_actual.edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoEnfermedadActual'])->name('tipo_enfermedad_actual.update');
+    });
+});
 
 require __DIR__ . '/auth.php';
