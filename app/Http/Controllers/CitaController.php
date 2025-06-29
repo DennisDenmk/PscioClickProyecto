@@ -17,6 +17,12 @@ use Illuminate\Http\Request;
 
 class CitaController extends Controller
 {
+    public function show($id)
+    {
+        $cita = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita', 'historiaClinica'])->findOrFail($id);
+
+        return view('citas.show', compact('cita'));
+    }
     public function createTipoCita()
     {
         return view('citas.tiposcita.create');
@@ -246,12 +252,17 @@ class CitaController extends Controller
             return [
                 'id' => $cita->cit_id,
                 'title' => "{$cita->tipoCita->tipc_nombre} - {$cita->paciente->pac_nombres} {$cita->paciente->pac_apellidos}",
+                'estado' =>"{$cita->estadoCita->estc_nombre}",
                 'start' => $cita->cit_fecha . 'T' . $cita->cit_hora_inicio,
                 'end' => $cita->cit_fecha . 'T' . $cita->cit_hora_fin,
-                'url' => route('citas.show', $cita->cit_id), // para ver detalles si quieres
+                'url' => route('citas.show', $cita->cit_id),
             ];
         });
 
         return response()->json($eventos);
+    }
+    public function mostrarCalendario()
+    {
+        return view('citas.calendario');
     }
 }

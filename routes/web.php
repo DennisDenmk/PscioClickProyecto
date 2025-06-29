@@ -39,11 +39,14 @@ Route::middleware(['auth', 'rol:administrador'])->group(function () {
         Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
     });
 });
-
+Route::get('/citas/calendario/data', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
 // Rutas accesibles por doctor y secretario
 Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
     Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
     Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
+    Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
+    Route::get('/citas/{id}', [CitaController::class, 'show'])->name('citas.show');
+
 });
 
 // Solo secretario
@@ -93,11 +96,11 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::put('/{id}', [SecretarioController::class, 'updateHorarioDoctor'])->name('horarios_doctor.update');
     });
     Route::prefix('citas')->group(function () {
-        Route::get('/', [CitaController::class, 'indexCita'])->name('citas.index');
-        Route::get('/create', [CitaController::class, 'createCita'])->name('citas.create');
-        Route::post('/', [CitaController::class, 'storeCita'])->name('citas.store');
-        Route::get('/{id}/edit', [CitaController::class, 'editCita'])->name('citas.edit');
-        Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
+    Route::get('/', [CitaController::class, 'indexCita'])->name('citas.index');
+    Route::get('/create', [CitaController::class, 'createCita'])->name('citas.create');
+    Route::post('/', [CitaController::class, 'storeCita'])->name('citas.store');
+    Route::get('/{id}/edit', [CitaController::class, 'editCita'])->name('citas.edit');
+    Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
     });
 });
 

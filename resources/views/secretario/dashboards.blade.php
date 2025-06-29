@@ -46,9 +46,13 @@
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
                     EstadoCivil
                 </a>
-                 <a href="{{route('horarios_doctor.index')}}"
+                <a href="{{route('horarios_doctor.index')}}"
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
                     Horarios Doctor
+                </a>
+                <a href="{{route('citas.calendario')}}"
+                   class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
+                    Calendario
                 </a>
             </div>
         </div>
