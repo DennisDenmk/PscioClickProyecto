@@ -75,4 +75,43 @@ class PacienteController extends Controller
         $paciente = Paciente::with(['estadoCivil', 'historiaClinica'])->findOrFail($cedula);
         return view('pacientes.show', compact('paciente'));
     }
+     public function indexEstadoCivil()
+    {
+        $estados = EstadoCivil::all();
+        return view('pacientes.estado_civil.index', compact('estados'));
+    }
+
+    public function createEstadoCivil()
+    {
+        return view('pacientes.estado_civil.create');
+    }
+
+    public function storeEstadoCivil(Request $request)
+    {
+        $request->validate([
+            'estc_nombre' => 'required|string|max:100|unique:estados_civiles,estc_nombre',
+        ]);
+
+        EstadoCivil::create($request->all());
+
+        return redirect()->route('estado_civil.index')->with('success', 'Estado civil creado correctamente.');
+    }
+
+    public function editEstadoCivil($id)
+    {
+        $estado = EstadoCivil::findOrFail($id);
+        return view('pacientes.estado_civil.edit', compact('estado'));
+    }
+
+    public function updateEstadoCivil(Request $request, $id)
+    {
+        $request->validate([
+            'estc_nombre' => 'required|string|max:100|unique:estados_civiles,estc_nombre,' . $id . ',estc_id',
+        ]);
+
+        $estado = EstadoCivil::findOrFail($id);
+        $estado->update($request->all());
+
+        return redirect()->route('estado_civil.index')->with('success', 'Estado civil actualizado.');
+    }
 }

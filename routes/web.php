@@ -77,6 +77,13 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::get('/{id}/edit', [CitaController::class, 'editPromocionCita'])->name('promocioncita.edit');
         Route::put('/{id}', [CitaController::class, 'updatePromocionCita'])->name('promocioncita.update');
     });
+    Route::prefix('estado-civil')->group(function () {
+        Route::get('/', [PacienteController::class, 'indexEstadoCivil'])->name('estado_civil.index');
+        Route::get('/create', [PacienteController::class, 'createEstadoCivil'])->name('estado_civil.create');
+        Route::post('/', [PacienteController::class, 'storeEstadoCivil'])->name('estado_civil.store');
+        Route::get('/{id}/edit', [PacienteController::class, 'editEstadoCivil'])->name('estado_civil.edit');
+        Route::put('/{id}', [PacienteController::class, 'updateEstadoCivil'])->name('estado_civil.update');
+    });
 });
 
 // Solo doctor

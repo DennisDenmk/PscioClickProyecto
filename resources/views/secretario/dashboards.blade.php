@@ -42,6 +42,10 @@
                    class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
                     Promociones-Citas
                 </a>
+                <a href="{{route('estado_civil.index')}}"
+                   class="block bg-yellow-100 hover:bg-yellow-200 border border-yellow-400 text-blue-800 font-semibold rounded-lg p-6 shadow text-center">
+                    EstadoCivil
+                </a>
             </div>
         </div>
     </div>
