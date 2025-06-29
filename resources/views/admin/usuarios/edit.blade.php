@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-10 max-w-3xl mx-auto px-4">
-        <form method="POST" action="{{ route('usuarios.update', $user->id) }}">
+        <form method="POST" action="{{ route('usuarios.update', $user->cedula) }}">
             @csrf
             @method('PUT')
 

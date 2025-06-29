@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -16,17 +17,26 @@ class AdminController extends Controller
     }
 
     // Mostrar el formulario para editar un usuario
-    public function editUser($id)
+    public function editUser($cedula)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('cedula', $cedula)->firstOrFail();
+        
+        if ((string) $cedula === (string) Auth::id()) {
+            // Redirige de vuelta a la lista de usuarios con un mensaje de error
+            return redirect()->route('usuarios.index')->with('error', 'No puedes editar tu propia cuenta desde este panel. Por favor, utiliza la sección de perfil si deseas modificarla.');
+        }
         $roles = Role::all();
 
         return view('admin.usuarios.edit', compact('user', 'roles'));
     }
 
     // Actualizar los datos del usuario
-    public function updateUser(Request $request, $id)
+    public function updateUser(Request $request, $cedula)
     {
+        $user = User::where('cedula', $cedula)->firstOrFail();
+        if ((string) $cedula === (string) Auth::id()) {
+            abort(403, 'No puedes editar tu propia cuenta desde este panel.');
+        }
         $request->validate(
             [
                 'name' => 'required|string|max:255',
@@ -42,10 +52,9 @@ class AdminController extends Controller
         );
         $estadoBooleano = filter_var($request->estado, FILTER_VALIDATE_BOOLEAN);
 
-        $user = User::findOrFail($id);
         $validatedData = $request->only(['name', 'cedula', 'email', 'role_id', 'estado']);
-        $validatedData['estado'] = $estadoBooleano; 
-        $user->update($validatedData); 
+        $validatedData['estado'] = $estadoBooleano;
+        $user->update($validatedData);
 
         return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente.');
     }
