@@ -40,12 +40,18 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2">
-                                <a href="{{ route('usuarios.edit', $user->id) }}" class="text-blue-600 hover:underline">
-                                    Editar
-                                </a>
+                                {{-- Comprobar si la cédula del usuario en la fila es diferente a la del usuario logueado --}}
+                                @if (auth()->user()->cedula !== $user->cedula)
+                                    <a href="{{ route('usuarios.edit', $user->id) }}"
+                                        class="text-blue-600 hover:underline">
+                                        Editar
+                                    </a>
+                                @endif
+                                {{-- Si las cédulas son iguales, no se mostrará nada en esta celda. --}}
                             </td>
                         </tr>
                     @endforeach
+                </tbody>
                 </tbody>
             </table>
         </div>
