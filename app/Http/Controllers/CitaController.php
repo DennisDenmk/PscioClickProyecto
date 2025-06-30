@@ -183,10 +183,10 @@ class CitaController extends Controller
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
             'estc_id' => 'required|exists:estado_citas,estc_id',
-            'cit_fecha' => 'required|date',
-            'cit_hora_inicio' => 'required',
-            'cit_hora_fin' => 'required',
-            'cit_motivo_consulta' => 'required|string',
+            'cit_fecha' => 'required|date|after_or_equal:today',
+            'cit_hora_inicio' => 'required|date_format:H:i',
+            'cit_hora_fin' => 'required|date_format:H:i|after:cit_hora_inicio',
+            'cit_motivo_consulta' => 'required|string|max:255',
         ]);
 
         // Buscar la historia clínica del paciente
@@ -231,7 +231,7 @@ class CitaController extends Controller
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
-            'estc_id' => 'required|exists:estado_cita,estc_id',
+            'estc_id' => 'required|exists:estado_citas,estc_id',
             'cit_fecha' => 'required|date',
             'cit_hora_inicio' => 'required|date_format:H:i',
             'cit_hora_fin' => 'required|date_format:H:i|after:cit_hora_inicio',
@@ -245,21 +245,51 @@ class CitaController extends Controller
     }
     public function citasCalendario(): JsonResponse
     {
-        $citas = Cita::with(['paciente', 'doctor', 'tipoCita'])->get();
+        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();
 
         // Transformar citas al formato esperado por FullCalendar
         $eventos = $citas->map(function ($cita) {
+            // Mapear estados a clases CSS
+            $estadoClase = $this->getEstadoClase($cita->estadoCita->estc_nombre);
+
             return [
                 'id' => $cita->cit_id,
                 'title' => "{$cita->tipoCita->tipc_nombre} - {$cita->paciente->pac_nombres} {$cita->paciente->pac_apellidos}",
-                'estado' =>"{$cita->estadoCita->estc_nombre}",
+                'estado' => $estadoClase, // Clase CSS para el color
+                'estadoTexto' => $cita->estadoCita->estc_nombre, // Texto del estado
                 'start' => $cita->cit_fecha . 'T' . $cita->cit_hora_inicio,
                 'end' => $cita->cit_fecha . 'T' . $cita->cit_hora_fin,
                 'url' => route('citas.show', $cita->cit_id),
+                'edit' => route('citas.edit', $cita->cit_id),
+                'extendedProps' => [
+                    'estado' => $estadoClase,
+                    'estadoTexto' => $cita->estadoCita->estc_nombre,
+                    'doctor' => $cita->doctor->doc_nombres . ' ' . $cita->doctor->doc_apellidos,
+                    'paciente' => $cita->paciente->pac_nombres . ' ' . $cita->paciente->pac_apellidos,
+                    'tipo' => $cita->tipoCita->tipc_nombre,
+                    'telefono' => $cita->paciente->pac_telefono ?? 'No disponible',
+                    'observaciones' => $cita->cit_observaciones ?? '',
+                ],
             ];
         });
 
         return response()->json($eventos);
+    }
+    private function getEstadoClase(string $estadoNombre): string
+    {
+        $estados = [
+            'Pendiente' => 'pendiente',
+            'Confirmada' => 'confirmada',
+            'Confirmado' => 'confirmada',
+            'Cancelada' => 'cancelada',
+            'Cancelado' => 'cancelada',
+            'Completada' => 'completada',
+            'Completado' => 'completada',
+            'Finalizada' => 'completada',
+            'Finalizado' => 'completada',
+        ];
+
+        return $estados[$estadoNombre] ?? 'pendiente';
     }
     public function mostrarCalendario()
     {

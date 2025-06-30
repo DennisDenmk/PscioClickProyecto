@@ -45,7 +45,7 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
     Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
     Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
     Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
-    Route::get('/citas/{id}', [CitaController::class, 'show'])->name('citas.show');
+    Route::get('/citas/calendaro/{id}', [CitaController::class, 'show'])->name('citas.show');
 
 });
 
