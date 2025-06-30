@@ -64,29 +64,29 @@
 
     /* Estilos de estados usando tu paleta de colores */
     .fc-event.pendiente {
-        background-color: #c8e6dc !important;
-        border-color: #7bb899 !important;
-        color: #1a5555 !important;
+        background-color: #e19f25 !important;
+        border-color: #e19f25 !important;
+        color: #e19f25 !important;
     }
 
     .fc-event.confirmada {
-        background-color: #7bb899 !important;
-        border-color: #2d7a6b !important;
-        color: white !important;
+        background-color: #3440e5 !important;
+        border-color: #3440e5 !important;
+        color: #3440e5 !important;
     }
 
     .fc-event.cancelada {
-        background-color: #f8fcfa !important;
-        border-color: #c8e6dc !important;
-        color: #1a5555 !important;
+        background-color: #f53131 !important;
+        border-color: #f53131 !important;
+        color: #f53131 !important;
         opacity: 0.7;
         text-decoration: line-through;
     }
 
     .fc-event.completada {
-        background-color: #1a5555 !important;
-        border-color: #2d7a6b !important;
-        color: white !important;
+        background-color: #7bb899 !important;
+        border-color: #7bb899 !important;
+        color: #7bb899 !important;
     }
 
     /* Personalización adicional del calendario */
