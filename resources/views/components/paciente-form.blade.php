@@ -65,7 +65,7 @@
 
     <div>
         <label class="block">Teléfono</label>
-        <input type="text" name="pac_telefono" class="form-input w-full"
+        <input type="numeric" name="pac_telefono" min="10" max="10" required class="form-input w-full"
                value="{{ old('pac_telefono', $paciente->pac_telefono ?? '') }}">
     </div>
 

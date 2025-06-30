@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Paciente;
 use App\Models\EstadoCivil;
+use App\Models\HistoriaClinica;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -31,7 +32,8 @@ class PacienteController extends Controller
     {
         $this->validatePaciente($request);
 
-        Paciente::create($request->all());
+        $paciente = Paciente::create($request->all());
+        HistoriaClinica::create(['pac_id' => $paciente->pac_cedula]);
 
         return redirect()->route('pacientes.index')->with('success', 'Paciente registrado correctamente.');
     }
