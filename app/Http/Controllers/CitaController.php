@@ -275,6 +275,38 @@ class CitaController extends Controller
 
         return response()->json($eventos);
     }
+     public function citasCalendarioDoctor(): JsonResponse
+    {
+        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();
+
+        // Transformar citas al formato esperado por FullCalendar
+        $eventos = $citas->map(function ($cita) {
+            // Mapear estados a clases CSS
+            $estadoClase = $this->getEstadoClase($cita->estadoCita->estc_nombre);
+            
+            return [
+                'id' => $cita->cit_id,
+                'title' => "{$cita->tipoCita->tipc_nombre} - {$cita->paciente->pac_nombres} {$cita->paciente->pac_apellidos}",
+                'estado' => $estadoClase, // Clase CSS para el color
+                'estadoTexto' => $cita->estadoCita->estc_nombre, // Texto del estado
+                'start' => $cita->cit_fecha . 'T' . $cita->cit_hora_inicio,
+                'end' => $cita->cit_fecha . 'T' . $cita->cit_hora_fin,
+                'url' => route('citas.show', $cita->cit_id),
+                'edit' => route('citas.edit', $cita->cit_id),
+                'extendedProps' => [
+                    'estado' => $estadoClase,
+                    'estadoTexto' => $cita->estadoCita->estc_nombre,
+                    'doctor' => $cita->doctor->doc_nombres . ' ' . $cita->doctor->doc_apellidos,
+                    'paciente' => $cita->paciente->pac_nombres . ' ' . $cita->paciente->pac_apellidos,
+                    'tipo' => $cita->tipoCita->tipc_nombre,
+                    'telefono' => $cita->paciente->pac_telefono ?? 'No disponible',
+                    'observaciones' => $cita->cit_observaciones ?? '',
+                ],
+            ];
+        });
+
+        return response()->json($eventos);
+    }
     private function getEstadoClase(string $estadoNombre): string
     {
         $estados = [
