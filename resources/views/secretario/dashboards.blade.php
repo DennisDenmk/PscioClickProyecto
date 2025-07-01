@@ -10,7 +10,8 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <h3 class="text-lg font-medium">Bienvenido, secretario</h3>
                 <p class="mt-2 text-gray-600">Desde aquí puedes agendar citas, verificar disponibilidad y gestionar los datos de los pacientes.</p>
-            </div>
+               
+            </div>  
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Registrar Paciente -->
