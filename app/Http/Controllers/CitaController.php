@@ -10,10 +10,12 @@ use App\Models\Paciente;
 use App\Models\Doctor;
 use App\Models\EstadoCita;
 use App\Models\HorarioDoctor;
+use App\Models\User;
 
 use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CitaController extends Controller
 {
@@ -243,7 +245,8 @@ class CitaController extends Controller
 
         return redirect()->route('citas.index')->with('success', 'Cita actualizada correctamente.');
     }
-    public function citasCalendario(): JsonResponse
+
+    public function citasCalendarioSecretario(): JsonResponse
     {
         $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();
 
@@ -268,27 +271,36 @@ class CitaController extends Controller
                     'paciente' => $cita->paciente->pac_nombres . ' ' . $cita->paciente->pac_apellidos,
                     'tipo' => $cita->tipoCita->tipc_nombre,
                     'telefono' => $cita->paciente->pac_telefono ?? 'No disponible',
-                    'observaciones' => $cita->cit_observaciones ?? '',
                 ],
             ];
         });
 
         return response()->json($eventos);
     }
-     public function citasCalendarioDoctor(): JsonResponse
-    {
-        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();
 
-        // Transformar citas al formato esperado por FullCalendar
+    public function citasCalendarioDoctor(): JsonResponse
+    {
+        $cedula = Auth::user()->cedula;
+
+        // Buscar al doctor con esa cédula
+        $doctor = Doctor::where('doc_cedula', $cedula)->first();
+
+        if (!$doctor) {
+            return response()->json([]);
+        }
+
+        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])
+            ->where('doctor_id', $doctor->doc_cedula)
+            ->get();
+
         $eventos = $citas->map(function ($cita) {
-            // Mapear estados a clases CSS
             $estadoClase = $this->getEstadoClase($cita->estadoCita->estc_nombre);
-            
+
             return [
                 'id' => $cita->cit_id,
                 'title' => "{$cita->tipoCita->tipc_nombre} - {$cita->paciente->pac_nombres} {$cita->paciente->pac_apellidos}",
-                'estado' => $estadoClase, // Clase CSS para el color
-                'estadoTexto' => $cita->estadoCita->estc_nombre, // Texto del estado
+                'estado' => $estadoClase,
+                'estadoTexto' => $cita->estadoCita->estc_nombre,
                 'start' => $cita->cit_fecha . 'T' . $cita->cit_hora_inicio,
                 'end' => $cita->cit_fecha . 'T' . $cita->cit_hora_fin,
                 'url' => route('citas.show', $cita->cit_id),
@@ -300,13 +312,13 @@ class CitaController extends Controller
                     'paciente' => $cita->paciente->pac_nombres . ' ' . $cita->paciente->pac_apellidos,
                     'tipo' => $cita->tipoCita->tipc_nombre,
                     'telefono' => $cita->paciente->pac_telefono ?? 'No disponible',
-                    'observaciones' => $cita->cit_observaciones ?? '',
                 ],
             ];
         });
 
         return response()->json($eventos);
     }
+
     private function getEstadoClase(string $estadoNombre): string
     {
         $estados = [
@@ -322,6 +334,21 @@ class CitaController extends Controller
         ];
 
         return $estados[$estadoNombre] ?? 'pendiente';
+    }
+    public function citasCalendario(): JsonResponse
+    {
+        $user = Auth::user();
+        $rol = $user->role_id;
+        //Rol de doctor
+        if ($rol === 2 ) {
+            return $this->citasCalendarioDoctor();
+        }
+        elseif ($rol === 3) {
+            //Rol de secretario
+            return $this->citasCalendarioSecretario();
+        }
+        return response()->json([]);
+        
     }
     public function mostrarCalendario()
     {
