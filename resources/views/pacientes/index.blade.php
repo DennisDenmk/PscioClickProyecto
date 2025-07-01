@@ -74,7 +74,7 @@
                 </tbody>
             </table>
             <div class="mt-4">
-                {{ $pacientes->withQueryString()->links() }}
+                {{ $pacientes->withQueryString()->links('custom-pagination') }}
             </div>
 
         </div>

@@ -98,7 +98,7 @@
                     </tbody>
                 </table>
                 <div class="mt-4">
-                    {{ $citas->appends(request()->query())->links() }}
+                    {{ $citas->appends(request()->query())->links('custom-pagination') }}
                 </div>
 
             </div>
