@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DayuLife - Iniciar Sesión</title>
+    <title>DayJuLife - Iniciar Sesión</title>
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -12,7 +12,7 @@
         <div class="login-card">
             <div class="login-header">
                 <div class="login-logo">D</div>
-                <h1 class="login-title">DayuLife</h1>
+                <h1 class="login-title">DayJuLife</h1>
                 <p class="login-subtitle">Accede a tu cuenta</p>
             </div>
             

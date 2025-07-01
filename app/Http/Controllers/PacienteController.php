@@ -16,9 +16,16 @@ class PacienteController extends Controller
         $this->middleware(['auth', 'rol:secretario']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pacientes = Paciente::with('estadoCivil')->get();
+        $cedula = $request->input('cedula');
+
+        $pacientes = Paciente::with('estadoCivil')
+            ->when($cedula, function ($query, $cedula) {
+                $query->where('pac_cedula', 'like', '%' . $cedula . '%');
+            })
+            ->paginate(10); // 👈 paginación de 10 en 10
+
         return view('pacientes.index', compact('pacientes'));
     }
 
@@ -68,6 +75,14 @@ class PacienteController extends Controller
             'pac_telefono' => 'nullable|string|size:10',
             'pac_direccion' => 'nullable|string',
             'pac_email' => ['nullable', 'email', 'max:125', $cedula ? 'unique:pacientes,pac_email,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_email'],
+        ] + [
+            'pac_cedula.unique' => 'La cédula ya está en uso.',
+            'pac_cedula.size' => 'La cédula debe tener 10 caracteres.',
+            'pac_email.email' => 'El email debe ser una dirección de correo válida.',
+            'pac_email.unique' => 'El email ya está en uso.',
+            'pac_telefono.size' => 'El teléfono debe tener 10 caracteres.',
+            'pac_telefono.string' => 'El teléfono debe ser un número válido.',
+            'pac_telefono.unique' => 'El teléfono ya está en uso.',
         ];
 
         $request->validate($rules);
@@ -77,7 +92,7 @@ class PacienteController extends Controller
         $paciente = Paciente::with(['estadoCivil', 'historiaClinica'])->findOrFail($cedula);
         return view('pacientes.show', compact('paciente'));
     }
-     public function indexEstadoCivil()
+    public function indexEstadoCivil()
     {
         $estados = EstadoCivil::all();
         return view('pacientes.estado_civil.index', compact('estados'));
