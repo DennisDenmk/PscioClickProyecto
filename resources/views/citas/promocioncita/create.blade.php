@@ -1,26 +1,48 @@
 <x-app-layout>
-    <x-slot name="header">Registrar Promoción de Cita</x-slot>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold text-gray-800 leading-tight">Registrar Promoción de Cita</h2>
+    </x-slot>
 
-    <form action="{{ route('promocioncita.store') }}" method="POST" class="max-w-xl mx-auto mt-6 space-y-4">
-        @csrf
+    <div class="max-w-xl mx-auto mt-8 p-6 bg-white dark:bg-gray-800 shadow-md rounded-lg">
+        <form action="{{ route('promocioncita.store') }}" method="POST" class="space-y-6">
+            @csrf
 
-        <label>Cita</label>
-        <select name="cit_id" class="w-full border-gray-300 rounded">
-            @foreach($citas as $cita)
-                <option value="{{ $cita->cit_id }}">{{ $cita->cit_id }}</option>
-            @endforeach
-        </select>
+            <div>
+                <label for="cit_id" class="block text-gray-700 dark:text-gray-200 font-semibold mb-2">Cita</label>
+                <select id="cit_id" name="cit_id" 
+                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 
+                           text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @foreach($citas as $cita)
+                        <option value="{{ $cita->cit_id }}">{{ $cita->cit_id }} - {{ $cita->paciente->pac_nombres ?? 'Paciente' }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <label>Promoción</label>
-        <select name="proc_id" class="w-full border-gray-300 rounded">
-            @foreach($promociones as $promo)
-                <option value="{{ $promo->prom_id }}">{{ $promo->prom_nombre }}</option>
-            @endforeach
-        </select>
+            <div>
+                <label for="proc_id" class="block text-gray-700 dark:text-gray-200 font-semibold mb-2">Promoción</label>
+                <select id="proc_id" name="proc_id" 
+                    class="w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 
+                           text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @foreach($promociones as $promo)
+                        <option value="{{ $promo->prom_id }}">{{ $promo->prom_nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <label>Sesiones Usadas</label>
-        <input type="number" name="proc_sesiones_usadas" min="0" class="w-full border-gray-300 rounded" required>
+            <div>
+                <label for="proc_sesiones_usadas" class="block text-gray-700 dark:text-gray-200 font-semibold mb-2">Sesiones Usadas</label>
+                <input type="number" id="proc_sesiones_usadas" name="proc_sesiones_usadas" min="0" required
+                       class="w-full border border-gray-300 dark:border-gray-600 rounded-md p-2 bg-white dark:bg-gray-700 
+                              text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
 
-        <x-primary-button>Guardar</x-primary-button>
-    </form>
+            <div>
+                <button type="submit" 
+                    class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow 
+                           transition duration-300">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
 </x-app-layout>
