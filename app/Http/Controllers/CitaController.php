@@ -162,10 +162,25 @@ class CitaController extends Controller
 
         return redirect()->route('promocioncita.index')->with('success', 'Registro actualizado correctamente');
     }
-    public function indexCita()
+    public function indexCita(Request $request)
     {
-        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();
-        return view('citas.index', compact('citas'));
+        $fecha = $request->input('fecha');
+        $estado = $request->input('estado');
+
+        $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])
+            ->when($fecha, function ($query, $fecha) {
+                $query->whereDate('cit_fecha', $fecha);
+            })
+            ->when($estado, function ($query, $estado) {
+                $query->where('estc_id', $estado);
+            })
+            ->orderBy('cit_fecha', 'desc')
+            ->paginate(10);
+
+        // También puedes pasar todos los estados disponibles para el filtro
+        $estados = EstadoCita::all();
+
+        return view('citas.index', compact('citas', 'fecha', 'estado', 'estados'));
     }
 
     public function createCita()
@@ -340,15 +355,13 @@ class CitaController extends Controller
         $user = Auth::user();
         $rol = $user->role_id;
         //Rol de doctor
-        if ($rol === 2 ) {
+        if ($rol === 2) {
             return $this->citasCalendarioDoctor();
-        }
-        elseif ($rol === 3) {
+        } elseif ($rol === 3) {
             //Rol de secretario
             return $this->citasCalendarioSecretario();
         }
         return response()->json([]);
-        
     }
     public function mostrarCalendario()
     {
