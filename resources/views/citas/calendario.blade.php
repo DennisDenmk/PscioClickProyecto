@@ -10,6 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="mb-4 p-4 bg-white rounded shadow">
                     <h3 class="text-lg font-semibold mb-2">Leyenda de Estados</h3>
+
                     <div class="flex flex-wrap gap-4">
                         <div class="flex items-center">
                             <span class="w-4 h-4 inline-block bg-[#e19f25] mr-2 rounded"></span>
@@ -30,12 +31,13 @@
                         </div>
                     </div>
                 </div>
-
+                @rol('secretario')
                 <div class="p-6 text-gray-900">
                     <a href="{{ route('citas.create') }}"
                         class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Crear nueva cita</a>
-                    <x-calendar route="citas.calendario" />
                 </div>
+                @endrol
+                <x-calendar/>
             </div>
         </div>
     </div>

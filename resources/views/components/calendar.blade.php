@@ -37,13 +37,17 @@
                 </div>
             </div>
             <div class="modal-footer">
+                @rol('secretario')
                 <a id="modalEditarCita" href="#"
                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
                     Editar
                 </a>
+                @endrol
+                
                 <a id="modalVerCita" href="#" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                     Ver
                 </a>
+                
                 <button onclick="cerrarModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
                     Cerrar
                 </button>
