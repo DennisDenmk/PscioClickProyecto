@@ -12,7 +12,6 @@ use App\Models\PlanTratamiento;
 use App\Models\EstadoReproductivo;
 use App\Models\Evaluacion;
 
-
 use Illuminate\Http\Request;
 
 class HistoriaClinicaController extends Controller
@@ -34,11 +33,22 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('historia_clinica.create')->with('success', 'Historia clínica creada.');
     }
-    public function index()
+    public function index(Request $request)
     {
-        $historias = HistoriaClinica::with('paciente')->latest()->get();
-        return view('historia_clinica.index', compact('historias'));
+        $cedula = $request->input('cedula');
+
+        $historias = HistoriaClinica::with('paciente')
+            ->when($cedula, function ($query, $cedula) {
+                $query->whereHas('paciente', function ($q) use ($cedula) {
+                    $q->where('pac_cedula', 'like', "%$cedula%");
+                });
+            })
+            ->latest()
+            ->paginate(10);
+
+        return view('historia_clinica.index', compact('historias', 'cedula'));
     }
+
     public function createDetalle($his_id)
     {
         return view('historia_clinica.createDetalle', compact('his_id'));
@@ -213,7 +223,7 @@ class HistoriaClinicaController extends Controller
 
         return view('historia_clinica.antecedentes.show', compact('historia'));
     }
-     public function indexTipoAntecedente()
+    public function indexTipoAntecedente()
     {
         $tipos = TipoAntecedente::all();
         return view('historia_clinica.tipoantecedentes.index', compact('tipos'));
@@ -385,7 +395,7 @@ class HistoriaClinicaController extends Controller
         return redirect()->route('plan_tratamiento.index')->with('success', 'Plan actualizado correctamente.');
     }
     //Estado  reprodictivo
-     public function indexEstadoReproductivo()
+    public function indexEstadoReproductivo()
     {
         $estados = EstadoReproductivo::with('historiaClinica')->get();
         return view('historia_clinica.estado_reproductivo.index', compact('estados'));
@@ -469,7 +479,7 @@ class HistoriaClinicaController extends Controller
             'eva_his_id' => 'required|exists:historia_clinica,his_id',
             'eva_evaluacion_dolor' => 'required|string',
             'eva_escala_dolor' => 'required|integer|min:0|max:10',
-            'eva_examenes_complementarios' => 'required|string'
+            'eva_examenes_complementarios' => 'required|string',
         ]);
 
         $evaluacion = Evaluacion::findOrFail($id);
