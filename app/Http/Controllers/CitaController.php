@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CitaController extends Controller
 {
@@ -195,40 +196,42 @@ class CitaController extends Controller
 
     public function storeCita(Request $request)
     {
+        // Validaciones básicas de los datos de entrada
         $request->validate([
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
-            'estc_id' => 'required|exists:estado_citas,estc_id',
+            // 'estc_id' ya no es necesario aquí, lo maneja el SP con el valor por defecto
             'cit_fecha' => 'required|date|after_or_equal:today',
             'cit_hora_inicio' => 'required|date_format:H:i',
-            'cit_hora_fin' => 'required|date_format:H:i|after:cit_hora_inicio',
-            'cit_motivo_consulta' => 'required|string|max:255',
+            // 'cit_hora_fin' ya no es necesario validar, lo calcula el SP
+            'cit_motivo_consulta' => 'nullable|string|max:255',
         ]);
 
-        // Buscar la historia clínica del paciente
-        $historia = \App\Models\HistoriaClinica::where('pac_id', $request->paciente_id)->first();
+        // Llamar al procedimiento almacenado
+        try {
+            // Convertir la hora a formato compatible con PostgreSQL si es necesario (H:i:s)
+            $horaInicio = $request->cit_hora_inicio . ':00';
 
-        if (!$historia) {
+            // Ejecutar la función del procedimiento almacenado
+            $resultado = DB::selectOne('SELECT crear_cita(?, ?, ?, ?, ?, ?)', [$request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
+            $mensaje = (array) $resultado;
+            $mensaje = reset($mensaje); // Obtiene el primer valor del array
+
+            // Si el mensaje indica un error
+            if (str_starts_with($mensaje, 'Error:')) {
+                return back()
+                    ->withErrors(['general' => $mensaje]) // Un error general para mostrar al usuario
+                    ->withInput();
+            }
+
+            return redirect()->route('citas.index')->with('success', $mensaje);
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Capturar excepciones de la base de datos (ej. si la función no existe o hay un error fatal)
             return back()
-                ->withErrors(['paciente_id' => 'El paciente no tiene una historia clínica registrada.'])
+                ->withErrors(['general' => 'Ocurrió un error al intentar crear la cita. Por favor, intente de nuevo.'])
                 ->withInput();
         }
-
-        // Crear la cita
-        Cita::create([
-            'paciente_id' => $request->paciente_id,
-            'doctor_id' => $request->doctor_id,
-            'tipc_id' => $request->tipc_id,
-            'estc_id' => $request->estc_id,
-            'cit_fecha' => $request->cit_fecha,
-            'cit_hora_inicio' => $request->cit_hora_inicio,
-            'cit_hora_fin' => $request->cit_hora_fin,
-            'cit_motivo_consulta' => $request->cit_motivo_consulta,
-            'his_id' => $historia->his_id, // <- asignación automática
-        ]);
-
-        return redirect()->route('citas.index')->with('success', 'Cita creada correctamente.');
     }
 
     public function editCita($id)
@@ -366,5 +369,20 @@ class CitaController extends Controller
     public function mostrarCalendario()
     {
         return view('citas.calendario');
+    }
+    public function porFecha($fecha)
+    {
+        $citas = Cita::with(['paciente', 'doctor'])
+            ->whereDate('cit_fecha', $fecha)
+            ->get()
+            ->map(function ($cita) {
+                return [
+                    'hora' => $cita->cit_hora_inicio,
+                    'paciente' => $cita->paciente->pac_nombres . ' ' . $cita->paciente->pac_apellidos,
+                    'doctor' => $cita->doctor->doc_nombres . ' ' . $cita->doctor->doc_apellidos,
+                ];
+            });
+
+        return response()->json($citas);
     }
 }

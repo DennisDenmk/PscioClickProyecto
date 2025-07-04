@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Doctor;
 
 class ProfileController extends Controller
 {
@@ -26,13 +27,33 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
+        dd($validated);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Guardar datos en la tabla users
+        $user->fill($validated);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        // Si el usuario tiene rol de doctor, actualizar también en la tabla doctores
+        if ($user->role && $user->role->nombre === 'doctor') {
+            $doctor = Doctor::where('doc_cedula', $user->getOriginal('cedula'))->first();
+
+            if ($doctor) {
+                $doctor->update([
+                    'doc_cedula' => $user->cedula,
+                    'doc_nombres' => $user->name,
+                    'doc_apellidos' => $user->apellido,
+                    'doc_telefono' => $user->telefono,
+                    'doc_email' => $user->email,
+                ]);
+            }
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -57,4 +78,5 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+   
 }

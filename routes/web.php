@@ -46,6 +46,8 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
     Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
     Route::get('/citas/calendario/mostrar/{id}', [CitaController::class, 'show'])->name('citas.show');
     Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
+    Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
+    Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
 
 });
 
