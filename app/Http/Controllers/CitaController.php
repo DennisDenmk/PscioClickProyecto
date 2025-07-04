@@ -9,7 +9,6 @@ use App\Models\Cita;
 use App\Models\Paciente;
 use App\Models\Doctor;
 use App\Models\EstadoCita;
-use App\Models\HorarioDoctor;
 use App\Models\User;
 
 use Illuminate\Http\JsonResponse;
