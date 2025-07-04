@@ -6,7 +6,7 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
+
                 <!-- Formulario - Lado Izquierdo -->
                 <div class="bg-white shadow rounded-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Editar Cita</h3>
@@ -62,7 +62,7 @@
                         <!-- Doctor -->
                         <div>
                             <label for="doctor_id" class="block text-sm font-medium text-gray-700 mb-1">Doctor</label>
-                            <select name="doctor_id" id="doctor_id" 
+                            <select name="doctor_id" id="doctor_id"
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 @foreach ($doctores as $doctor)
                                     <option value="{{ $doctor->doc_cedula }}"
@@ -78,8 +78,9 @@
 
                         <!-- Tipo de Cita -->
                         <div>
-                            <label for="tipc_id" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Cita</label>
-                            <select name="tipc_id" id="tipc_id" 
+                            <label for="tipc_id" class="block text-sm font-medium text-gray-700 mb-1">Tipo de
+                                Cita</label>
+                            <select name="tipc_id" id="tipc_id"
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 @foreach ($tipos as $tipo)
                                     <option value="{{ $tipo->tipc_id }}"
@@ -97,7 +98,7 @@
                         <!-- Estado -->
                         <div>
                             <label for="estc_id" class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                            <select name="estc_id" id="estc_id" 
+                            <select name="estc_id" id="estc_id"
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 @foreach ($estados as $estado)
                                     <option value="{{ $estado->estc_id }}"
@@ -114,8 +115,9 @@
                         <!-- Fecha y Horarios -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
-                                <label for="cit_fecha" class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
-                                <input type="date" name="cit_fecha" id="cit_fecha" 
+                                <label for="cit_fecha"
+                                    class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+                                <input type="date" name="cit_fecha" id="cit_fecha"
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     value="{{ old('cit_fecha', $cita->cit_fecha) }}" required>
                                 @error('cit_fecha')
@@ -123,30 +125,34 @@
                                 @enderror
                             </div>
 
-                            <div>
-                                <label for="cit_hora_inicio" class="block text-sm font-medium text-gray-700 mb-1">Hora Inicio</label>
+                            <div class="mb-4">
+                                <label for="cit_hora_inicio" class="block">Hora Inicio</label>
+                                {{-- NO CAMBIAR EL TYPE="TIME" AQUÍ --}}
                                 <input type="time" name="cit_hora_inicio" id="cit_hora_inicio"
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                    value="{{ old('cit_hora_inicio', substr($cita->cit_hora_inicio, 0, 5)) }}" required>
+                                    class="w-full border-gray-300 rounded"
+                                    value="{{ old('cit_hora_inicio', substr($cita->cit_hora_inicio, 0, 5)) }}"
+                                    required>
                                 @error('cit_hora_inicio')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
 
                             <div>
-                                <label for="cit_hora_fin" class="block text-sm font-medium text-gray-700 mb-1">Hora Fin</label>
+                                <label for="cit_hora_fin" class="block text-sm font-medium text-gray-700 mb-1">Hora
+                                    Fin</label>
                                 <input type="time" name="cit_hora_fin" id="cit_hora_fin"
                                     class="w-full rounded-md border-gray-300 bg-gray-50 shadow-sm"
-                                    value="{{ old('cit_hora_fin', substr($cita->cit_hora_fin, 0, 5)) }}" readonly required>
+                                    value="{{ old('cit_hora_fin', substr($cita->cit_hora_fin, 0, 5)) }}" readonly
+                                    required>
                             </div>
                         </div>
 
                         <!-- Motivo -->
                         <div>
-                            <label for="cit_motivo_consulta" class="block text-sm font-medium text-gray-700 mb-1">Motivo</label>
+                            <label for="cit_motivo_consulta"
+                                class="block text-sm font-medium text-gray-700 mb-1">Motivo</label>
                             <textarea name="cit_motivo_consulta" id="cit_motivo_consulta" rows="3"
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                required>{{ old('cit_motivo_consulta', $cita->cit_motivo_consulta) }}</textarea>
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>{{ old('cit_motivo_consulta', $cita->cit_motivo_consulta) }}</textarea>
                             @error('cit_motivo_consulta')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
@@ -154,11 +160,11 @@
 
                         <!-- Botones -->
                         <div class="flex gap-2 pt-4">
-                            <a href="{{ route('citas.index') }}" 
+                            <a href="{{ route('citas.index') }}"
                                 class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-md text-center transition-colors">
                                 Cancelar
                             </a>
-                            <button type="submit" 
+                            <button type="submit"
                                 class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
                                 Actualizar Cita
                             </button>
@@ -180,6 +186,8 @@
         </div>
     </div>
 </x-app-layout>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     const pacienteCedulaInput = document.getElementById('paciente_cedula');
     const pacienteNombreEl = document.getElementById('paciente_nombre');
@@ -191,7 +199,6 @@
 
     const tipoCitaSelect = document.getElementById('tipc_id');
     const horaInicioInput = document.getElementById('cit_hora_inicio');
-    const horaFinInput = document.getElementById('cit_hora_fin');
 
     // Función para buscar y mostrar datos del paciente
     function fetchPacienteData(cedula) {
@@ -288,14 +295,22 @@
 
     // Cargar datos iniciales al cargar la página
     document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar Flatpickr para los campos de hora
+        flatpickr(horaInicioInput, {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i", // Formato de 24 horas para el valor
+            time_24hr: true,   // Forzar visualización de 24 horas en el picker
+            minuteIncrement: 1 // Opcional: para que los minutos vayan de 5 en 5
+        });
+
+
         // Cargar datos del paciente actual
         fetchPacienteData(pacienteCedulaInput.value);
 
         // Calcular hora de fin inicial
         calcularHoraFin();
 
-        // Cargar citas para la fecha actual de la cita
         cargarCitasDelDia(fechaInput.value);
     });
 </script>
-```
