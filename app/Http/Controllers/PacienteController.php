@@ -131,4 +131,19 @@ class PacienteController extends Controller
 
         return redirect()->route('estado_civil.index')->with('success', 'Estado civil actualizado.');
     }
+    //Ingreso de cita
+    public function buscar($cedula)
+    {
+        $paciente = Paciente::where('pac_cedula', $cedula)->first();
+
+        if ($paciente) {
+            return response()->json([
+                'nombres' => $paciente->pac_nombres,
+                'apellidos' => $paciente->pac_apellidos,
+            ]);
+        } else {
+            return response()->json(['error' => 'Paciente no encontrado'], 404);
+        }
+    }
+    
 }

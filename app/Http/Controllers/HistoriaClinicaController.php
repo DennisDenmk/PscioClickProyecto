@@ -27,12 +27,24 @@ class HistoriaClinicaController extends Controller
             'pac_id' => 'required|exists:pacientes,pac_cedula',
         ]);
 
-        $historia = HistoriaClinica::create([
+        // Verificar si ya existe una historia clínica con esa cédula
+        $existe = HistoriaClinica::where('pac_id', $request->pac_id)->exists();
+
+        if ($existe) {
+            return redirect()
+                ->back()
+                ->withErrors(['pac_id' => 'Ya existe una historia clínica para este paciente.'])
+                ->withInput();
+        }
+
+        // Crear la historia clínica si no existe
+        HistoriaClinica::create([
             'pac_id' => $request->pac_id,
         ]);
 
         return redirect()->route('historia_clinica.create')->with('success', 'Historia clínica creada.');
     }
+
     public function index(Request $request)
     {
         $cedula = $request->input('cedula');
@@ -194,7 +206,7 @@ class HistoriaClinicaController extends Controller
     }
     public function createAntecedente($his_id)
     {
-        $tiposAntecedentes = \App\Models\TipoAntecedente::all();
+        $tiposAntecedentes = TipoAntecedente::all();
         return view('historia_clinica.antecedentes.create', compact('his_id', 'tiposAntecedentes'));
     }
 
