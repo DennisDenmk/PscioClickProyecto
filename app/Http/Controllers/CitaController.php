@@ -247,21 +247,51 @@ class CitaController extends Controller
 
     public function updateCita(Request $request, $id)
     {
+        // Validaciones básicas de los datos de entrada
         $request->validate([
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
-            'estc_id' => 'required|exists:estado_citas,estc_id',
+            'estc_id' => 'required|exists:estado_citas,estc_id', 
             'cit_fecha' => 'required|date',
             'cit_hora_inicio' => 'required|date_format:H:i',
-            'cit_hora_fin' => 'required|date_format:H:i|after:cit_hora_inicio',
             'cit_motivo_consulta' => 'nullable|string|max:255',
         ]);
 
-        $cita = Cita::findOrFail($id);
-        $cita->update($request->all());
+      
+        try {
+            // Convertir la hora a formato compatible con PostgreSQL (H:i:s)
+            $horaInicio = $request->cit_hora_inicio . ':00';
 
-        return redirect()->route('citas.index')->with('success', 'Cita actualizada correctamente.');
+            // Ejecutar la función del procedimiento almacenado para actualizar
+            $resultado = DB::selectOne('SELECT actualizar_cita_sin_horarios(?, ?, ?, ?, ?, ?, ?, ?)', [
+                $id, // ID de la cita a actualizar
+                $request->paciente_id,
+                $request->doctor_id,
+                $request->tipc_id,
+                $request->estc_id, // Incluir el estc_id
+                $request->cit_fecha,
+                $horaInicio,
+                $request->cit_motivo_consulta,
+            ]);
+
+            // El resultado de DB::selectOne es un objeto, necesitamos acceder a la propiedad
+            $mensaje = (array) $resultado;
+            $mensaje = reset($mensaje); // Obtiene el primer valor del array
+
+            // Si el mensaje indica un error
+            if (str_starts_with($mensaje, 'Error:')) {
+                return back()
+                    ->withErrors(['general' => $mensaje])
+                    ->withInput();
+            }
+
+            return redirect()->route('citas.index')->with('success', $mensaje);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()
+                ->withErrors(['general' => 'Ocurrió un error al intentar actualizar la cita. Por favor, intente de nuevo.'])
+                ->withInput();
+        }
     }
 
     public function citasCalendarioSecretario(): JsonResponse
