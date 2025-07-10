@@ -15,7 +15,6 @@
         ['ruta' => 'promociones.index', 'texto' => 'Promociones', 'icono' => '🏷️', 'color' => 'pink'],
         ['ruta' => 'promocioncita.index', 'texto' => 'Promociones-Citas', 'icono' => '💬', 'color' => 'teal'],
         ['ruta' => 'estado_civil.index', 'texto' => 'Estado Civil', 'icono' => '❤️', 'color' => 'orange'],
-        ['ruta' => 'horarios_doctor.index', 'texto' => 'Horarios Doctor', 'icono' => '⏰', 'color' => 'indigo'],
         ['ruta' => 'citas.calendario', 'texto' => 'Calendario', 'icono' => '📆', 'color' => 'cyan'],
         ];
         @endphp

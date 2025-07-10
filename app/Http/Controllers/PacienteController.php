@@ -70,11 +70,11 @@ class PacienteController extends Controller
             'pac_sexo' => 'required|boolean',
             'pac_fecha_nacimiento' => 'required|date|before:today',
             'estc_id' => 'required|exists:estados_civiles,estc_id',
-            'pac_profesion' => 'nullable|string|max:50',
-            'pac_ocupacion' => 'nullable|string|max:50',
-            'pac_telefono' => 'nullable|string|size:10',
-            'pac_direccion' => 'nullable|string',
-            'pac_email' => ['nullable', 'email', 'max:125', $cedula ? 'unique:pacientes,pac_email,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_email'],
+            'pac_ocupacion' => 'required|string|max:50',
+            'pac_profesion' => 'required|string|max:50',
+            'pac_telefono' => 'required|string|size:10',
+            'pac_direccion' => 'required|string',
+            'pac_email' => ['required', 'email', 'max:125', $cedula ? 'unique:pacientes,pac_email,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_email'],
         ] + [
             'pac_cedula.unique' => 'La cédula ya está en uso.',
             'pac_cedula.size' => 'La cédula debe tener 10 caracteres.',
@@ -83,6 +83,7 @@ class PacienteController extends Controller
             'pac_telefono.size' => 'El teléfono debe tener 10 caracteres.',
             'pac_telefono.string' => 'El teléfono debe ser un número válido.',
             'pac_telefono.unique' => 'El teléfono ya está en uso.',
+            'pac_fecha_nacimiento.before' => 'La fecha de nacimiento debe ser anterior a hoy.',
         ];
 
         $request->validate($rules);

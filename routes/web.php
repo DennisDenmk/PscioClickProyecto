@@ -90,13 +90,6 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::get('/{id}/edit', [PacienteController::class, 'editEstadoCivil'])->name('estado_civil.edit');
         Route::put('/{id}', [PacienteController::class, 'updateEstadoCivil'])->name('estado_civil.update');
     });
-    Route::prefix('horarios')->group(function () {
-        Route::get('/', [SecretarioController::class, 'indexHorarioDoctor'])->name('horarios_doctor.index');
-        Route::get('/create', [SecretarioController::class, 'createHorarioDoctor'])->name('horarios_doctor.create');
-        Route::post('/', [SecretarioController::class, 'storeHorarioDoctor'])->name('horarios_doctor.store');
-        Route::get('/{id}/edit', [SecretarioController::class, 'editHorarioDoctor'])->name('horarios_doctor.edit');
-        Route::put('/{id}', [SecretarioController::class, 'updateHorarioDoctor'])->name('horarios_doctor.update');
-    });
     Route::prefix('citas')->group(function () {
         Route::get('/', [CitaController::class, 'indexCita'])->name('citas.index');
         Route::get('/create', [CitaController::class, 'createCita'])->name('citas.create');

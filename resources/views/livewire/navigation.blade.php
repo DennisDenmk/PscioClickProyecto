@@ -227,10 +227,6 @@
                             class="hover:text-purple-400 dark:hover:text-blue-400 transition ease-in-out duration-200">
                             ➤ Promociones-Citas
                         </a>
-                        <a href="{{ route('horarios_doctor.index') }}"
-                            class="hover:text-purple-400 dark:hover:text-blue-400 transition ease-in-out duration-200">
-                            ➤ Horarios Doctor
-                        </a>
                         <a href="{{ route('citas.calendario') }}"
                             class="hover:text-purple-400 dark:hover:text-blue-400 transition ease-in-out duration-200">
                             ➤ Calendario
