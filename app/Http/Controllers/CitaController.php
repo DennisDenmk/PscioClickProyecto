@@ -10,6 +10,7 @@ use App\Models\Paciente;
 use App\Models\Doctor;
 use App\Models\EstadoCita;
 use App\Models\User;
+use App\Notifications\CitaAsignada;
 
 use Illuminate\Http\JsonResponse;
 
@@ -200,10 +201,8 @@ class CitaController extends Controller
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
-            // 'estc_id' ya no es necesario aquí, lo maneja el SP con el valor por defecto
             'cit_fecha' => 'required|date|after_or_equal:today',
             'cit_hora_inicio' => 'required|date_format:H:i',
-            // 'cit_hora_fin' ya no es necesario validar, lo calcula el SP
             'cit_motivo_consulta' => 'nullable|string|max:255',
         ]);
 
@@ -222,6 +221,17 @@ class CitaController extends Controller
                 return back()
                     ->withErrors(['general' => $mensaje]) // Un error general para mostrar al usuario
                     ->withInput();
+            }
+            $doctorUser = User::where('cedula', $request->doctor_id)->first();
+            if ($doctorUser) {
+                $doctorUser->notify(
+                    new CitaAsignada([
+                        'fecha' => $request->cit_fecha,
+                        'hora' => $request->cit_hora_inicio,
+                        'paciente' => $request->paciente_id,
+                        'motivo' => $request->cit_motivo_consulta,
+                    ]),
+                );
             }
 
             return redirect()->route('citas.index')->with('success', $mensaje);
@@ -251,13 +261,12 @@ class CitaController extends Controller
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
-            'estc_id' => 'required|exists:estado_citas,estc_id', 
+            'estc_id' => 'required|exists:estado_citas,estc_id',
             'cit_fecha' => 'required|date',
             'cit_hora_inicio' => 'required|date_format:H:i',
             'cit_motivo_consulta' => 'nullable|string|max:255',
         ]);
 
-      
         try {
             // Convertir la hora a formato compatible con PostgreSQL (H:i:s)
             $horaInicio = $request->cit_hora_inicio . ':00';

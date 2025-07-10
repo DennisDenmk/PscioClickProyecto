@@ -179,6 +179,14 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEvaluacion'])->name('evaluaciones.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEvaluacion'])->name('evaluaciones.update');
     });
+
+     Route::patch('/notificaciones/{id}/leida', function ($id) {
+        $notificacion = auth()->user()->notifications()->findOrFail($id);
+        $notificacion->markAsRead();
+        return back();
+    })->name('notificaciones.marcarLeida');
 });
+
+
 
 require __DIR__ . '/auth.php';
