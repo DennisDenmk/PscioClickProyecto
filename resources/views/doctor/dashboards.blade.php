@@ -43,8 +43,6 @@
                             Paciente: {{ $notification->data['paciente'] }}
                         </p>
                         <div class="flex justify-between items-center mt-1">
-                            <a href="{{ $notification->data['url'] }}" class="text-blue-600 text-xs hover:underline">Ver
-                                cita</a>
                             @if (!$notification->read_at)
                                 <form method="POST"
                                     action="{{ route('notificaciones.marcarLeida', $notification->id) }}">
