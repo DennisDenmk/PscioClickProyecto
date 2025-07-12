@@ -31,7 +31,9 @@
                                 <div class="flex gap-2">
                                     <input type="text" name="paciente_id" id="paciente_cedula"
                                         class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                        value="{{ old('paciente_id') }}" required>
+                                        value="{{ old('paciente_id') }}" maxlength="10" pattern="[0-9]{10}"
+                                        inputmode="numeric"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required>
                                     <button type="button" id="btnBuscarPaciente"
                                         class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">
                                         Buscar
@@ -120,8 +122,7 @@
                                 <div class="mb-4">
                                     <label for="cit_hora_inicio" class="block">Hora Inicio</label>
                                     <input type="time" name="cit_hora_inicio" id="cit_hora_inicio"
-                                        class="w-full border-gray-300 rounded"
-                                        value="{{ old('cit_hora_inicio') }}"
+                                        class="w-full border-gray-300 rounded" value="{{ old('cit_hora_inicio') }}"
                                         required>
                                     @error('cit_hora_inicio')
                                         <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -146,7 +147,8 @@
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div> <div class="pt-4">
+                        </div>
+                        <div class="pt-4">
                             <button type="submit"
                                 class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
                                 Guardar Cita
@@ -234,7 +236,8 @@
     // Función para cargar las citas del día seleccionado
     function cargarCitasDelDia(fecha) {
         if (!fecha) {
-            tarjetasCitas.innerHTML = '<div class="text-gray-500 text-center py-8">Seleccione una fecha para ver las citas.</div>';
+            tarjetasCitas.innerHTML =
+                '<div class="text-gray-500 text-center py-8">Seleccione una fecha para ver las citas.</div>';
             return;
         }
 
@@ -285,7 +288,7 @@
             enableTime: true,
             noCalendar: true,
             dateFormat: "H:i", // Formato de 24 horas para el valor
-            time_24hr: true,   // Forzar visualización de 24 horas en el picker
+            time_24hr: true, // Forzar visualización de 24 horas en el picker
             minuteIncrement: 5 // Para que los minutos vayan de 5 en 5, como es común en citas
         });
 
