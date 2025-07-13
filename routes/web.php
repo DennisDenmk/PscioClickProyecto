@@ -48,7 +48,6 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
     Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
     Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
     Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
-
 });
 
 // Solo secretario
@@ -142,10 +141,10 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     });
     //Enfermedad Actual
     Route::prefix('enfermedad-actual')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
+        Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
+        Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
+        Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
+        Route::get('/edit/{id}', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEnfermedadActual'])->name('enfermedad_actual.update');
     });
 
@@ -180,13 +179,11 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEvaluacion'])->name('evaluaciones.update');
     });
 
-     Route::patch('/notificaciones/{id}/leida', function ($id) {
+    Route::patch('/notificaciones/{id}/leida', function ($id) {
         $notificacion = auth()->user()->notifications()->findOrFail($id);
         $notificacion->markAsRead();
         return back();
     })->name('notificaciones.marcarLeida');
 });
-
-
 
 require __DIR__ . '/auth.php';

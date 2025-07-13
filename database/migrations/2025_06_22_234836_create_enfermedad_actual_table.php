@@ -11,7 +11,7 @@ class CreateEnfermedadActualTable extends Migration
             $table->id('enf_id');
             $table->unsignedBigInteger('enf_his_id');
             $table->unsignedBigInteger('enf_tipo_id');
-            $table->text('enf_descripcion');
+            $table->text('enf_descripcion')->nullable();
             $table->timestamps();
 
             $table->foreign('enf_his_id')->references('his_id')->on('historia_clinica')->onDelete('cascade')->onUpdate('cascade');

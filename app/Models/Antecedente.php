@@ -11,7 +11,6 @@ class Antecedente extends Model
     protected $fillable = [
         'ant_his_id',
         'tipo_ant_id',
-        'ant_valor',
         'ant_detalle',
     ];
 

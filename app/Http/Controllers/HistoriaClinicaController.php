@@ -188,16 +188,22 @@ class HistoriaClinicaController extends Controller
     public function storeHabito(Request $request, $his_id)
     {
         $request->validate([
-            'tipo_hab_id' => 'required|exists:tipo_habito,tipo_hab_id',
+            'habitos' => 'required|array|min:1',
+            'habitos.*.tipo_hab_id' => 'required|exists:tipo_habito,tipo_hab_id',
+            'habitos.*.hab_detalle' => 'nullable|string',
         ]);
 
-        \App\Models\Habito::create([
-            'hab_his_id' => $his_id,
-            'tipo_hab_id' => $request->tipo_hab_id,
-        ]);
+        foreach ($request->habitos as $habito) {
+            \App\Models\Habito::create([
+                'hab_his_id' => $his_id,
+                'tipo_hab_id' => $habito['tipo_hab_id'],
+                'hab_detalle' => $habito['hab_detalle'] ?? null,
+            ]);
+        }
 
-        return redirect()->route('historias.show', $his_id)->with('success', 'Hábito registrado correctamente.');
+        return redirect()->back()->with('success', 'Hábitos registrados correctamente.');
     }
+
     public function showHabitos($his_id)
     {
         $historia = HistoriaClinica::with(['paciente', 'habitos.tipoHabito'])->findOrFail($his_id);
@@ -212,23 +218,23 @@ class HistoriaClinicaController extends Controller
 
     public function storeAntecedente(Request $request, $his_id)
     {
-        $antecedentes = $request->input('antecedentes');
-        $valor = $request->ant_valor === 'Sí' ? true : false;
-        foreach ($antecedentes as $tipo_ant_id => $data) {
-            if (!isset($data['ant_valor'])) {
-                continue;
-            }
+        $request->validate([
+            'antecedentes' => 'required|array|min:1',
+            'antecedentes.*.tipo_ant_id' => 'required|exists:tipo_antecedente,tipa_id',
+            'antecedentes.*.ant_detalle' => 'nullable|string',
+        ]);
 
+        foreach ($request->antecedentes as $ant) {
             \App\Models\Antecedente::create([
                 'ant_his_id' => $his_id,
-                'tipo_ant_id' => $tipo_ant_id,
-                'ant_valor' => $valor,
-                'ant_detalle' => $data['ant_detalle'] ?? null,
+                'tipo_ant_id' => $ant['tipo_ant_id'],
+                'ant_detalle' => $ant['ant_detalle'] ?? null,
             ]);
         }
 
-        return redirect()->route('historias.show', $his_id)->with('success', 'Antecedentes guardados.');
+        return redirect()->back()->with('success', 'Antecedentes registrados correctamente.');
     }
+
     public function showAntecedente($his_id)
     {
         $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente'])->findOrFail($his_id);
@@ -274,10 +280,10 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('tipo_antecedente.index')->with('success', 'Tipo de antecedente actualizado correctamente.');
     }
-    public function indexEnfermedadActual()
+    public function indexEnfermedadActual($his_id)
     {
-        $enfermedades = EnfermedadActual::with('tipoEnfermedad', 'historiaClinica')->get();
-        return view('historia_clinica.enfermedad_actual.index', compact('enfermedades'));
+        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente', 'enfermedadesActuales.tipoEnfermedad'])->findOrFail($his_id);
+        return view('historia_clinica.enfermedad_actual.index', compact('historia'));
     }
 
     public function createEnfermedadActual()
@@ -286,17 +292,23 @@ class HistoriaClinicaController extends Controller
         return view('historia_clinica.enfermedad_actual.create', compact('tipos'));
     }
 
-    public function storeEnfermedadActual(Request $request)
+    public function storeEnfermedadActual(Request $request, $his_id)
     {
         $request->validate([
-            'enf_his_id' => 'required|exists:historia_clinica,his_id',
-            'enf_tipo_id' => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
-            'enf_descripcion' => 'required|string|max:255',
+        'enfermedades' => 'required|array|min:1',
+        'enfermedades.*.enf_tipo_id'   => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
+        'enfermedades.*.enf_descripcion' => 'required|string',
+    ]);
+
+    foreach ($request->enfermedades as $enf) {
+        EnfermedadActual::create([
+            'enf_his_id'      => $his_id,
+            'enf_tipo_id'     => $enf['enf_tipo_id'],
+            'enf_descripcion' => $enf['enf_descripcion'],
         ]);
+    }
 
-        EnfermedadActual::create($request->only('enf_his_id', 'enf_tipo_id', 'enf_descripcion'));
-
-        return redirect()->route('enfermedad_actual.index')->with('success', 'Enfermedad actual registrada.');
+    return redirect()->back()->with('success', 'Enfermedades actuales registradas correctamente.');
     }
 
     public function editEnfermedadActual($id)
