@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Rules\EcuadorianCedula;
 
 class RegisteredUserController extends Controller
 {
@@ -36,14 +37,21 @@ class RegisteredUserController extends Controller
             [
                 'name' => ['required', 'string', 'max:30'],
                 'apellido' => ['required', 'string', 'max:30'],
-                'cedula' => ['required', 'string', 'size:10', 'unique:users,cedula'],
+                'cedula' => [
+                    'required',
+                    'string',
+                    'size:10',
+                    new EcuadorianCedula,
+                    'unique:users,cedula',
+                    'unique:doctors,doc_cedula',
+                ],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'telefono' => ['required', 'string', 'size:10', 'unique:users,telefono'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'role_id' => ['required', 'exists:roles,id'],
             ],
             [
-                'cedula.unique' => 'Cédula ya registrada.',
+                'cedula.unique' => 'Cédula ya registrada en usuarios o doctores.',
                 'email.unique' => 'Correo ya registrado.',
                 'telefono.unique' => 'Teléfono ya registrado.',
             ],
@@ -75,7 +83,8 @@ class RegisteredUserController extends Controller
 
         return redirect(route('admin.dashboard'))->with('success', 'Usuario creado correctamente.');
     }
-     public function resetPasswordToCedula($id)
+
+    public function resetPasswordToCedula($id)
     {
         $user = User::findOrFail($id);
 
