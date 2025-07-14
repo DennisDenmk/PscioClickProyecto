@@ -10,7 +10,11 @@ use App\Http\Controllers\SecretarioController;
 use Monolog\Registry;
 
 Route::get('/', function () {
-    return view('auth.login');
+    return view('home.home');
+});
+
+Route::get('/login', function () {
+    return view('auth.login')->name('login');
 });
 // routes/web.php
 Route::get('/acceso-denegado', function () {
@@ -41,7 +45,7 @@ Route::middleware(['auth', 'rol:administrador'])->group(function () {
 });
 // Rutas accesibles por doctor y secretario
 Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
-    Route::get('/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
+    Route::get('/historias/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
     Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
     Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
     Route::get('/citas/calendario/mostrar/{id}', [CitaController::class, 'show'])->name('citas.show');
