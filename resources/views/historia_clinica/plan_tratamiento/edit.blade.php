@@ -9,32 +9,30 @@
             @method('PUT')
 
             <div class="mb-4">
-                <label>Historia Clínica</label>
-                <select name="pla_his_id" class="w-full border px-3 py-2">
-                    @foreach($historias as $historia)
-                        <option value="{{ $historia->his_id }}" {{ $plan->pla_his_id == $historia->his_id ? 'selected' : '' }}>
-                            Historia #{{ $historia->his_id }}
-                        </option>
-                    @endforeach
-                </select>
+                <label class="block text-gray-700 font-medium">
+                    Historia Clínica #{{ $plan->historiaClinica->pac_id }} 
+                    @if($plan->historiaClinica->paciente)
+                        - {{ $plan->historiaClinica->paciente->pac_nombres }} {{ $plan->historiaClinica->paciente->pac_apellidos }}
+                    @endif
+                </label>
             </div>
 
             <div class="mb-4">
-                <label>Diagnóstico</label>
-                <input type="text" name="pla_diagnostico" class="w-full border px-3 py-2" value="{{ $plan->pla_diagnostico }}" required>
+                <label class="block text-gray-700 font-medium">Diagnóstico</label>
+                <input type="text" name="pla_diagnostico" class="w-full border px-3 py-2 rounded" value="{{ $plan->pla_diagnostico }}" required>
             </div>
 
             <div class="mb-4">
-                <label>Objetivo del Tratamiento</label>
-                <input type="text" name="pla_objetivo_tratamiento" class="w-full border px-3 py-2" value="{{ $plan->pla_objetivo_tratamiento }}" required>
+                <label class="block text-gray-700 font-medium">Objetivo del Tratamiento</label>
+                <textarea name="pla_objetivo_tratamiento" class="w-full border px-3 py-2 rounded" rows="2" required>{{ $plan->pla_objetivo_tratamiento }}</textarea>
             </div>
 
             <div class="mb-4">
-                <label>Tratamiento</label>
-                <input type="text" name="pla_tratamiento" class="w-full border px-3 py-2" value="{{ $plan->pla_tratamiento }}" required>
+                <label class="block text-gray-700 font-medium">Tratamiento</label>
+                <textarea name="pla_tratamiento" class="w-full border px-3 py-2 rounded" rows="3" required>{{ $plan->pla_tratamiento }}</textarea>
             </div>
 
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">Actualizar</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Actualizar</button>
         </form>
     </div>
 </x-app-layout>

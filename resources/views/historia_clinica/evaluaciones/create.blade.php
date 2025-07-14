@@ -1,38 +1,30 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold">Nueva Evaluación</h2>
+        <h2 class="text-xl font-semibold">Nueva Evaluación - Historia Clínica #{{ $his_id }}</h2>
     </x-slot>
 
-    <div class="max-w-xl mx-auto py-6">
-        <form method="POST" action="{{ route('evaluaciones.store') }}">
+    <div class="max-w-2xl mx-auto py-10">
+        <form method="POST" action="{{ route('evaluaciones.store', $his_id) }}">
             @csrf
 
             <div class="mb-4">
-                <label>Historia Clínica</label>
-                <select name="eva_his_id" class="w-full border p-2">
-                    @foreach ($historias as $his)
-                        <option value="{{ $his->his_id }}">{{ $his->his_id }}</option>
-                    @endforeach
-                </select>
+                <label class="block font-medium text-gray-700">Evaluación de Dolor</label>
+                <input type="text" name="eva_evaluacion_dolor" value="{{ old('eva_evaluacion_dolor') }}" class="w-full border px-3 py-2" required>
+                @error('eva_evaluacion_dolor') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="mb-4">
-                <label>Evaluación Dolor</label>
-                <textarea name="eva_evaluacion_dolor" class="w-full border p-2"></textarea>
+                <label class="block font-medium text-gray-700">Escala de Dolor (0 a 10)</label>
+                <input type="number" name="eva_escala_dolor" min="0" max="10" value="{{ old('eva_escala_dolor') }}" class="w-full border px-3 py-2" required>
+                @error('eva_escala_dolor') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
             </div>
 
             <div class="mb-4">
-                <label for="eva_escala_dolor">Escala Dolor</label>
-                <input type="number" id="eva_escala_dolor" name="eva_escala_dolor" min="0" max="10"
-                    class="w-full border p-2">
+                <label class="block font-medium text-gray-700">Exámenes Complementarios</label>
+                <textarea name="eva_examenes_complementarios" rows="3" class="w-full border px-3 py-2">{{ old('eva_examenes_complementarios') }}</textarea>
             </div>
 
-            <div class="mb-4">
-                <label>Exámenes Complementarios</label>
-                <textarea name="eva_examenes_complementarios" class="w-full border p-2"></textarea>
-            </div>
-
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+            <x-primary-button>Guardar Evaluación</x-primary-button>
         </form>
     </div>
 </x-app-layout>

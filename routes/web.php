@@ -157,25 +157,31 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoEnfermedadActual'])->name('tipo_enfermedad_actual.update');
     });
     //Plan de tratamiento
-    Route::prefix('plan-tratamiento')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexPlanTratamiento'])->name('plan_tratamiento.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createPlanTratamiento'])->name('plan_tratamiento.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storePlanTratamiento'])->name('plan_tratamiento.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('plan_tratamiento.edit');
-        Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('plan_tratamiento.update');
-    });
-    Route::prefix('estado-reproductivo')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEstadoReproductivo'])->name('estado_reproductivo.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEstadoReproductivo'])->name('estado_reproductivo.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEstadoReproductivo'])->name('estado_reproductivo.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEstadoReproductivo'])->name('estado_reproductivo.edit');
-        Route::put('/{id}', [HistoriaClinicaController::class, 'updateEstadoReproductivo'])->name('estado_reproductivo.update');
-    });
+    Route::prefix('plan-tratamiento')
+        ->name('plan_tratamiento.')
+        ->group(function () {
+            Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexPlanTratamiento'])->name('index');
+            Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createPlanTratamiento'])->name('create');
+            Route::post('/{his_id}', [HistoriaClinicaController::class, 'storePlanTratamiento'])->name('store');
+            Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('edit');
+            Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('update');
+        });
+
+    Route::prefix('estado-reproductivo')
+        ->name('estado_reproductivo.')
+        ->group(function () {
+            Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEstadoReproductivo'])->name('index');
+            Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEstadoReproductivo'])->name('create');
+            Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEstadoReproductivo'])->name('store');
+            Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEstadoReproductivo'])->name('edit');
+            Route::put('/{id}', [HistoriaClinicaController::class, 'updateEstadoReproductivo'])->name('update');
+        });
+
     Route::prefix('evaluaciones')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEvaluacion'])->name('evaluaciones.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEvaluacion'])->name('evaluaciones.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEvaluacion'])->name('evaluaciones.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEvaluacion'])->name('evaluaciones.edit');
+        Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEvaluacion'])->name('evaluaciones.index');
+        Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEvaluacion'])->name('evaluaciones.create');
+        Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEvaluacion'])->name('evaluaciones.store');
+        Route::get('/edit/{id}', [HistoriaClinicaController::class, 'editEvaluacion'])->name('evaluaciones.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEvaluacion'])->name('evaluaciones.update');
     });
 

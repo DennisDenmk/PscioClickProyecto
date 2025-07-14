@@ -1,37 +1,37 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold">Nuevo Plan de Tratamiento</h2>
+       
     </x-slot>
 
-    <div class="py-6 max-w-xl mx-auto">
-        <form method="POST" action="{{ route('plan_tratamiento.store') }}">
+    <div class="max-w-4xl mx-auto py-10">
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+        <h2 class="text-xl font-semibold text-gray-800 leading-tight">
+            Planes de Tratamiento - Historia Clínica #{{ $historia->pac_id}}
+        </h2>
+        <form method="POST" action="{{ route('plan_tratamiento.store', $historia->his_id) }}" class="space-y-6">
+
             @csrf
 
-            <div class="mb-4">
-                <label>Historia Clínica</label>
-                <select name="pla_his_id" class="w-full border px-3 py-2">
-                    @foreach($historias as $historia)
-                        <option value="{{ $historia->his_id }}">Historia #{{ $historia->his_id }}</option>
-                    @endforeach
-                </select>
+            <div class="mb-3">
+                <label class="block font-medium text-gray-700">Diagnóstico</label>
+                <input type="text" name="pla_diagnostico" class="form-input w-full mt-1" required>
             </div>
 
-            <div class="mb-4">
-                <label>Diagnóstico</label>
-                <input type="text" name="pla_diagnostico" class="w-full border px-3 py-2" required>
+            <div class="mb-3">
+                <label class="block font-medium text-gray-700">Objetivo del Tratamiento</label>
+                <textarea name="pla_objetivo_tratamiento" rows="2" class="form-textarea w-full mt-1" required></textarea>
             </div>
 
-            <div class="mb-4">
-                <label>Objetivo del Tratamiento</label>
-                <input type="text" name="pla_objetivo_tratamiento" class="w-full border px-3 py-2" required>
+            <div>
+                <label class="block font-medium text-gray-700">Tratamiento</label>
+                <textarea name="pla_tratamiento" rows="3" class="form-textarea w-full mt-1" required></textarea>
             </div>
 
-            <div class="mb-4">
-                <label>Tratamiento</label>
-                <input type="text" name="pla_tratamiento" class="w-full border px-3 py-2" required>
-            </div>
-
-            <button class="bg-green-600 text-white px-4 py-2 rounded">Guardar</button>
+            <x-primary-button class="mt-4">Guardar Plan</x-primary-button>
         </form>
     </div>
 </x-app-layout>
