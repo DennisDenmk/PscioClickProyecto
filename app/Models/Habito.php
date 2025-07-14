@@ -11,6 +11,7 @@ class Habito extends Model
     protected $fillable = [
         'hab_his_id',
         'tipo_hab_id',
+        'hab_detalle',
     ];
 
     public function historiaClinica()

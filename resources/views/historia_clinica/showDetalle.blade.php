@@ -52,19 +52,19 @@
                 onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#7bb899'">
                 Mostrar Antecedentes
             </a>
-             <a href="{{ route('enfermedad_actual.index') }}"
+             <a href="{{ route('enfermedad_actual.index',$historia->his_id) }}"
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Enfermedad-Actual
             </a>
-            <a href="{{ route('plan_tratamiento.index') }}"
+            <a href="{{ route('plan_tratamiento.index',$historia->his_id) }}"
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Plan de tratamiento
             </a>
-            <a href="{{ route('estado_reproductivo.index') }}"
+            <a href="{{ route('estado_reproductivo.index',$historia->his_id) }}"
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Estado Reproductivo
             </a>
-            <a href="{{ route('evaluaciones.index') }}"
+            <a href="{{ route('evaluaciones.index',$historia->his_id) }}"
                     class="inline-block bg-indigo-600 hover:bg-indigo-700 text-back font-bold py-2 px-4 rounded mt-4">
                     Evaluaciones
             </a>

@@ -188,16 +188,22 @@ class HistoriaClinicaController extends Controller
     public function storeHabito(Request $request, $his_id)
     {
         $request->validate([
-            'tipo_hab_id' => 'required|exists:tipo_habito,tipo_hab_id',
+            'habitos' => 'required|array|min:1',
+            'habitos.*.tipo_hab_id' => 'required|exists:tipo_habito,tipo_hab_id',
+            'habitos.*.hab_detalle' => 'nullable|string',
         ]);
 
-        \App\Models\Habito::create([
-            'hab_his_id' => $his_id,
-            'tipo_hab_id' => $request->tipo_hab_id,
-        ]);
+        foreach ($request->habitos as $habito) {
+            \App\Models\Habito::create([
+                'hab_his_id' => $his_id,
+                'tipo_hab_id' => $habito['tipo_hab_id'],
+                'hab_detalle' => $habito['hab_detalle'] ?? null,
+            ]);
+        }
 
-        return redirect()->route('historias.show', $his_id)->with('success', 'Hábito registrado correctamente.');
+        return redirect()->back()->with('success', 'Hábitos registrados correctamente.');
     }
+
     public function showHabitos($his_id)
     {
         $historia = HistoriaClinica::with(['paciente', 'habitos.tipoHabito'])->findOrFail($his_id);
@@ -212,23 +218,23 @@ class HistoriaClinicaController extends Controller
 
     public function storeAntecedente(Request $request, $his_id)
     {
-        $antecedentes = $request->input('antecedentes');
-        $valor = $request->ant_valor === 'Sí' ? true : false;
-        foreach ($antecedentes as $tipo_ant_id => $data) {
-            if (!isset($data['ant_valor'])) {
-                continue;
-            }
+        $request->validate([
+            'antecedentes' => 'required|array|min:1',
+            'antecedentes.*.tipo_ant_id' => 'required|exists:tipo_antecedente,tipa_id',
+            'antecedentes.*.ant_detalle' => 'nullable|string',
+        ]);
 
+        foreach ($request->antecedentes as $ant) {
             \App\Models\Antecedente::create([
                 'ant_his_id' => $his_id,
-                'tipo_ant_id' => $tipo_ant_id,
-                'ant_valor' => $valor,
-                'ant_detalle' => $data['ant_detalle'] ?? null,
+                'tipo_ant_id' => $ant['tipo_ant_id'],
+                'ant_detalle' => $ant['ant_detalle'] ?? null,
             ]);
         }
 
-        return redirect()->route('historias.show', $his_id)->with('success', 'Antecedentes guardados.');
+        return redirect()->back()->with('success', 'Antecedentes registrados correctamente.');
     }
+
     public function showAntecedente($his_id)
     {
         $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente'])->findOrFail($his_id);
@@ -274,10 +280,10 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('tipo_antecedente.index')->with('success', 'Tipo de antecedente actualizado correctamente.');
     }
-    public function indexEnfermedadActual()
+    public function indexEnfermedadActual($his_id)
     {
-        $enfermedades = EnfermedadActual::with('tipoEnfermedad', 'historiaClinica')->get();
-        return view('historia_clinica.enfermedad_actual.index', compact('enfermedades'));
+        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria', 'signosVitales', 'habitos.tipoHabito', 'antecedentes.tipoAntecedente', 'enfermedadesActuales.tipoEnfermedad'])->findOrFail($his_id);
+        return view('historia_clinica.enfermedad_actual.index', compact('historia'));
     }
 
     public function createEnfermedadActual()
@@ -286,17 +292,23 @@ class HistoriaClinicaController extends Controller
         return view('historia_clinica.enfermedad_actual.create', compact('tipos'));
     }
 
-    public function storeEnfermedadActual(Request $request)
+    public function storeEnfermedadActual(Request $request, $his_id)
     {
         $request->validate([
-            'enf_his_id' => 'required|exists:historia_clinica,his_id',
-            'enf_tipo_id' => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
-            'enf_descripcion' => 'required|string|max:255',
+            'enfermedades' => 'required|array|min:1',
+            'enfermedades.*.enf_tipo_id' => 'required|exists:tipo_enfermedad_actual,tipo_enf_id',
+            'enfermedades.*.enf_descripcion' => 'required|string',
         ]);
 
-        EnfermedadActual::create($request->only('enf_his_id', 'enf_tipo_id', 'enf_descripcion'));
+        foreach ($request->enfermedades as $enf) {
+            EnfermedadActual::create([
+                'enf_his_id' => $his_id,
+                'enf_tipo_id' => $enf['enf_tipo_id'],
+                'enf_descripcion' => $enf['enf_descripcion'],
+            ]);
+        }
 
-        return redirect()->route('enfermedad_actual.index')->with('success', 'Enfermedad actual registrada.');
+        return redirect()->back()->with('success', 'Enfermedades actuales registradas correctamente.');
     }
 
     public function editEnfermedadActual($id)
@@ -359,30 +371,36 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('tipo_enfermedad_actual.index')->with('success', 'Tipo actualizado correctamente.');
     }
-    public function indexPlanTratamiento()
+    public function indexPlanTratamiento($his_id)
     {
-        $planes = PlanTratamiento::with('historiaClinica')->get();
-        return view('historia_clinica.plan_tratamiento.index', compact('planes'));
+        $historia = HistoriaClinica::with(['paciente', 'planesTratamiento'])->findOrFail($his_id);
+        $planes = $historia->planesTratamiento;
+        return view('historia_clinica.plan_tratamiento.index', compact('historia', 'planes'));
     }
 
-    public function createPlanTratamiento()
+    public function createPlanTratamiento($his_id)
     {
-        $historias = HistoriaClinica::all();
-        return view('historia_clinica.plan_tratamiento.create', compact('historias'));
+        $historia = HistoriaClinica::with('paciente')->findOrFail($his_id);
+
+        return view('historia_clinica.plan_tratamiento.create', compact('historia'));
     }
 
-    public function storePlanTratamiento(Request $request)
+    public function storePlanTratamiento(Request $request, $his_id)
     {
         $request->validate([
-            'pla_his_id' => 'required|exists:historia_clinica,his_id',
-            'pla_diagnostico' => 'required|string|max:255',
-            'pla_objetivo_tratamiento' => 'required|string|max:255',
-            'pla_tratamiento' => 'required|string|max:255',
+            'pla_diagnostico' => 'required|string',
+            'pla_objetivo_tratamiento' => 'required|string',
+            'pla_tratamiento' => 'required|string',
         ]);
 
-        PlanTratamiento::create($request->all());
+        PlanTratamiento::create([
+            'pla_his_id' => $his_id,
+            'pla_diagnostico' => $request->pla_diagnostico,
+            'pla_objetivo_tratamiento' => $request->pla_objetivo_tratamiento,
+            'pla_tratamiento' => $request->pla_tratamiento,
+        ]);
 
-        return redirect()->route('plan_tratamiento.index')->with('success', 'Plan creado correctamente.');
+        return redirect()->back()->with('success', 'Plan de tratamiento registrado correctamente.');
     }
 
     public function editPlanTratamiento($id)
@@ -395,7 +413,6 @@ class HistoriaClinicaController extends Controller
     public function updatePlanTratamiento(Request $request, $id)
     {
         $request->validate([
-            'pla_his_id' => 'required|exists:historia_clinica,his_id',
             'pla_diagnostico' => 'required|string|max:255',
             'pla_objetivo_tratamiento' => 'required|string|max:255',
             'pla_tratamiento' => 'required|string|max:255',
@@ -404,99 +421,111 @@ class HistoriaClinicaController extends Controller
         $plan = PlanTratamiento::findOrFail($id);
         $plan->update($request->all());
 
-        return redirect()->route('plan_tratamiento.index')->with('success', 'Plan actualizado correctamente.');
+        return redirect()->route('plan_tratamiento.index', $plan->pla_his_id)->with('success', 'Plan actualizado correctamente.');
     }
-    //Estado  reprodictivo
-    public function indexEstadoReproductivo()
+    //Estado  reproductivo
+    public function indexEstadoReproductivo($his_id)
     {
-        $estados = EstadoReproductivo::with('historiaClinica')->get();
-        return view('historia_clinica.estado_reproductivo.index', compact('estados'));
+        $estados = EstadoReproductivo::where('est_his_id', $his_id)->get();
+        return view('historia_clinica.estado_reproductivo.index', compact('estados', 'his_id'));
     }
 
-    public function createEstadoReproductivo()
+    public function createEstadoReproductivo($his_id)
     {
-        $historias = HistoriaClinica::all();
-        return view('historia_clinica.estado_reproductivo.create', compact('historias'));
+        $historia = HistoriaClinica::with('paciente')->findOrFail($his_id);
+        return view('historia_clinica.estado_reproductivo.create', compact('historia'));
     }
 
-    public function storeEstadoReproductivo(Request $request)
+    public function storeEstadoReproductivo(Request $request, $his_id)
     {
         $request->validate([
-            'est_his_id' => 'required|exists:historia_clinica,his_id',
-            'est_esta_embarazada' => 'required|in:si,no',
+            'est_esta_embarazada' => 'required|boolean',
             'est_cantidad_hijos' => 'required|integer|min:0',
         ]);
 
-        EstadoReproductivo::create($request->all());
+        EstadoReproductivo::create([
+            'est_his_id' => $his_id,
+            'est_esta_embarazada' => $request->est_esta_embarazada,
+            'est_cantidad_hijos' => $request->est_cantidad_hijos,
+        ]);
 
-        return redirect()->route('estado_reproductivo.index')->with('success', 'Estado reproductivo registrado.');
+        return redirect()->route('estado_reproductivo.index', $his_id)->with('success', 'Estado reproductivo registrado correctamente.');
     }
 
     public function editEstadoReproductivo($id)
     {
-        $estado = EstadoReproductivo::findOrFail($id);
-        $historias = HistoriaClinica::all();
-        return view('historia_clinica.estado_reproductivo.edit', compact('estado', 'historias'));
+        $estado = EstadoReproductivo::with('historiaClinica.paciente')->findOrFail($id);
+        return view('historia_clinica.estado_reproductivo.edit', compact('estado'));
     }
 
     public function updateEstadoReproductivo(Request $request, $id)
     {
         $request->validate([
-            'est_his_id' => 'required|exists:historia_clinica,his_id',
-            'est_esta_embarazada' => 'required|in:si,no',
+            'est_esta_embarazada' => 'required|boolean',
             'est_cantidad_hijos' => 'required|integer|min:0',
         ]);
 
         $estado = EstadoReproductivo::findOrFail($id);
-        $estado->update($request->all());
+        $estado->update($request->only('est_esta_embarazada', 'est_cantidad_hijos'));
 
-        return redirect()->route('estado_reproductivo.index')->with('success', 'Estado reproductivo actualizado.');
+        return redirect()->route('estado_reproductivo.index', $estado->est_his_id)->with('success', 'Estado reproductivo actualizado correctamente.');
     }
-    public function indexEvaluacion()
+
+    public function indexEvaluacion($his_id)
     {
-        $evaluaciones = Evaluacion::with('historiaClinica')->get();
-        return view('historia_clinica.evaluaciones.index', compact('evaluaciones'));
+        $evaluaciones = Evaluacion::where('eva_his_id', $his_id)->get();
+        return view('historia_clinica.evaluaciones.index', compact('evaluaciones', 'his_id'));
     }
 
-    public function createEvaluacion()
+    // Mostrar formulario para crear nueva evaluación
+    public function createEvaluacion($his_id)
     {
-        $historias = HistoriaClinica::all();
-        return view('historia_clinica.evaluaciones.create', compact('historias'));
+        return view('historia_clinica.evaluaciones.create', compact('his_id'));
     }
 
-    public function storeEvaluacion(Request $request)
+    // Guardar evaluación
+    public function storeEvaluacion(Request $request, $his_id)
     {
         $request->validate([
-            'eva_his_id' => 'required|exists:historia_clinica,his_id',
             'eva_evaluacion_dolor' => 'required|string',
-            'eva_escala_dolor' => 'required|integer|min:0|max:10',
-            'eva_examenes_complementarios' => 'required|string',
+            'eva_escala_dolor' => 'required|numeric|min:0|max:10',
+            'eva_examenes_complementarios' => 'nullable|string',
         ]);
 
-        Evaluacion::create($request->all());
+        Evaluacion::create([
+            'eva_his_id' => $his_id,
+            'eva_evaluacion_dolor' => $request->eva_evaluacion_dolor,
+            'eva_escala_dolor' => $request->eva_escala_dolor,
+            'eva_examenes_complementarios' => $request->eva_examenes_complementarios,
+        ]);
 
-        return redirect()->route('evaluaciones.index')->with('success', 'Evaluación creada correctamente.');
+        return redirect()->route('evaluaciones.index', $his_id)->with('success', 'Evaluación creada correctamente.');
     }
 
+    // Mostrar formulario para editar evaluación
     public function editEvaluacion($id)
     {
         $evaluacion = Evaluacion::findOrFail($id);
-        $historias = HistoriaClinica::all();
-        return view('historia_clinica.evaluaciones.edit', compact('evaluacion', 'historias'));
+        return view('historia_clinica.evaluaciones.edit', compact('evaluacion'));
     }
 
+    // Actualizar evaluación
     public function updateEvaluacion(Request $request, $id)
     {
+        $evaluacion = Evaluacion::findOrFail($id);
+
         $request->validate([
-            'eva_his_id' => 'required|exists:historia_clinica,his_id',
             'eva_evaluacion_dolor' => 'required|string',
-            'eva_escala_dolor' => 'required|integer|min:0|max:10',
-            'eva_examenes_complementarios' => 'required|string',
+            'eva_escala_dolor' => 'required|numeric|min:0|max:10',
+            'eva_examenes_complementarios' => 'nullable|string',
         ]);
 
-        $evaluacion = Evaluacion::findOrFail($id);
-        $evaluacion->update($request->all());
+        $evaluacion->update([
+            'eva_evaluacion_dolor' => $request->eva_evaluacion_dolor,
+            'eva_escala_dolor' => $request->eva_escala_dolor,
+            'eva_examenes_complementarios' => $request->eva_examenes_complementarios,
+        ]);
 
-        return redirect()->route('evaluaciones.index')->with('success', 'Evaluación actualizada correctamente.');
+        return redirect()->route('evaluaciones.index', $evaluacion->eva_his_id)->with('success', 'Evaluación actualizada correctamente.');
     }
 }

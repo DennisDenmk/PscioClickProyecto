@@ -4,8 +4,12 @@
     </x-slot>
 
     <div class="py-6 max-w-6xl mx-auto">
-        <a href="{{ route('estado_reproductivo.create') }}"
-            class="mb-4 inline-block px-4 py-2 bg-green-600 text-white rounded">+ Nuevo Estado</a>
+
+        {{-- Si tienes la variable $his_id, pásala así: --}}
+        <a href="{{ route('estado_reproductivo.create', $his_id ?? ($estados->first()->est_his_id ?? '') ) }}"
+            class="mb-4 inline-block px-4 py-2 bg-green-600 text-white rounded">
+            + Nuevo Estado
+        </a>
 
         @if (session('success'))
             <div class="text-green-600 mb-4">{{ session('success') }}</div>

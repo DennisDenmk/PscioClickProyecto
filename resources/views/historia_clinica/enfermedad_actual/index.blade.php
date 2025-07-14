@@ -1,41 +1,16 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Enfermedades Actuales</h2>
-    </x-slot>
+<div class="bg-white shadow rounded p-6 mt-6">
+    <h4 class="text-lg font-medium text-gray-800 mb-4">Enfermedades Actuales</h4>
 
-    <div class="py-6 max-w-5xl mx-auto">
-        <a href="{{ route('enfermedad_actual.create') }}" class="mb-4 px-4 py-2 bg-green-600 text-white rounded">+ Agregar Enfermedad</a>
-        <a href="{{ route('tipo_enfermedad_actual.index') }}"
-                    class="inline-block bg-blue-600 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
-                    Crear Tipo de enfermadad Actual
-                </a>
-        @if(session('success'))
-            <div class="text-green-600 mb-4">{{ session('success') }}</div>
-        @endif
-
-        <table class="w-full border">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="px-4 py-2">ID</th>
-                    <th class="px-4 py-2">Historia</th>
-                    <th class="px-4 py-2">Tipo</th>
-                    <th class="px-4 py-2">Descripción</th>
-                    <th class="px-4 py-2">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($enfermedades as $enf)
-                    <tr class="border-t">
-                        <td class="px-4 py-2">{{ $enf->enf_id }}</td>
-                        <td class="px-4 py-2">#{{ $enf->historiaClinica->his_id ?? '-' }}</td>
-                        <td class="px-4 py-2">{{ $enf->tipoEnfermedad->tipo_enf_nombre ?? '-' }}</td>
-                        <td class="px-4 py-2">{{ $enf->enf_descripcion }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ route('enfermedad_actual.edit', $enf->enf_id) }}" class="text-blue-600 hover:underline">Editar</a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</x-app-layout>
+    @if($historia->enfermedadesActuales->isEmpty())
+        <p class="text-gray-500">No hay enfermedades actuales registradas.</p>
+    @else
+        <ul class="space-y-3 text-gray-700">
+            @foreach ($historia->enfermedadesActuales as $enf)
+                <li class="border-b pb-2">
+                    <strong>{{ $enf->tipoEnfermedad->tipo_enf_nombre }}</strong>
+                    <div class="text-sm text-gray-600 mt-1">Descripción: {{ $enf->enf_descripcion }}</div>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</div>

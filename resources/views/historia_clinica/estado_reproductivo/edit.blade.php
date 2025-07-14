@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold">Editar Estado Reproductivo</h2>
+        <h2 class="text-xl font-semibold">Editar Estado Reproductivo - Historia Clínica #{{ $estado->est_his_id }}</h2>
     </x-slot>
 
     <div class="py-6 max-w-xl mx-auto">
@@ -8,31 +8,26 @@
             @csrf
             @method('PUT')
 
+            {{-- Historia clínica (solo muestra, no editable) --}}
             <div class="mb-4">
-                <label>Historia Clínica</label>
-                <select name="est_his_id" class="w-full border px-3 py-2">
-                    @foreach ($historias as $historia)
-                        <option value="{{ $historia->his_id }}" {{ $estado->est_his_id == $historia->his_id ? 'selected' : '' }}>
-                            Historia #{{ $historia->his_id }}
-                        </option>
-                    @endforeach
+                <label class="block font-medium text-gray-700 mb-1">Historia Clínica</label>
+                <input type="text" class="w-full border px-3 py-2 rounded bg-gray-100" value="Historia #{{ $estado->est_his_id }}" disabled>
+            </div>
+
+            <div class="mb-4">
+                <label class="block font-medium text-gray-700 mb-1">¿Está embarazada?</label>
+                <select name="est_esta_embarazada" class="w-full border px-3 py-2 rounded" required>
+                    <option value="1" {{ $estado->est_esta_embarazada == 1 ? 'selected' : '' }}>Sí</option>
+                    <option value="0" {{ $estado->est_esta_embarazada == 0 ? 'selected' : '' }}>No</option>
                 </select>
             </div>
 
             <div class="mb-4">
-                <label>¿Está embarazada?</label>
-                <select name="est_esta_embarazada" class="w-full border px-3 py-2">
-                    <option value="si" {{ $estado->est_esta_embarazada == 'si' ? 'selected' : '' }}>Sí</option>
-                    <option value="no" {{ $estado->est_esta_embarazada == 'no' ? 'selected' : '' }}>No</option>
-                </select>
+                <label class="block font-medium text-gray-700 mb-1">Cantidad de hijos</label>
+                <input type="number" name="est_cantidad_hijos" class="w-full border px-3 py-2 rounded" value="{{ $estado->est_cantidad_hijos }}" min="0" required>
             </div>
 
-            <div class="mb-4">
-                <label>Cantidad de hijos</label>
-                <input type="number" name="est_cantidad_hijos" class="w-full border px-3 py-2" value="{{ $estado->est_cantidad_hijos }}" required>
-            </div>
-
-            <button class="bg-blue-600 text-white px-4 py-2 rounded">Actualizar</button>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Actualizar</button>
         </form>
     </div>
 </x-app-layout>

@@ -48,7 +48,6 @@ Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
     Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
     Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
     Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
-
 });
 
 // Solo secretario
@@ -142,10 +141,10 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     });
     //Enfermedad Actual
     Route::prefix('enfermedad-actual')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
+        Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
+        Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
+        Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
+        Route::get('/edit/{id}', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEnfermedadActual'])->name('enfermedad_actual.update');
     });
 
@@ -158,35 +157,39 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoEnfermedadActual'])->name('tipo_enfermedad_actual.update');
     });
     //Plan de tratamiento
-    Route::prefix('plan-tratamiento')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexPlanTratamiento'])->name('plan_tratamiento.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createPlanTratamiento'])->name('plan_tratamiento.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storePlanTratamiento'])->name('plan_tratamiento.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('plan_tratamiento.edit');
-        Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('plan_tratamiento.update');
-    });
-    Route::prefix('estado-reproductivo')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEstadoReproductivo'])->name('estado_reproductivo.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEstadoReproductivo'])->name('estado_reproductivo.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEstadoReproductivo'])->name('estado_reproductivo.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEstadoReproductivo'])->name('estado_reproductivo.edit');
-        Route::put('/{id}', [HistoriaClinicaController::class, 'updateEstadoReproductivo'])->name('estado_reproductivo.update');
-    });
+    Route::prefix('plan-tratamiento')
+        ->name('plan_tratamiento.')
+        ->group(function () {
+            Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexPlanTratamiento'])->name('index');
+            Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createPlanTratamiento'])->name('create');
+            Route::post('/{his_id}', [HistoriaClinicaController::class, 'storePlanTratamiento'])->name('store');
+            Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editPlanTratamiento'])->name('edit');
+            Route::put('/{id}', [HistoriaClinicaController::class, 'updatePlanTratamiento'])->name('update');
+        });
+
+    Route::prefix('estado-reproductivo')
+        ->name('estado_reproductivo.')
+        ->group(function () {
+            Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEstadoReproductivo'])->name('index');
+            Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEstadoReproductivo'])->name('create');
+            Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEstadoReproductivo'])->name('store');
+            Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEstadoReproductivo'])->name('edit');
+            Route::put('/{id}', [HistoriaClinicaController::class, 'updateEstadoReproductivo'])->name('update');
+        });
+
     Route::prefix('evaluaciones')->group(function () {
-        Route::get('/', [HistoriaClinicaController::class, 'indexEvaluacion'])->name('evaluaciones.index');
-        Route::get('/create', [HistoriaClinicaController::class, 'createEvaluacion'])->name('evaluaciones.create');
-        Route::post('/', [HistoriaClinicaController::class, 'storeEvaluacion'])->name('evaluaciones.store');
-        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editEvaluacion'])->name('evaluaciones.edit');
+        Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEvaluacion'])->name('evaluaciones.index');
+        Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEvaluacion'])->name('evaluaciones.create');
+        Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEvaluacion'])->name('evaluaciones.store');
+        Route::get('/edit/{id}', [HistoriaClinicaController::class, 'editEvaluacion'])->name('evaluaciones.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateEvaluacion'])->name('evaluaciones.update');
     });
 
-     Route::patch('/notificaciones/{id}/leida', function ($id) {
+    Route::patch('/notificaciones/{id}/leida', function ($id) {
         $notificacion = auth()->user()->notifications()->findOrFail($id);
         $notificacion->markAsRead();
         return back();
     })->name('notificaciones.marcarLeida');
 });
-
-
 
 require __DIR__ . '/auth.php';
