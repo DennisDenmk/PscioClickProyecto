@@ -48,6 +48,13 @@
                     </tbody>
                 </table>
             </div>
+            <div class="flex justify-end">
+                <a href="{{ route('citas.index') }}"
+                    class="text-sm bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow transition mb-4">
+                    Volver a Citas
+                </a>
+            </div>
+
 
         </div>
     </div>

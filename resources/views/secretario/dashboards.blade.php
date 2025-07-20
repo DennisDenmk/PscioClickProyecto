@@ -11,10 +11,9 @@
         ['ruta' => 'pacientes.create', 'texto' => 'Registrar Paciente', 'icono' => '📝', 'color' => 'purple'],
         ['ruta' => 'pacientes.index', 'texto' => 'Ver Pacientes', 'icono' => '👤', 'color' => 'green'],
         ['ruta' => 'citas.index', 'texto' => 'Agendar Cita', 'icono' => '📅', 'color' => 'yellow'],
-        ['ruta' => 'tipocita.index', 'texto' => 'Tipo de Cita', 'icono' => '🗂️', 'color' => 'blue'],
         ['ruta' => 'promociones.index', 'texto' => 'Promociones', 'icono' => '🏷️', 'color' => 'pink'],
         ['ruta' => 'promocioncita.index', 'texto' => 'Promociones-Citas', 'icono' => '💬', 'color' => 'teal'],
-        
+
         ];
         @endphp
 

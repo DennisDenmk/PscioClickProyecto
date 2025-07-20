@@ -7,7 +7,9 @@
 
     <div class="py-10 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto space-y-6">
-
+            <div class="flex justify-end">
+                <a href="{{route('tipocita.index')}}" class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300">Gestion tipo de citas</a>
+            </div>
             <!-- Botón de nueva cita -->
             <div class="flex justify-end">
                 <a href="{{ route('citas.create') }}"
