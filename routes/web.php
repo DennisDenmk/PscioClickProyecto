@@ -33,32 +33,15 @@ Route::middleware('auth')->group(function () {
 });
 //Solo Administrador
 Route::middleware(['auth', 'rol:administrador'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboards');
-    })->name('admin.dashboard');
-
     Route::prefix('administrador')->group(function () {
+        Route::get('/dashboard', [AdminController::class,'index']) ->name('admin.dashboard');
         Route::get('/', [AdminController::class, 'indexUser'])->name('usuarios.index');
         Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
         Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
     });
 });
-// Rutas accesibles por doctor y secretario
-Route::middleware(['auth', 'rol:doctor,secretario'])->group(function () {
-    Route::get('/historias/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
-    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
-    Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
-    Route::get('/citas/calendario/mostrar/{id}', [CitaController::class, 'show'])->name('citas.show');
-    Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
-    Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
-    Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
-});
-
 // Solo secretario
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
-    Route::get('/secretario/dashboard', function () {
-        return view('secretario.dashboards');
-    })->name('secretario.dashboard');
     Route::get('/secretario/dashboard', function () {
         return view('secretario.dashboards');
     })->name('secretario.dashboard');
@@ -195,5 +178,18 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         return back();
     })->name('notificaciones.marcarLeida');
 });
+
+// Rutas accesibles por doctor y secretario
+Route::middleware(['auth', 'rol:doctor,secretario,administrador'])->group(function () {
+    Route::get('/historias/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
+    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
+    Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
+    Route::get('/citas/calendario/mostrar/{id}', [CitaController::class, 'show'])->name('citas.show');
+    Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');
+    Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
+    Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
+});
+
+
 
 require __DIR__ . '/auth.php';

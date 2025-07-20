@@ -18,13 +18,12 @@ class Doctor extends Model
         'doc_email',
     ];
 
-    public function horarios()
-    {
-        return $this->hasMany(HorarioDoctor::class, 'doc_cedula', 'doc_cedula');
-    }
-
     public function citas()
     {
         return $this->hasMany(Cita::class, 'doctor_id', 'doc_cedula');
+    }
+    public static function totalDoctores()
+    {
+        return self::count();
     }
 }

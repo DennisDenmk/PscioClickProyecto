@@ -37,4 +37,13 @@ class Paciente extends Model
     {
         return $this->hasOne(HistoriaClinica::class, 'pac_id', 'pac_cedula');
     }
+    /**
+     * Obtiene el total de pacientes registrados
+     *
+     * @return int
+     */
+    public static function totalPacientes()
+    {
+        return self::count();
+    }
 }

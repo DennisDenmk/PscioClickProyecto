@@ -79,7 +79,7 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">12</p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">{{$citasHoy}}</p>
                             </div>
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Citas Hoy</h4>
@@ -102,10 +102,10 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">85</p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">{{$totalPacientes}}</p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Pacientes Activos</h4>
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Pacientes Registrados</h4>
                         <div class="flex items-center text-sm">
                             <span class="text-green-500 font-medium">+12.5%</span>
                             <span class="text-gray-500 dark:text-gray-400 ml-2">este mes</span>
@@ -149,7 +149,7 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">4</p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">{{$totalDoctores}}</p>
                             </div>
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fisioterapeutas</h4>
@@ -220,7 +220,7 @@
                     </div>
                 </a>
 
-                <a href="#"
+                <a href="{{ route('citas.calendario') }}"
                    class="group relative overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 hover:from-amber-50 hover:to-orange-50 dark:hover:from-gray-700 dark:hover:to-gray-800 border border-gray-200 dark:border-gray-700 hover:border-amber-300 dark:hover:border-amber-600 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
 
                     <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>

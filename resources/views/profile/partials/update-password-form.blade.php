@@ -14,13 +14,13 @@
                 </div>
                 <div>
                     <h2 class="text-2xl font-bold bg-gradient-to-r from-gray-900 to-red-600 dark:from-white dark:to-red-400 bg-clip-text text-transparent">
-                        {{ __('Update Password') }}
+                        {{ __('Actualizar Contraseña') }}
                     </h2>
                 </div>
             </div>
 
             <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                {{ __('Ensure your account is using a long, random password to stay secure.') }}
+                {{ __('Asegurese de crear una contraseña segura y no olvidarla') }}
             </p>
         </header>
 
@@ -30,7 +30,7 @@
 
             <!-- Campo Contraseña Actual -->
             <div class="group">
-                <x-input-label for="update_password_current_password" :value="__('Current Password')"
+                <x-input-label for="update_password_current_password" :value="__('Contraseña Actual')"
                     class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 block transition-colors group-focus-within:text-red-600 dark:group-focus-within:text-red-400" />
 
                 <div class="relative">
@@ -57,7 +57,7 @@
 
             <!-- Campo Nueva Contraseña -->
             <div class="group">
-                <x-input-label for="update_password_password" :value="__('New Password')"
+                <x-input-label for="update_password_password" :value="__('Nueva Contraseña')"
                     class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 block transition-colors group-focus-within:text-red-600 dark:group-focus-within:text-red-400" />
 
                 <div class="relative">
@@ -100,7 +100,7 @@
 
             <!-- Campo Confirmar Contraseña -->
             <div class="group">
-                <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')"
+                <x-input-label for="update_password_password_confirmation" :value="__('Confirmar Contraseña')"
                     class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 block transition-colors group-focus-within:text-red-600 dark:group-focus-within:text-red-400" />
 
                 <div class="relative">

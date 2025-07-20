@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Paciente;
+use App\Models\Doctor;
+use App\Models\Cita;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function index()
+    {
+        $totalDoctores = Doctor::totalDoctores();
+        $totalPacientes = Paciente::totalPacientes();
+        $citasHoy = Cita::citasDeHoy();
+        return view('admin.dashboards',compact('totalPacientes','totalDoctores','citasHoy'));
+    }
     public function indexUser()
     {
         $users = User::with('role')->get();
@@ -20,7 +29,7 @@ class AdminController extends Controller
     public function editUser($cedula)
     {
         $user = User::where('cedula', $cedula)->firstOrFail();
-        
+
         if ((string) $cedula === (string) Auth::id()) {
             // Redirige de vuelta a la lista de usuarios con un mensaje de error
             return redirect()->route('usuarios.index')->with('error', 'No puedes editar tu propia cuenta desde este panel. Por favor, utiliza la sección de perfil si deseas modificarla.');
