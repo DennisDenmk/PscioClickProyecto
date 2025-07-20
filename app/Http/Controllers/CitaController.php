@@ -134,40 +134,56 @@ class CitaController extends Controller
         try {
             $horaInicio = $request->cit_hora_inicio . ':00';
 
-            $resultado = DB::selectOne('SELECT actualizar_cita_sin_horarios(?, ?, ?, ?, ?, ?, ?, ?)', [$id, $request->paciente_id, $request->doctor_id, $request->tipc_id, $request->estc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
+            // Ejecutar procedimiento almacenado que retorna tipo compuesto
+            $resultado = DB::selectOne('SELECT * FROM actualizar_cita(?, ?, ?, ?, ?, ?, ?)', [$id, $request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
 
-            // Extraer el resultado JSON
-            $resultadoArray = (array) $resultado;
-            $resultadoJson = reset($resultadoArray);
-            $data = json_decode($resultadoJson, true);
+            $mensaje = $resultado->mensaje ?? null;
+            $citId = $resultado->cit_id ?? null;
 
-            // Verificar si hubo error
-            if (!$data['success']) {
+            // Verificar si hay error
+            if ($mensaje && str_starts_with($mensaje, 'Error:')) {
                 return back()
-                    ->withErrors(['general' => $data['message']])
+                    ->withErrors(['general' => $mensaje])
                     ->withInput();
             }
 
-            // Obtener datos para la notificación
-            $paciente = \App\Models\Paciente::where('pac_cedula', $request->paciente_id)->first();
-            $usuario = $paciente->usuario;
+            // Obtener los datos de la cita anterior para comparar
+            $citaAnterior = DB::selectOne('SELECT cit_fecha FROM citas WHERE cit_id = ?', [$id]);
 
-            if ($usuario) {
-                $usuario->notify(
+            // Determinar la acción según los cambios
+            $accion = 'editada'; // Por defecto
+            if ($citaAnterior && $citaAnterior->cit_fecha !== $request->cit_fecha) {
+                $accion = 'reprogramada'; // Si cambió la fecha
+            }
+
+            // Buscar el usuario doctor para enviar notificación
+            $doctorUser = User::where('cedula', $request->doctor_id)->first();
+
+            // Enviar notificación al doctor si se actualizó la cita exitosamente
+            if ($doctorUser && $citId) {
+                $doctorUser->notify(
                     new CitaActualizada([
-                        'cita_id' => $data['cita_id'], // Usar el ID devuelto por el procedimiento
+                        'cita_id' => $citId,
                         'fecha' => $request->cit_fecha,
                         'hora' => $request->cit_hora_inicio,
-                        'paciente' => $paciente->nombreCompleto ?? 'Paciente',
+                        'paciente' => $request->paciente_id,
                         'motivo' => $request->cit_motivo_consulta,
+                        'accion' => $accion, // Usar la acción determinada automáticamente
+                        'tipo_notificacion' => $accion === 'reprogramada' ? 'reprogramacion' : 'edicion',
                     ]),
                 );
             }
 
-            return redirect()->route('citas.index')->with('success', $data['message']);
+            return redirect()
+                ->route('citas.index')
+                ->with('success', $mensaje ?: 'Cita actualizada exitosamente');
         } catch (\Illuminate\Database\QueryException $e) {
             return back()
                 ->withErrors(['general' => 'Ocurrió un error al intentar actualizar la cita. Por favor, intente de nuevo.'])
+                ->withInput();
+        } catch (\Exception $e) {
+            return back()
+                ->withErrors(['general' => 'Ocurrió un error inesperado. Por favor, intente de nuevo.'])
                 ->withInput();
         }
     }
