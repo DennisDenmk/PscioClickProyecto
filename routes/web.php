@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'rol:administrador'])->group(function () {
     Route::prefix('administrador')->group(function () {
         Route::get('/dashboard', [AdminController::class,'index']) ->name('admin.dashboard');
-        Route::get('/', [AdminController::class, 'indexUser'])->name('usuarios.index');
+        Route::get('/usuarios', [AdminController::class, 'indexUser'])->name('usuarios.index');
         Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
         Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
     });

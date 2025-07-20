@@ -5,14 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Doctor;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Rules\EcuadorianCedula;
+use App\Rules\EmailValido;
 
 class RegisteredUserController extends Controller
 {
@@ -43,9 +42,9 @@ class RegisteredUserController extends Controller
                     'size:10',
                     new EcuadorianCedula,
                     'unique:users,cedula',
-                    'unique:doctors,doc_cedula',
+                    'unique:doctores,doc_cedula',
                 ],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email',new EmailValido],
                 'telefono' => ['required', 'string', 'size:10', 'unique:users,telefono'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'role_id' => ['required', 'exists:roles,id'],

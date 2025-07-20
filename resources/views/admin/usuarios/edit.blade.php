@@ -25,10 +25,18 @@
             </div>
 
             <div class="mb-4">
-                <x-input-label for="cedula" value="Cédula" />
-                <x-text-input id="cedula" name="cedula" type="text" class="mt-1 block w-full"
+                <x-input-label for="name" value="Cédula" />
+                <x-text-input id="cedula" name="cedula" type="text" class="mt-1 block w-full" inputmode="numeric"
+                    pattern="[0-9]*" maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                     value="{{ old('cedula', $user->cedula) }}" />
-                <x-input-error :messages="$errors->get('cedula')" />
+
+            </div>
+            <div class="mb-4">
+                <x-input-label for="name" value="Teléfono" />
+                <x-text-input id="telefono" name="telefono" type="text" class="mt-1 block w-full"
+                    inputmode="numeric" pattern="[0-9]*" maxlength="10"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                    value="{{ old('telefono', $user->telefono) }}" />
             </div>
 
             <div class="mb-4">

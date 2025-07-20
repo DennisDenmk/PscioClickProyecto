@@ -5,9 +5,8 @@ use App\Models\Paciente;
 use App\Models\EstadoCivil;
 use App\Models\HistoriaClinica;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Rules\EcuadorianCedula;
+use App\Rules\EmailValido;
 
 class PacienteController extends Controller
 {

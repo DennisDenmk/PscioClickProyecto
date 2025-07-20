@@ -13,7 +13,7 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="login-logo">D</div>
+                <img class="login-logo"src="{{ asset('/img/logo.png') }}" alt="Imagen Subida">
                 <h1 class="login-title">DayJuLife</h1>
                 <p class="login-subtitle">Accede a tu cuenta</p>
             </div>
@@ -43,11 +43,7 @@
 
                         <a class="forgot-password mt-4" href="{{ route('home.home') }}">Volver</a>
                     </div>
-
-
             </div>
-
-
             </form>
         </div>
     </div>
