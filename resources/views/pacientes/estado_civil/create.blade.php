@@ -11,7 +11,7 @@
             <div>
                 <label for="estc_nombre" class="block font-medium text-gray-700 dark:text-gray-200">Nombre</label>
                 <input type="text" name="estc_nombre" id="estc_nombre"
-                       class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-500"
+                       class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-black shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 dark:focus:ring-blue-500"
                        required>
             </div>
 
@@ -23,4 +23,5 @@
             </div>
         </form>
     </div>
+    
 </x-app-layout>

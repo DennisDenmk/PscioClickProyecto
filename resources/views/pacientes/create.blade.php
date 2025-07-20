@@ -4,7 +4,7 @@
             Registrar Paciente
         </h2>
     </x-slot>
-
+    <a href="{{route('estado_civil.index')}}">Añadir estado civil </a>
     <div class="py-6 max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
         <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
             <x-paciente-form :estadosCiviles="$estadosCiviles" />

@@ -14,8 +14,7 @@
         ['ruta' => 'tipocita.index', 'texto' => 'Tipo de Cita', 'icono' => '🗂️', 'color' => 'blue'],
         ['ruta' => 'promociones.index', 'texto' => 'Promociones', 'icono' => '🏷️', 'color' => 'pink'],
         ['ruta' => 'promocioncita.index', 'texto' => 'Promociones-Citas', 'icono' => '💬', 'color' => 'teal'],
-        ['ruta' => 'estado_civil.index', 'texto' => 'Estado Civil', 'icono' => '❤️', 'color' => 'orange'],
-        ['ruta' => 'citas.calendario', 'texto' => 'Calendario', 'icono' => '📆', 'color' => 'cyan'],
+        
         ];
         @endphp
 
