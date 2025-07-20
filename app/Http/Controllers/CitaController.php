@@ -11,7 +11,7 @@ use App\Models\Doctor;
 use App\Models\EstadoCita;
 use App\Models\User;
 use App\Notifications\CitaAsignada;
-
+use App\Notifications\CitaActualizada;
 use Illuminate\Http\JsonResponse;
 
 use Illuminate\Http\Request;
@@ -53,7 +53,6 @@ class CitaController extends Controller
 
     public function storeCita(Request $request)
     {
-        // Validaciones básicas de los datos de entrada
         $request->validate([
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
@@ -63,26 +62,30 @@ class CitaController extends Controller
             'cit_motivo_consulta' => 'nullable|string|max:255',
         ]);
 
-        // Llamar al procedimiento almacenado
         try {
-            // Convertir la hora a formato compatible con PostgreSQL si es necesario (H:i:s)
             $horaInicio = $request->cit_hora_inicio . ':00';
 
-            // Ejecutar la función del procedimiento almacenado
-            $resultado = DB::selectOne('SELECT crear_cita(?, ?, ?, ?, ?, ?)', [$request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
-            $mensaje = (array) $resultado;
-            $mensaje = reset($mensaje); // Obtiene el primer valor del array
+            // Ejecutar procedimiento almacenado que retorna tipo compuesto
+            $resultado = DB::selectOne('SELECT * FROM crear_cita(?, ?, ?, ?, ?, ?)', [$request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
 
-            // Si el mensaje indica un error
-            if (str_starts_with($mensaje, 'Error:')) {
+            $mensaje = $resultado->mensaje ?? null;
+            $citId = $resultado->cit_id ?? null;
+
+            // Verificar si hay error
+            if ($mensaje && str_starts_with($mensaje, 'Error:')) {
                 return back()
-                    ->withErrors(['general' => $mensaje]) // Un error general para mostrar al usuario
+                    ->withErrors(['general' => $mensaje])
                     ->withInput();
             }
+
+            // Buscar el usuario doctor para enviar notificación
             $doctorUser = User::where('cedula', $request->doctor_id)->first();
-            if ($doctorUser) {
+
+            // Enviar notificación solo si se creó la cita exitosamente y se encontró el doctor
+            if ($doctorUser && $citId) {
                 $doctorUser->notify(
                     new CitaAsignada([
+                        'cita_id' => $citId, // Cambiado de 'id' a 'cita_id'
                         'fecha' => $request->cit_fecha,
                         'hora' => $request->cit_hora_inicio,
                         'paciente' => $request->paciente_id,
@@ -91,11 +94,16 @@ class CitaController extends Controller
                 );
             }
 
-            return redirect()->route('citas.index')->with('success', $mensaje);
+            return redirect()
+                ->route('citas.index')
+                ->with('success', $mensaje ?: 'Cita creada exitosamente');
         } catch (\Illuminate\Database\QueryException $e) {
-            // Capturar excepciones de la base de datos (ej. si la función no existe o hay un error fatal)
             return back()
                 ->withErrors(['general' => 'Ocurrió un error al intentar crear la cita. Por favor, intente de nuevo.'])
+                ->withInput();
+        } catch (\Exception $e) {
+            return back()
+                ->withErrors(['general' => 'Ocurrió un error inesperado. Por favor, intente de nuevo.'])
                 ->withInput();
         }
     }
@@ -113,7 +121,6 @@ class CitaController extends Controller
 
     public function updateCita(Request $request, $id)
     {
-        // Validaciones básicas de los datos de entrada
         $request->validate([
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
@@ -125,39 +132,46 @@ class CitaController extends Controller
         ]);
 
         try {
-            // Convertir la hora a formato compatible con PostgreSQL (H:i:s)
             $horaInicio = $request->cit_hora_inicio . ':00';
 
-            // Ejecutar la función del procedimiento almacenado para actualizar
-            $resultado = DB::selectOne('SELECT actualizar_cita_sin_horarios(?, ?, ?, ?, ?, ?, ?, ?)', [
-                $id, // ID de la cita a actualizar
-                $request->paciente_id,
-                $request->doctor_id,
-                $request->tipc_id,
-                $request->estc_id, // Incluir el estc_id
-                $request->cit_fecha,
-                $horaInicio,
-                $request->cit_motivo_consulta,
-            ]);
+            $resultado = DB::selectOne('SELECT actualizar_cita_sin_horarios(?, ?, ?, ?, ?, ?, ?, ?)', [$id, $request->paciente_id, $request->doctor_id, $request->tipc_id, $request->estc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
 
-            // El resultado de DB::selectOne es un objeto, necesitamos acceder a la propiedad
-            $mensaje = (array) $resultado;
-            $mensaje = reset($mensaje); // Obtiene el primer valor del array
+            // Extraer el resultado JSON
+            $resultadoArray = (array) $resultado;
+            $resultadoJson = reset($resultadoArray);
+            $data = json_decode($resultadoJson, true);
 
-            // Si el mensaje indica un error
-            if (str_starts_with($mensaje, 'Error:')) {
+            // Verificar si hubo error
+            if (!$data['success']) {
                 return back()
-                    ->withErrors(['general' => $mensaje])
+                    ->withErrors(['general' => $data['message']])
                     ->withInput();
             }
 
-            return redirect()->route('citas.index')->with('success', $mensaje);
+            // Obtener datos para la notificación
+            $paciente = \App\Models\Paciente::where('pac_cedula', $request->paciente_id)->first();
+            $usuario = $paciente->usuario;
+
+            if ($usuario) {
+                $usuario->notify(
+                    new CitaActualizada([
+                        'cita_id' => $data['cita_id'], // Usar el ID devuelto por el procedimiento
+                        'fecha' => $request->cit_fecha,
+                        'hora' => $request->cit_hora_inicio,
+                        'paciente' => $paciente->nombreCompleto ?? 'Paciente',
+                        'motivo' => $request->cit_motivo_consulta,
+                    ]),
+                );
+            }
+
+            return redirect()->route('citas.index')->with('success', $data['message']);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()
                 ->withErrors(['general' => 'Ocurrió un error al intentar actualizar la cita. Por favor, intente de nuevo.'])
                 ->withInput();
         }
     }
+
     public function destroy($id)
     {
         $cita = Cita::find($id);
@@ -346,16 +360,16 @@ class CitaController extends Controller
     {
         return $promocionCita->promocion->prom_sesiones - $promocionCita->proc_sesiones_usadas;
     }
-
+    /*
     public function usarSesion()
     {
-        if ($this->sesionesRestantes() <= 0) {
+        if ($this->sesionesRestantes(PromocionCita $promocionCita) <= 0) {
             throw new \Exception('No quedan sesiones disponibles para esta promoción.');
         }
 
         $this->increment('proc_sesiones_usadas');
     }
-
+*/
     public function citasCalendarioSecretario(): JsonResponse
     {
         $citas = Cita::with(['paciente', 'doctor', 'tipoCita', 'estadoCita'])->get();

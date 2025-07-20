@@ -1,11 +1,10 @@
 <?php
-
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class CitaAsignada extends Notification
+class CitaActualizada extends Notification
 {
     use Queueable;
 
@@ -24,13 +23,13 @@ class CitaAsignada extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'cita_id' => $this->cita['cita_id'], // Cambiado de 'id' a 'cita_id'
-            'mensaje' => 'Se le ha asignado una nueva cita.',
+            'cita_id' => $this->cita['cita_id'],
+            'mensaje' => 'Tu cita ha sido actualizada.',
             'fecha' => $this->cita['fecha'],
             'hora' => $this->cita['hora'],
             'paciente' => $this->cita['paciente'],
-            'motivo' => $this->cita['motivo'],
-            'url' => url("/citas/{$this->cita['cita_id']}"), // URL más consistente
+            'motivo' => $this->cita['motivo'] ?? null,
+            'url' => url("/citas/{$this->cita['cita_id']}"),
         ];
     }
 }

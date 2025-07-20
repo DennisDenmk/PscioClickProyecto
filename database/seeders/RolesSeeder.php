@@ -18,8 +18,8 @@ class RolesSeeder extends Seeder
         DB::table('estado_citas')->insert([
             ['estc_nombre' => 'Pendiente',   'created_at' => now(), 'updated_at' => now()],
             ['estc_nombre' => 'Confirmada',  'created_at' => now(), 'updated_at' => now()],
-            ['estc_nombre' => 'Cancelada',   'created_at' => now(), 'updated_at' => now()],
             ['estc_nombre' => 'Completada',  'created_at' => now(), 'updated_at' => now()],
+            ['estc_nombre' => 'Cancelada',   'created_at' => now(), 'updated_at' => now()],
         ]);
         DB::table('tipo_habito')->insert([
             ['tipo_hab_nombre' => 'Fumar',               'created_at' => now(), 'updated_at' => now()],
