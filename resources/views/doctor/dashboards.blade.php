@@ -70,19 +70,6 @@
 
             <!-- Acciones estilo administrador -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Registrar Historia Clínica -->
-                <a href="{{ route('historia_clinica.create') }}"
-                    class="rounded-lg shadow p-5 border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-100 to-blue-300 dark:from-blue-900 dark:to-blue-800 hover:shadow-lg transition duration-300 block">
-                    <div class="flex items-center justify-between">
-                        <h4 class="text-lg font-semibold text-blue-900 dark:text-white">Registrar Historia</h4>
-                        <svg class="w-6 h-6 text-blue-700 dark:text-blue-200" fill="none" stroke="currentColor"
-                            stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                        </svg>
-                    </div>
-                    <p class="text-md font-bold mt-3 text-blue-800 dark:text-blue-200">➤ Ingresar ahora</p>
-                </a>
-
                 <!-- Ver Historias Clínicas -->
                 <a href="{{ route('historia_clinica.index') }}"
                     class="rounded-lg shadow p-5 border border-gray-200 dark:border-gray-700 bg-gradient-to-r from-indigo-100 to-indigo-300 dark:from-indigo-900 dark:to-indigo-800 hover:shadow-lg transition duration-300 block">

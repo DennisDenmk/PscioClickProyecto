@@ -16,10 +16,15 @@ class EcuadorianCedula implements Rule
      */
     public function passes($attribute, $value)
     {
-        // Ejecutar la función SQL validar_cedula_ecuatoriana
-        $result = DB::selectOne('SELECT validar_cedula_ecuatoriana(?) AS es_valida', [$value]);
+        try {
+            $result = DB::selectOne('SELECT validar_cedula_ecuatoriana(?) AS es_valida', [$value]);
 
-        return $result->es_valida;
+            return $result && isset($result->es_valida) && $result->es_valida === true;
+        } catch (\Exception $e) {
+            // Opcional: puedes registrar el error si lo deseas
+            // Log::error('Error validando cédula: ' . $e->getMessage());
+            return false;
+        }
     }
 
     /**

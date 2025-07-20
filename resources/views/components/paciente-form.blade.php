@@ -10,7 +10,7 @@
     <div>
         <label class="block">Cédula</label>
         <input type="text" name="pac_cedula" maxlength="10" class="form-input w-full"
-            value="{{ old('pac_cedula', $paciente->pac_cedula ?? '') }}" {{ $isEdit ? 'readonly' : 'required' }}>
+            value="{{ old('pac_cedula', $paciente->pac_cedula ?? '') }}" required>
     </div>
 
     <div>

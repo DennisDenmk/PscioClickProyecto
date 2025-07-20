@@ -7,6 +7,7 @@ use App\Models\HistoriaClinica;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Rules\EcuadorianCedula;
 
 class PacienteController extends Controller
 {
@@ -24,7 +25,7 @@ class PacienteController extends Controller
             ->when($cedula, function ($query, $cedula) {
                 $query->where('pac_cedula', 'like', '%' . $cedula . '%');
             })
-            ->paginate(10); // 👈 paginación de 10 en 10
+            ->paginate(10);
 
         return view('pacientes.index', compact('pacientes'));
     }
@@ -64,7 +65,7 @@ class PacienteController extends Controller
     protected function validatePaciente(Request $request, $cedula = null)
     {
         $rules = [
-            'pac_cedula' => ['required', 'string', 'size:10', $cedula ? 'unique:pacientes,pac_cedula,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_cedula'],
+            'pac_cedula' => ['required', 'string', 'size:10', new EcuadorianCedula(), $cedula ? 'unique:pacientes,pac_cedula,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_cedula'],
             'pac_nombres' => 'required|string|max:75',
             'pac_apellidos' => 'required|string|max:75',
             'pac_sexo' => 'required|boolean',
@@ -74,8 +75,10 @@ class PacienteController extends Controller
             'pac_profesion' => 'required|string|max:50',
             'pac_telefono' => 'required|string|size:10',
             'pac_direccion' => 'required|string',
-            'pac_email' => ['required', 'email', 'max:125', $cedula ? 'unique:pacientes,pac_email,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_email'],
-        ] + [
+            'pac_email' => ['required', 'email', 'max:125', new EmailValido(), $cedula ? 'unique:pacientes,pac_email,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_email'],
+        ];
+
+        $messages = [
             'pac_cedula.unique' => 'La cédula ya está en uso.',
             'pac_cedula.size' => 'La cédula debe tener 10 caracteres.',
             'pac_email.email' => 'El email debe ser una dirección de correo válida.',
@@ -86,8 +89,9 @@ class PacienteController extends Controller
             'pac_fecha_nacimiento.before' => 'La fecha de nacimiento debe ser anterior a hoy.',
         ];
 
-        $request->validate($rules);
+        $request->validate($rules, $messages);
     }
+
     public function show($cedula)
     {
         $paciente = Paciente::with(['estadoCivil', 'historiaClinica'])->findOrFail($cedula);
@@ -146,5 +150,4 @@ class PacienteController extends Controller
             return response()->json(['error' => 'Paciente no encontrado'], 404);
         }
     }
-    
 }
