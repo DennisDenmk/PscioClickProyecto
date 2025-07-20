@@ -60,11 +60,6 @@
                             <span class="text-sm">Confirmada</span>
                         </div>
                         <div class="flex items-center">
-                            <span class="w-4 h-4 inline-block bg-[#f53131] mr-2 rounded opacity-70"
-                                style="text-decoration: line-through;"></span>
-                            <span class="text-sm">Cancelada</span>
-                        </div>
-                        <div class="flex items-center">
                             <span class="w-4 h-4 inline-block bg-[#7bb899] mr-2 rounded"></span>
                             <span class="text-sm">Completada</span>
                         </div>

@@ -81,6 +81,7 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::post('/', [CitaController::class, 'storeCita'])->name('citas.store');
         Route::get('/{id}/edit', [CitaController::class, 'editCita'])->name('citas.edit');
         Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
+        Route::delete('/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
     });
 });
 

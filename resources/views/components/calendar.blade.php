@@ -37,17 +37,21 @@
                 </div>
             </div>
             <div class="modal-footer">
-                @rol('secretario')
-                <a id="modalEditarCita" href="#"
-                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
-                    Editar
-                </a>
-                @endrol
-                
                 <a id="modalVerCita" href="#" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Ver
+                    Ver Detalles
                 </a>
-                
+                @rol('secretario')
+                    <a id="modalEditarCita" href="#"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                        Editar
+                    </a>
+                    <form id="deleteCitaForm" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Eliminar</button>
+                    </form>
+                @endrol
                 <button onclick="cerrarModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
                     Cerrar
                 </button>
@@ -77,14 +81,6 @@
         background-color: #3440e5 !important;
         border-color: #3440e5 !important;
         color: #3440e5 !important;
-    }
-
-    .fc-event.cancelada {
-        background-color: #f53131 !important;
-        border-color: #f53131 !important;
-        color: #f53131 !important;
-        opacity: 0.7;
-        text-decoration: line-through;
     }
 
     .fc-event.completada {
@@ -363,10 +359,14 @@
             }
 
             document.getElementById('modalVerCita').href = event.url;
-            document.getElementById('modalEditarCita').href = event.extendedProps.edit;
+            document.getElementById('modalEditarCita').href = props.edit;
+
+            // 👇 Aquí actualizamos el action del formulario de eliminación
+            document.getElementById('deleteCitaForm').action = `/citas/${event.id}`;
 
             modal.style.display = 'flex';
         };
+
 
         // Función para cerrar modal
         window.cerrarModal = function() {
