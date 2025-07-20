@@ -11,7 +11,7 @@ use Monolog\Registry;
 
 Route::get('/', function () {
     return view('home.home');
-});
+})->name('home.home');
 
 Route::get('/login', function () {
     return view('auth.login')->name('login');

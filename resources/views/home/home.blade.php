@@ -18,11 +18,13 @@
                         'green-light': '#81c784',
                         'accent': '#00d4aa',
                         'accent-pink': '#ff6b9d',
+                        'primarycolor-logo': '#0b5d63' // <- color del logo agregado aquí
                     }
                 }
             }
         }
     </script>
+
     <style>
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -161,6 +163,8 @@
             opacity: 0;
             transform: translateY(50px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            height: auto !important;
+            min-height: 0 !important;
         }
 
         .section-reveal.revealed {
@@ -195,7 +199,7 @@
           <x-application-logo class="h-10 w-10 rounded-full border border-primary p-1 shadow-md" />
         </div>
         <div class="leading-tight">
-          <h1 class="text-2xl font-extrabold bg-gradient-to-r from-primary via-accent to-teal bg-clip-text text-transparent">DayJu Life</h1>
+            <h1 class="text-2xl font-extrabold text-primarycolor-logo">DayJu Life</h1>
           <p class="text-xs text-gray-500 font-medium group-hover:text-primary transition duration-300">Salud en Movimiento</p>
         </div>
       </div>
@@ -208,17 +212,18 @@
         <a href="#contacto" class="text-gray-700 hover:text-primary transition font-medium">Contacto</a>
       </nav>
 
+
       <!-- BOTÓN SISTEMA -->
-      <!-- BOTÓN SISTEMA -->
-<a href="{{ route('login') }}" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-primary via-accent to-teal text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5l6 6m0 0l-6 6m6-6H4.5" />
-    </svg>
-    Sistema
-  </a>
+      <a href="{{ route('login') }}" class="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-primarycolor-logo text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5l6 6m0 0l-6 6m6-6H4.5" />
+        </svg>
+        Sistema
+      </a>
 
 
-      <!-- MENÚ HAMBURGUESA -->
+
+
       <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-full hover:bg-gray-100 transition shadow-sm">
         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
@@ -257,12 +262,13 @@
         </a>
 
         <!-- Botón sistema -->
-        <a href="{{ route('login') }}" class="mt-6 w-full max-w-xs px-6 py-3 rounded-full bg-gradient-to-r from-primary via-accent to-teal text-white font-bold shadow-lg hover:shadow-xl transition hover:scale-105 flex items-center justify-center gap-2">
+        <a href="{{ route('login') }}" class="mt-6 w-full max-w-xs px-6 py-3 rounded-full bg-primarycolor-logo text-white font-bold shadow-lg hover:shadow-xl transition hover:scale-105 flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.5 4.5l6 6m0 0l-6 6m6-6H4.5" />
             </svg>
             Sistema
           </a>
+
 
       </div>
     </div>
@@ -314,7 +320,7 @@
         <div class="container mx-auto px-4 relative z-10">
           <!-- Título -->
           <div class="text-center mb-16 section-reveal">
-            <h2 class="text-5xl font-bold text-gradient mb-4">Nuestros Servicios</h2>
+            <h2 class="text-3xl font-bold text-gradient mb-4">Nuestros Servicios</h2>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
               Potenciamos tu bienestar con atención personalizada y tratamientos profesionales 💪
             </p>
@@ -361,14 +367,17 @@
       </section>
 
 
+
     <!-- Nosotros -->
-    <!-- Nosotros -->
-<section id="nosotros" class="py-20 bg-white relative overflow-hidden">
+    <section id="nosotros" class="py-20 bg-white relative overflow-visible">
+        <div class="text-center mb-16 section-reveal">
+            <h2 class="text-3xl font-bold text-gradient mb-4">¿Por qué elegirnos?</h2>
+          </div>
+
     <div class="container mx-auto px-4 relative z-10">
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <!-- Texto -->
         <div class="section-reveal">
-          <h2 class="text-5xl font-bold text-gradient mb-6">¿Por qué elegirnos?</h2>
           <p class="text-lg text-gray-600 mb-8">
             En <strong>DayJu Life</strong> nos enfocamos en brindarte un servicio humano, profesional y transformador.
             Nuestra misión es ayudarte a recuperar tu bienestar con calidad, empatía y resultados reales.
@@ -404,7 +413,7 @@
               </div>
               <div>
                 <h3 class="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary transition-colors duration-300">Resultados Comprobados</h3>
-                <p class="text-gray-600">Más de 800 pacientes han mejorado su calidad de vida junto a nosotros.</p>
+                <p class="text-gray-600">Más de 600 pacientes han mejorado su calidad de vida junto a nosotros.</p>
               </div>
             </div>
           </div>
@@ -415,7 +424,7 @@
           <div class="bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl p-8 animate-pulse-glow">
             <div class="grid grid-cols-2 gap-6">
               <div class="text-center group">
-                <div class="text-4xl font-bold text-gradient mb-2 counter" data-target="800">0</div>
+                <div class="text-4xl font-bold text-gradient mb-2 counter" data-target="600">0</div>
                 <div class="text-gray-600">Pacientes Atendidos</div>
               </div>
               <div class="text-center group">
@@ -439,7 +448,7 @@
             <!-- Galería de Nuestro Trabajo -->
             <div class="mt-20 section-reveal">
                 <div class="text-center mb-12">
-                    <h3 class="text-4xl font-bold text-gradient mb-4">Nuestro Trabajo en Acción</h3>
+                    <h3 class="text-3xl font-bold text-gradient mb-4">Nuestro Trabajo en Acción</h3>
                     <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                         Conoce algunos de los casos y tratamientos que hemos realizado con éxito
                     </p>
@@ -568,7 +577,7 @@
     <section id="contacto" class="py-20 bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-16 section-reveal">
-                <h2 class="text-5xl font-bold text-gradient mb-4">Contacto</h2>
+                <h2 class="text-3xl font-bold text-gradient mb-4">Contacto</h2>
                 <p class="text-xl text-gray-600">¿Listo para comenzar tu tratamiento?</p>
             </div>
 
@@ -678,7 +687,7 @@
                     <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center animate-pulse-glow mr-3">
                         <span class="text-white font-bold text-2xl">D</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-gradient">DayLife</h3>
+                    <h3 class="text-2xl font-bold text-gradient">DayJu Life</h3>
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">
                     Salud en Movimiento. Servicios profesionales de fisioterapia y enfermería

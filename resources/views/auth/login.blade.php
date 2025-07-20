@@ -15,9 +15,9 @@
                 <h1 class="login-title">DayJuLife</h1>
                 <p class="login-subtitle">Accede a tu cuenta</p>
             </div>
-            
+
             <div class="login-body">
-                
+
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <div class="form-group">
@@ -29,7 +29,7 @@
 
                     <div class="form-group">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input id="password" class="form-input" type="password" name="password" 
+                        <input id="password" class="form-input" type="password" name="password"
                                placeholder="Ingresa tu contraseña" required autocomplete="current-password">
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
@@ -42,10 +42,17 @@
                         <label for="remember_me" class="checkbox-label">Recordarme</label>
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions flex flex-col items-center space-y-4">
                         <a class="forgot-password" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
                         <button type="submit" class="btn-primary">Iniciar Sesión</button>
+
+                        <a class="forgot-password mt-4" href="{{ route('home.home') }}">Volver</a>
                     </div>
+
+
+                    </div>
+
+
                 </form>
             </div>
         </div>
