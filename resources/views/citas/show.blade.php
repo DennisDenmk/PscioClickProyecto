@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto py-8 px-4">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Detalle de Cita #{{ $cita->cit_id }}</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Información de la cita</h1>
 
         <div class="bg-white shadow rounded p-6 space-y-6">
             {{-- Datos del Paciente --}}
