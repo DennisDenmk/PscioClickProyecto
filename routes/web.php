@@ -82,6 +82,8 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::get('/{id}/edit', [CitaController::class, 'editCita'])->name('citas.edit');
         Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
         Route::delete('/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
+        Route::post('/promocion', [CitaController::class, 'asignarPromocion'])->name('citas.asignar.promocion');
+
     });
 });
 
@@ -94,6 +96,9 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     // Crear historia clínica
     Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
     Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
+    //Citas
+    Route::post('/citas/{id}/completar', [CitaController::class, 'completarCita'])->name('citas.completar');
+    //Notificaciones
 
     // Detalles de historia clinica
     Route::get('{his_id}/detalles/create', [HistoriaClinicaController::class, 'createDetalle'])->name('detalles.create');

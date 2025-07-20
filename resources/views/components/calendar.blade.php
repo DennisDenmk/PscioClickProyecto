@@ -316,8 +316,10 @@
             eventDisplay: 'block',
             dayMaxEvents: 3,
             eventClick: function(info) {
-                mostrarDetallesCita(info.event);
                 info.jsEvent.preventDefault();
+                info.jsEvent.stopPropagation();
+
+                mostrarDetallesCita(info.event);
             },
             eventDidMount: function(info) {
                 // Añadir clase CSS basada en el estado
@@ -358,15 +360,32 @@
                 observacionesGrupo.style.display = 'none';
             }
 
-            document.getElementById('modalVerCita').href = event.url;
-            document.getElementById('modalEditarCita').href = props.edit;
+            // Configurar enlaces de manera segura
+            const verCitaBtn = document.getElementById('modalVerCita');
+            const editarCitaBtn = document.getElementById('modalEditarCita');
+            const completarCitaBtn = document.getElementById('modalCompletarCita');
 
-            // 👇 Aquí actualizamos el action del formulario de eliminación
-            document.getElementById('deleteCitaForm').action = `/citas/${event.id}`;
+            if (verCitaBtn && event.url) {
+                verCitaBtn.href = event.url;
+            }
 
+            if (editarCitaBtn && props.edit) {
+                editarCitaBtn.href = props.edit;
+            }
+
+            if (completarCitaBtn && props.completar) {
+                completarCitaBtn.href = props.completar;
+            }
+
+            // Configurar formulario de eliminación
+            const deleteForm = document.getElementById('deleteCitaForm');
+            if (deleteForm) {
+                deleteForm.action = `/citas/${event.id}`;
+            }
+
+            // Mostrar modal
             modal.style.display = 'flex';
         };
-
 
         // Función para cerrar modal
         window.cerrarModal = function() {

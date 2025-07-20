@@ -48,4 +48,29 @@ class Cita extends Model
     {
         return self::where('cit_fecha', now()->toDateString())->count();
     }
+    public function marcarComoCompletado()
+    {
+        // Obtener estado "Completado"
+        $estadoCompletado = EstadoCita::where('estc_nombre', 'Completado')->first();
+
+        if (!$estadoCompletado) {
+            throw new \Exception('Estado "Completado" no está definido.');
+        }
+
+        // Si ya está completado, no hacemos nada
+        if ($this->estc_id == $estadoCompletado->estc_id) {
+            return;
+        }
+
+        // Cambiar estado
+        $this->estc_id = $estadoCompletado->estc_id;
+        $this->save();
+
+        // Usar una sesión por cada promoción vinculada
+        foreach ($this->promocionesCitas as $promoCita) {
+            if ($promoCita->sesionesRestantes() > 0) {
+                $promoCita->usarSesion(); // método definido en PromocionCita
+            }
+        }
+    }
 }

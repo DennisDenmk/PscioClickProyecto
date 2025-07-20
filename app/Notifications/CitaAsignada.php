@@ -29,7 +29,7 @@ class CitaAsignada extends Notification
             'hora' => $this->cita['hora'],
             'paciente' => $this->cita['paciente'],
             'motivo' => $this->cita['motivo'],
-            'url' => url('/citas/calendario/mostrar/{id}'),
+            'url' =>  $this->cita['id'],
         ];
     }
 }
