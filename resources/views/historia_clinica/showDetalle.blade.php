@@ -38,6 +38,7 @@
                                 <th class="px-4 py-3 text-left text-sm font-medium text-white">Motivo</th>
                                 <th class="px-4 py-3 text-left text-sm font-medium text-white">Peso</th>
                                 <th class="px-4 py-3 text-left text-sm font-medium text-white">Talla</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-white">Imc</th>
                                 <th class="px-4 py-3 text-left text-sm font-medium text-white">Fecha Toma de datos</th>
                                 <th class="px-4 py-3 text-left text-sm font-medium text-white">Acciones</th>
                             </tr>
@@ -51,6 +52,7 @@
                                         {{ $detalle->deth_motivo_consulta }}</td>
                                     <td class="px-4 py-3 text-sm" style="color: #2d7a6b;">{{ $detalle->deth_peso }}</td>
                                     <td class="px-4 py-3 text-sm" style="color: #2d7a6b;">{{ $detalle->deth_talla }}</td>
+                                    <td class="px-4 py-3 text-sm" style="color: #2d7a6b;">{{ $detalle->deth_imc }}</td>
                                     <td class="px-4 py-3 text-sm" style="color: #1a5555;">
                                         {{ $detalle->deth_fecha_valoracion }}</td>
 

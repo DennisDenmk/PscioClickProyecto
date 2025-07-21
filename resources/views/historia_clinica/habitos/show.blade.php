@@ -7,10 +7,22 @@
 
     <div class="max-w-4xl mx-auto py-10">
         {{-- Datos del Paciente --}}
-        <div class="mb-6 bg-white p-6 rounded shadow">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Paciente</h3>
-            <p><strong>Nombre:</strong> {{ $historia->paciente->pac_nombres }} {{ $historia->paciente->pac_apellidos }}</p>
-            <p><strong>Cédula:</strong> {{ $historia->paciente->pac_cedula }}</p>
+        <div class="py-10 max-w-7xl mx-auto px-4">
+        <div class="mb-6 p-4 rounded-lg shadow-sm" style="background-color: #f8fcfa; border-left: 4px solid #2d7a6b;">
+            <h3 class="text-lg font-bold mb-2" style="color: #1a5555;">
+                Paciente: {{ $historia->paciente->pac_nombres }} {{ $historia->paciente->pac_apellidos }}
+            </h3>
+            <p class="text-sm" style="color: #2d7a6b;">Cédula: {{ $historia->paciente->pac_cedula }}</p>
+        </div>
+        </div>
+        <div>
+            <a href="{{ route('habitos.create', $historia->his_id) }}"
+                class="px-4 py-2 rounded-md font-medium transition-colors duration-200 border-2"
+                style="color: #1a5555; border-color: #7bb899; background-color: transparent;"
+                onmouseover="this.style.backgroundColor='#c8e6dc'; this.style.borderColor='#2d7a6b'"
+                onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#7bb899'">
+                Registrar Hábitos
+            </a>
         </div>
 
         {{-- Hábitos Registrados --}}

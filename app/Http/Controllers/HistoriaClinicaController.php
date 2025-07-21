@@ -74,8 +74,6 @@ class HistoriaClinicaController extends Controller
     public function storeDetalle(Request $request, $his_id)
     {
         $validated = $request->validate([
-            'deth_fecha_valoracion' => 'required|date',
-            'deth_hora' => 'required',
             'deth_motivo_consulta' => 'required|string',
             'deth_tratamientos_previos' => 'nullable|string',
             'deth_peso' => 'required|numeric',
@@ -85,11 +83,13 @@ class HistoriaClinicaController extends Controller
             'deth_exploracion_fisica' => 'nullable|string',
         ]);
 
+        $validated['deth_fecha_valoracion'] = now()->format('Y-m-d');
+        $validated['deth_hora'] = now()->format('H:i');
         $validated['his_id'] = $his_id;
 
         DetalleHistoria::create($validated);
 
-        return redirect()->route('historia_clinica.home', $his_id)->with('success', 'Consulta registrada.');
+        return redirect()->route('historias.show', $his_id)->with('success', 'Consulta registrada.');
     }
 
     public function editDetalle($deth_id)
@@ -100,11 +100,7 @@ class HistoriaClinicaController extends Controller
 
     public function updateDetalle(Request $request, $deth_id)
     {
-        $detalle = DetalleHistoria::findOrFail($deth_id);
-
         $validated = $request->validate([
-            'deth_fecha_valoracion' => 'required|date',
-            'deth_hora' => 'required',
             'deth_motivo_consulta' => 'required|string',
             'deth_tratamientos_previos' => 'nullable|string',
             'deth_peso' => 'required|numeric',
@@ -114,9 +110,12 @@ class HistoriaClinicaController extends Controller
             'deth_exploracion_fisica' => 'nullable|string',
         ]);
 
+        $detalle = DetalleHistoria::findOrFail($deth_id);
+
+        // No actualizamos fecha ni hora, mantenemos las originales
         $detalle->update($validated);
 
-        return redirect()->route('historia_clinica.index')->with('success', 'Detalle actualizado.');
+        return redirect()->route('historias.show', $detalle->his_id)->with('success', 'Detalle actualizado correctamente.');
     }
 
     public function showDetalle($his_id)
@@ -209,7 +208,7 @@ class HistoriaClinicaController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Hábitos registrados correctamente.');
+        return redirect()->route('habitos.show',$his_id)->with('success', 'Hábitos registrados correctamente.');
     }
 
     public function showHabitos($his_id)
@@ -240,7 +239,7 @@ class HistoriaClinicaController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Antecedentes registrados correctamente.');
+        return redirect()->route('antecedentes.show',$his_id)->with('success', 'Antecedentes registrados correctamente.');
     }
 
     public function showAntecedente($his_id)
@@ -408,7 +407,7 @@ class HistoriaClinicaController extends Controller
             'pla_tratamiento' => $request->pla_tratamiento,
         ]);
 
-        return redirect()->back()->with('success', 'Plan de tratamiento registrado correctamente.');
+        return redirect()->route('plan_tratamiento.index',$his_id)->with('success', 'Plan de tratamiento registrado correctamente.');
     }
 
     public function editPlanTratamiento($id)

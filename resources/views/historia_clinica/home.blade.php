@@ -25,22 +25,7 @@
                 class="px-4 py-2 rounded-md text-white font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
                 style="background-color: #7bb899; border: 1px solid #2d7a6b;"
                 onmouseover="this.style.backgroundColor='#2d7a6b'" onmouseout="this.style.backgroundColor='#7bb899'">
-                + Revisar Hábitos
-            </a>
-
-            <a href="{{ route('habitos.create', $historia->his_id) }}"
-                class="px-4 py-2 rounded-md font-medium transition-colors duration-200 border-2"
-                style="color: #1a5555; border-color: #7bb899; background-color: transparent;"
-                onmouseover="this.style.backgroundColor='#c8e6dc'; this.style.borderColor='#2d7a6b'"
-                onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#7bb899'">
-                Registrar Hábitos
-            </a>
-            <a href="{{ route('antecedentes.create', $historia->his_id) }}"
-                class="px-4 py-2 rounded-md font-medium transition-colors duration-200 border-2"
-                style="color: #1a5555; border-color: #7bb899; background-color: transparent;"
-                onmouseover="this.style.backgroundColor='#c8e6dc'; this.style.borderColor='#2d7a6b'"
-                onmouseout="this.style.backgroundColor='transparent'; this.style.borderColor='#7bb899'">
-                Registrar Antecedentes
+                Habitos
             </a>
             <a href="{{ route('antecedentes.show', $historia->his_id) }}"
                 class="px-4 py-2 rounded-md font-medium transition-colors duration-200 border-2"
