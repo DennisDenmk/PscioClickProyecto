@@ -1,48 +1,131 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             Lista de Promociones
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl mx-auto py-6 px-4 sm:px-6 lg:px-8 space-y-4">
-        <!-- Botón Nueva Promoción -->
-        <div class="flex justify-start">
-            <a href="{{ route('promociones.create') }}" 
-               class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-5 rounded shadow transition duration-300">
-               + Nueva Promoción
-            </a>
-        </div>
+    <div class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        @if (session('success'))
+            <div class="mb-4 text-green-600 font-medium">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        <!-- Tabla -->
-        <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-2xl">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Nombre</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Descripción</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Precio</th>
-                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Sesiones</th>
-                        <th class="px-6 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-600">
-                    @foreach($promociones as $promocion)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                        <td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{{ $promocion->prom_nombre }}</td>
-                        <td class="px-6 py-4 text-gray-700 dark:text-gray-300">{{ $promocion->prom_descripcion }}</td>
-                        <td class="px-6 py-4 text-gray-900 dark:text-gray-100">$ {{ number_format($promocion->prom_precio, 2) }}</td>
-                        <td class="px-6 py-4 text-gray-900 dark:text-gray-100">{{ $promocion->prom_sesiones }}</td>
-                        <td class="px-6 py-4 text-center">
-                            <a href="{{ route('promociones.edit', $promocion->prom_id) }}" 
-                               class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold">
-                               Editar
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+        <div class="space-y-6">
+            <!-- Botón de acción -->
+            <div class="flex justify-end">
+                <a href="{{ route('promociones.create') }}"
+                   class="inline-flex items-center justify-center bg-primarycolor-logo hover:bg-[#09494e] text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-300">
+                    + Nueva Promoción
+                </a>
+            </div>
+
+
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <!-- Vista de tabla para pantallas grandes -->
+                <div class="hidden lg:block">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sesiones</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($promociones as $promocion)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $promocion->prom_nombre }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $promocion->prom_descripcion }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            <span class="font-semibold text-green-600">$ {{ number_format($promocion->prom_precio, 2) }}</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $promocion->prom_sesiones }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <a href="{{ route('promociones.edit', $promocion->prom_id) }}"
+                                                class="text-indigo-600 hover:text-indigo-900 font-medium">
+                                                Editar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Vista de tarjetas para pantallas medianas -->
+                <div class="hidden md:block lg:hidden">
+                    <div class="p-4 space-y-4">
+                        @foreach($promociones as $promocion)
+                            <div class="bg-gray-50 rounded-lg p-4 border">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Nombre</div>
+                                        <div class="text-sm text-gray-900 font-medium">{{ $promocion->prom_nombre }}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Precio</div>
+                                        <div class="text-sm font-semibold text-green-600">$ {{ number_format($promocion->prom_precio, 2) }}</div>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <div class="text-sm font-medium text-gray-500">Descripción</div>
+                                        <div class="text-sm text-gray-900">{{ $promocion->prom_descripcion }}</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-500">Sesiones</div>
+                                        <div class="text-sm text-gray-900">{{ $promocion->prom_sesiones }}</div>
+                                    </div>
+                                    <div class="flex justify-end items-end">
+                                        <a href="{{ route('promociones.edit', $promocion->prom_id) }}"
+                                            class="bg-indigo-600 text-white px-3 py-1 rounded text-sm hover:bg-indigo-700 transition duration-200">
+                                            Editar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Vista compacta para móviles -->
+                <div class="block md:hidden">
+                    <div class="p-4 space-y-3">
+                        @foreach($promociones as $promocion)
+                            <div class="bg-gray-50 rounded-lg p-3 border">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-900">{{ $promocion->prom_nombre }}</div>
+                                        <div class="text-lg font-semibold text-green-600">$ {{ number_format($promocion->prom_precio, 2) }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs text-gray-500">Sesiones</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $promocion->prom_sesiones }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2 mb-3">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-500">Descripción:</span>
+                                        <p class="text-sm text-gray-900">{{ $promocion->prom_descripcion }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-start">
+                                    <a href="{{ route('promociones.edit', $promocion->prom_id) }}"
+                                        class="bg-indigo-600 text-white px-3 py-2 rounded text-sm text-center hover:bg-indigo-700 transition duration-200">
+                                        Editar Promoción
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -37,7 +37,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
             <!-- Bienvenida Moderna -->
-            <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-8 shadow-2xl">
+            <div class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-2xl p-8 shadow-2xl">
                 <div class="absolute inset-0 bg-black/20"></div>
                 <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
                 <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-white/5 rounded-full blur-lg"></div>
@@ -113,7 +113,7 @@
                     </div>
                 </div>
 
-                <!-- Ingresos del Mes -->
+                <!-- Personal DIsponible -->
                 <div class="card-hover group relative bg-gradient-to-br from-amber-500/10 via-orange-500/10 to-yellow-600/10 dark:from-amber-500/20 dark:via-orange-500/20 dark:to-yellow-600/20 backdrop-blur-sm border border-amber-200/50 dark:border-amber-500/30 rounded-2xl p-6 shadow-lg hover:shadow-2xl">
                     <div class="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -129,10 +129,10 @@
                                 <p class="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">$4,250</p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Ingresos del Mes</h4>
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personal Disponible</h4>
                         <div class="flex items-center text-sm">
-                            <span class="text-green-500 font-medium">+18.7%</span>
-                            <span class="text-gray-500 dark:text-gray-400 ml-2">vs mes anterior</span>
+                            <span class="text-green-500 font-medium">100%</span>
+                            <span class="text-gray-500 dark:text-gray-400 ml-2">disponibles</span>
                         </div>
                     </div>
                 </div>

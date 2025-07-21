@@ -8,10 +8,11 @@
     <div class="py-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-end mb-4">
             <a href="{{ route('promocioncita.create') }}"
-               class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow transition duration-300">
+               class="px-4 py-2 bg-primarycolor-logo hover:bg-[#09494e] text-white font-semibold rounded-lg shadow transition duration-300">
                 + Nuevo
             </a>
         </div>
+
 
         <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
             <table class="min-w-full table-auto border-collapse border border-gray-300 dark:border-gray-700">
