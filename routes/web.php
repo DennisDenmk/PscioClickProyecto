@@ -7,7 +7,6 @@ use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\CitaController;
 
-
 Route::get('/', function () {
     return view('home.home');
 })->name('home.home');
@@ -33,7 +32,7 @@ Route::middleware('auth')->group(function () {
 //Solo Administrador
 Route::middleware(['auth', 'rol:administrador'])->group(function () {
     Route::prefix('administrador')->group(function () {
-        Route::get('/dashboard', [AdminController::class,'index']) ->name('admin.dashboard');
+        Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/usuarios', [AdminController::class, 'indexUser'])->name('usuarios.index');
         Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
         Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
@@ -83,7 +82,6 @@ Route::middleware(['auth', 'rol:secretario'])->group(function () {
         Route::put('/{id}', [CitaController::class, 'updateCita'])->name('citas.update');
         Route::delete('/{id}', [CitaController::class, 'destroy'])->name('citas.destroy');
         Route::post('/promocion', [CitaController::class, 'asignarPromocion'])->name('citas.asignar.promocion');
-
     });
 });
 
@@ -148,6 +146,16 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoEnfermedadActual'])->name('tipo_enfermedad_actual.edit');
         Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoEnfermedadActual'])->name('tipo_enfermedad_actual.update');
     });
+    //Tipo de habitos
+    Route::prefix('tipo-habito')->name('tipo_habito.')->group(function () {
+        Route::get('/', [HistoriaClinicaController::class, 'indexTipoHabitos'])->name('index');
+        Route::get('/create', [HistoriaClinicaController::class, 'createTipoHabitos'])->name('create');
+        Route::post('/', [HistoriaClinicaController::class, 'storeTipoHabitos'])->name('store');
+        Route::get('/{id}/edit', [HistoriaClinicaController::class, 'editTipoHabitos'])->name('edit');
+        Route::put('/{id}', [HistoriaClinicaController::class, 'updateTipoHabitos'])->name('update');
+    });
+
+
     //Plan de tratamiento
     Route::prefix('plan-tratamiento')
         ->name('plan_tratamiento.')
@@ -195,7 +203,5 @@ Route::middleware(['auth', 'rol:doctor,secretario,administrador'])->group(functi
     Route::get('/pacientes/buscar/{cedula}', [PacienteController::class, 'buscar']);
     Route::get('/citas/por-fecha/{fecha}', [CitaController::class, 'porFecha']);
 });
-
-
 
 require __DIR__ . '/auth.php';

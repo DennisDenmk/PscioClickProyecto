@@ -108,6 +108,9 @@
                         </div>
                         <p class="text-md font-bold mt-3 text-yellow-700 dark:text-yellow-100">➤ Ver agenda</p>
                     </a>
+                    <a href="{{route('tipo_enfermedad_actual.index')}}">Tipo enfermedad</a>
+                    <a href="{{route('tipo_habito.index')}}">Tipo habito</a>
+
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ use App\Models\TipoEnfermedadActual;
 use App\Models\PlanTratamiento;
 use App\Models\EstadoReproductivo;
 use App\Models\Evaluacion;
+use App\Models\TipoHabito;
 
 use Illuminate\Http\Request;
 
@@ -62,8 +63,16 @@ class HistoriaClinicaController extends Controller
     }
     public function home($his_id)
     {
-        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria'])->findOrFail($his_id);
-        return view('historia_clinica.home', compact('historia'));
+        $historia = HistoriaClinica::with('paciente')->findOrFail($his_id);
+
+        // Cargar el último registro de cada módulo relacionado
+        $ultimoHabito = $historia->habitos()->latest()->first();
+        $ultimoAntecedente = $historia->antecedentes()->latest()->first();
+        $ultimaEnfermedadActual = $historia->enfermedadesActuales()->latest()->first();
+        $ultimoPlanTratamiento = $historia->planesTratamiento()->latest()->first();
+        $ultimoEstadoReproductivo = $historia->estadoReproductivo()->latest()->first();
+        $ultimaEvaluacion = $historia->evaluaciones()->latest()->first();
+        return view('historia_clinica.home', compact('historia', 'ultimoHabito', 'ultimoAntecedente', 'ultimaEnfermedadActual', 'ultimoPlanTratamiento', 'ultimoEstadoReproductivo', 'ultimaEvaluacion'));
     }
 
     public function createDetalle($his_id)
@@ -186,6 +195,46 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('historia_clinica.show', $his_id)->with('success', 'Signos vitales eliminados.');
     }
+    //Tipo de Habito
+    public function indexTipoHabitos()
+    {
+        $tipos = TipoHabito::all();
+        return view('historia_clinica.habitos.tipo.index', compact('tipos'));
+    }
+
+    public function createTipoHabitos()
+    {
+        return view('historia_clinica.habitos.tipo.create');
+    }
+
+    public function storeTipoHabitos(Request $request)
+    {
+        $validated = $request->validate([
+            'tipo_hab_nombre' => 'required|string|max:255',
+        ]);
+
+        TipoHabito::create($validated);
+
+        return redirect()->route('tipo_habito.index')->with('success', 'Tipo de hábito creado.');
+    }
+
+    public function editTipoHabitos($id)
+    {
+        $tipo = TipoHabito::findOrFail($id);
+        return view('historia_clinica.habitos.tipo.edit', compact('tipo'));
+    }
+
+    public function updateTipoHabitos(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'tipo_hab_nombre' => 'required|string|max:255',
+        ]);
+
+        $tipo = TipoHabito::findOrFail($id);
+        $tipo->update($validated);
+
+        return redirect()->route('tipo_habito.index')->with('success', 'Tipo de hábito actualizado.');
+    }
     //Habito
     public function createHabito($his_id)
     {
@@ -208,7 +257,7 @@ class HistoriaClinicaController extends Controller
             ]);
         }
 
-        return redirect()->route('habitos.show',$his_id)->with('success', 'Hábitos registrados correctamente.');
+        return redirect()->route('habitos.show', $his_id)->with('success', 'Hábitos registrados correctamente.');
     }
 
     public function showHabitos($his_id)
@@ -239,7 +288,7 @@ class HistoriaClinicaController extends Controller
             ]);
         }
 
-        return redirect()->route('antecedentes.show',$his_id)->with('success', 'Antecedentes registrados correctamente.');
+        return redirect()->route('antecedentes.show', $his_id)->with('success', 'Antecedentes registrados correctamente.');
     }
 
     public function showAntecedente($his_id)
@@ -407,7 +456,7 @@ class HistoriaClinicaController extends Controller
             'pla_tratamiento' => $request->pla_tratamiento,
         ]);
 
-        return redirect()->route('plan_tratamiento.index',$his_id)->with('success', 'Plan de tratamiento registrado correctamente.');
+        return redirect()->route('plan_tratamiento.index', $his_id)->with('success', 'Plan de tratamiento registrado correctamente.');
     }
 
     public function editPlanTratamiento($id)
