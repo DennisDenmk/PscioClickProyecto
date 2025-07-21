@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -18,7 +19,7 @@
         <div class="min-h-screen bg-gray-100 dark:bg-[#0F172A]">
             <x-notification />
             @livewire('navigation')
-            
+
             <!-- Page Content - Ajustado para ser responsive con la sidebar -->
             <main class="ml-12 md:ml-12 transition-all duration-500 ease-in-out pt-20 px-2 md:px-5 pb-4" id="main-content">
                 <div class="max-w-full">
@@ -33,7 +34,7 @@
             function adjustMainContent() {
                 const sidebar = document.querySelector("aside");
                 const mainContent = document.getElementById("main-content");
-                
+
                 if (sidebar && mainContent) {
                     // Observer para detectar cambios en las clases de la sidebar
                     const observer = new MutationObserver(function(mutations) {
@@ -43,13 +44,13 @@
                             }
                         });
                     });
-                    
+
                     // Configurar el observer
                     observer.observe(sidebar, {
                         attributes: true,
                         attributeFilter: ['class']
                     });
-                    
+
                     // Función para actualizar el margen del contenido principal
                     function updateMainContentMargin() {
                         if (sidebar.classList.contains('-translate-x-48')) {
@@ -62,18 +63,18 @@
                             mainContent.classList.add('ml-12', 'md:ml-60');
                         }
                     }
-                    
+
                     // Ejecutar una vez al cargar
                     updateMainContentMargin();
                 }
             }
-            
+
             // Ejecutar cuando el DOM esté listo
             document.addEventListener('DOMContentLoaded', adjustMainContent);
-            
+
             // También ejecutar después de que Livewire se haya inicializado
             document.addEventListener('livewire:load', adjustMainContent);
         </script>
-        
+
     </body>
 </html>

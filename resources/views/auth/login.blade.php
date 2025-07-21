@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DayJuLife - Iniciar Sesión</title>
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 </head>
 
 <body>
