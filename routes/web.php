@@ -94,8 +94,8 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
     })->name('doctor.dashboard');
 
     // Crear historia clínica
-    Route::get('/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
-    Route::post('/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
+    Route::get('historia/create', [HistoriaClinicaController::class, 'create'])->name('historia_clinica.create');
+    Route::post('historia/', [HistoriaClinicaController::class, 'store'])->name('historia_clinica.store');
     //Citas
     Route::post('/citas/{id}/completar', [CitaController::class, 'completarCita'])->name('citas.completar');
     //Notificaciones
@@ -186,8 +186,9 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
 
 // Rutas accesibles por doctor y secretario
 Route::middleware(['auth', 'rol:doctor,secretario,administrador'])->group(function () {
+    Route::get('/historia-clinica/{his_id}', [HistoriaClinicaController::class, 'home'])->name('historia_clinica.home');
     Route::get('/historias/', [HistoriaClinicaController::class, 'index'])->name('historia_clinica.index');
-    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'show'])->name('historias.show');
+    Route::get('/historias/{his_id}', [HistoriaClinicaController::class, 'showDetalle'])->name('historias.show');
     Route::get('/citas/calendario', [CitaController::class, 'mostrarCalendario'])->name('citas.calendario');
     Route::get('/citas/calendario/mostrar/{id}', [CitaController::class, 'show'])->name('citas.show');
     Route::get('/citas/calendario/datos', [CitaController::class, 'citasCalendario'])->name('citas.calendario.data');

@@ -50,7 +50,7 @@
                                     <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                                         {{ $historia->created_at->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">
-                                        <a href="{{ route('historias.show', $historia->his_id) }}"
+                                        <a href="{{ route('historia_clinica.home', $historia->his_id) }}"
                                             class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition">
                                             Ver
                                         </a>

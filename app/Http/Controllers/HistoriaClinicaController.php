@@ -60,6 +60,11 @@ class HistoriaClinicaController extends Controller
 
         return view('historia_clinica.index', compact('historias', 'cedula'));
     }
+    public function home($his_id)
+    {
+        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria'])->findOrFail($his_id);
+        return view('historia_clinica.home', compact('historia'));
+    }
 
     public function createDetalle($his_id)
     {
@@ -84,7 +89,7 @@ class HistoriaClinicaController extends Controller
 
         DetalleHistoria::create($validated);
 
-        return redirect()->route('historia_clinica.index')->with('success', 'Detalle registrado.');
+        return redirect()->route('historia_clinica.home', $his_id)->with('success', 'Consulta registrada.');
     }
 
     public function editDetalle($deth_id)
@@ -113,11 +118,14 @@ class HistoriaClinicaController extends Controller
 
         return redirect()->route('historia_clinica.index')->with('success', 'Detalle actualizado.');
     }
-    public function show($his_id)
-    {
-        $historia = HistoriaClinica::with(['paciente', 'detallesHistoria'])->findOrFail($his_id);
 
-        return view('historia_clinica.showDetalle', compact('historia'));
+    public function showDetalle($his_id)
+    {
+        $historia = HistoriaClinica::with('paciente')->findOrFail($his_id);
+
+        $detalles = DetalleHistoria::where('his_id', $his_id)->orderBy('deth_fecha_valoracion', 'desc')->orderBy('deth_hora', 'desc')->paginate(10);
+
+        return view('historia_clinica.showDetalle', compact('historia', 'detalles'));
     }
 
     public function destroyDetalle($deth_id)
