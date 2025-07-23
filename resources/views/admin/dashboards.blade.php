@@ -126,7 +126,7 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">$4,250</p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"></p>
                             </div>
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personal Disponible</h4>
