@@ -4,108 +4,7 @@
             <h2 class="font-bold text-2xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                 Dashboard de Doctor
             </h2>
-            <div class="flex items-center gap-4">
-                <!-- Panel de Notificaciones Modernizado -->
-                @php
-                    $notificacionesNoLeidas = auth()->user()->unreadNotifications;
-                @endphp
-
-                <div class="relative">
-                    <button onclick="document.getElementById('notificacionesPanel').classList.toggle('hidden')"
-                            class="relative p-3 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm border border-blue-200/50 dark:border-blue-500/30 rounded-2xl hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-300 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9a6 6 0 10-12 0v.75a8.967 8.967 0 01-2.312 6.022 23.848 23.848 0 005.455 1.31m5.714 0a3 3 0 11-5.714 0" />
-                        </svg>
-                        @if ($notificacionesNoLeidas->count())
-                            <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse shadow-lg">
-                                {{ $notificacionesNoLeidas->count() }}
-                            </span>
-                        @endif
-                    </button>
-
-                    <div id="notificacionesPanel"
-                        class="hidden absolute right-0 mt-4 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-2xl z-50 overflow-hidden">
-
-                        <!-- Header del panel -->
-                        <div class="p-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-bold text-lg">Notificaciones</h3>
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                                    <span class="text-sm opacity-90">{{ $notificacionesNoLeidas->count() }} nuevas</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="max-h-96 overflow-y-auto">
-                            @forelse (auth()->user()->notifications->take(10) as $notification)
-                                <a href="{{ route('citas.show', $notification->data['cita_id']) }}"
-                                    class="block p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 {{ $notification->read_at ? '' : 'bg-gradient-to-r from-blue-50/30 to-cyan-50/30 dark:from-blue-900/10 dark:to-cyan-900/10' }}">
-
-                                    <div class="flex items-start gap-3">
-                                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-                                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
-                                        </div>
-
-                                        <div class="flex-1 min-w-0">
-                                            <p class="font-medium text-gray-800 dark:text-white text-sm leading-tight">
-                                                {{ $notification->data['mensaje'] }}
-                                            </p>
-                                            <div class="mt-2 space-y-1">
-                                                <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                                                    📅 {{ $notification->data['fecha'] }} - {{ $notification->data['hora'] }}
-                                                </p>
-                                                <p class="text-xs text-gray-600 dark:text-gray-300">
-                                                    👤 {{ $notification->data['paciente'] }}
-                                                </p>
-                                            </div>
-
-                                            @if (!$notification->read_at)
-                                                <div class="mt-3">
-                                                    <form method="POST" action="{{ route('notificaciones.marcarLeida', $notification->id) }}" class="inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                                class="inline-flex items-center gap-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors duration-200"
-                                                                onclick="event.stopPropagation()">
-                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                                                            </svg>
-                                                            Marcar leída
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        @if (!$notification->read_at)
-                                            <div class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0 mt-1"></div>
-                                        @endif
-                                    </div>
-                                </a>
-                            @empty
-                                <div class="p-8 text-center">
-                                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9a6 6 0 10-12 0v.75a8.967 8.967 0 01-2.312 6.022 23.848 23.848 0 005.455 1.31m5.714 0a3 3 0 11-5.714 0"/>
-                                        </svg>
-                                    </div>
-                                    <p class="text-gray-500 dark:text-gray-400 text-sm">No tienes notificaciones</p>
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-300">En línea</span>
-                </div>
-            </div>
+            
         </div>
     </x-slot>
 
@@ -133,6 +32,112 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            <div class="w-full flex items-center gap-4 justify-start">
+    <!-- Panel de Notificaciones a la izquierda -->
+    @php
+        $notificacionesNoLeidas = auth()->user()->unreadNotifications;
+    @endphp
+
+    <div class="relative">
+        <button onclick="document.getElementById('notificacionesPanel').classList.toggle('hidden')"
+            class="relative p-3 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm border border-blue-200/50 dark:border-blue-500/30 rounded-2xl hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-300 group">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="w-6 h-6 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9a6 6 0 10-12 0v.75a8.967 8.967 0 01-2.312 6.022 23.848 23.848 0 005.455 1.31m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            @if ($notificacionesNoLeidas->count())
+                <span class="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse shadow-lg">
+                    {{ $notificacionesNoLeidas->count() }}
+                </span>
+            @endif
+        </button>
+
+        <!-- Panel flotante -->
+        <div id="notificacionesPanel"
+            class="hidden absolute left-0 mt-4 w-96 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-2xl z-50 overflow-hidden">
+
+            <!-- Header del panel -->
+            <div class="p-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-lg">Notificaciones</h3>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <span class="text-sm opacity-90">{{ $notificacionesNoLeidas->count() }} nuevas</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-h-96 overflow-y-auto">
+                @forelse (auth()->user()->notifications->take(10) as $notification)
+                    <a href="{{ route('citas.show', $notification->data['cita_id']) }}"
+                        class="block p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-all duration-300 {{ $notification->read_at ? '' : 'bg-gradient-to-r from-blue-50/30 to-cyan-50/30 dark:from-blue-900/10 dark:to-cyan-900/10' }}">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <p class="font-medium text-gray-800 dark:text-white text-sm leading-tight">
+                                    {{ $notification->data['mensaje'] }}
+                                </p>
+                                <div class="mt-2 space-y-1">
+                                    <p class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                                        📅 {{ $notification->data['fecha'] }} - {{ $notification->data['hora'] }}
+                                    </p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-300">
+                                        👤 {{ $notification->data['paciente'] }}
+                                    </p>
+                                </div>
+
+                                @if (!$notification->read_at)
+                                    <div class="mt-3">
+                                        <form method="POST" action="{{ route('notificaciones.marcarLeida', $notification->id) }}" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                class="inline-flex items-center gap-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors duration-200"
+                                                onclick="event.stopPropagation()">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                                Marcar leída
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
+
+                            @if (!$notification->read_at)
+                                <div class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                            @endif
+                        </div>
+                    </a>
+                @empty
+                    <div class="p-8 text-center">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9a6 6 0 10-12 0v.75a8.967 8.967 0 01-2.312 6.022 23.848 23.848 0 005.455 1.31m5.714 0a3 3 0 11-5.714 0" />
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No tienes notificaciones</p>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    <!-- Estado en línea -->
+    <div class="flex items-center gap-2">
+        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+        <span class="text-sm text-gray-600 dark:text-gray-300">En línea</span>
+    </div>
+</div>
 
             <!-- Bienvenida Moderna -->
             <div class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-2xl p-8 shadow-2xl">
@@ -161,6 +166,7 @@
                     </p>
                 </div>
             </div>
+
 
             <!-- Acciones Principales Modernizadas -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
