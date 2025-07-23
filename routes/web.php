@@ -134,9 +134,11 @@ Route::middleware(['auth', 'rol:doctor'])->group(function () {
         Route::get('/{his_id}', [HistoriaClinicaController::class, 'indexEnfermedadActual'])->name('enfermedad_actual.index');
         Route::get('/{his_id}/create', [HistoriaClinicaController::class, 'createEnfermedadActual'])->name('enfermedad_actual.create');
         Route::post('/{his_id}', [HistoriaClinicaController::class, 'storeEnfermedadActual'])->name('enfermedad_actual.store');
-        Route::get('/edit/{id}', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
-        Route::put('/{id}', [HistoriaClinicaController::class, 'updateEnfermedadActual'])->name('enfermedad_actual.update');
+        Route::get('/{his_id}/edit/{id}', [HistoriaClinicaController::class, 'editEnfermedadActual'])->name('enfermedad_actual.edit');
+        Route::put('/{his_id}/update/{id}', [HistoriaClinicaController::class, 'updateEnfermedadActual'])->name('enfermedad_actual.update');
+        Route::delete('/{his_id}/delete/{id}', [HistoriaClinicaController::class, 'destroyEnfermedadActual'])->name('enfermedad_actual.destroy');
     });
+
 
     //Tipo de enfermedad
     Route::prefix('tipo-enfermedad')->group(function () {

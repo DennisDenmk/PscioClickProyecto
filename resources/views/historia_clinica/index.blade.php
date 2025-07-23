@@ -14,11 +14,6 @@
 
         <!-- Botón y buscador -->
         <div class="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <!-- Botón "Nueva Historia" -->
-            <a href="{{ route('historia_clinica.create') }}"
-               class="inline-flex items-center justify-center bg-primarycolor-logo hover:bg-[#09494e] text-white font-semibold py-2 px-5 rounded-lg shadow transition duration-300">
-                + Nueva Historia Clínica
-            </a>
 
             <!-- Formulario de búsqueda -->
             <form method="GET" class="flex">
