@@ -49,7 +49,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'cedula' => 'Cuenta desactivada',
+                'cedula' => 'Cuenta desactivada o no existente',
             ]);
         }
 
