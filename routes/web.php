@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\SecretarioController;
 
 Route::get('/', function () {
     return view('home.home');
@@ -40,9 +42,7 @@ Route::middleware(['auth', 'rol:administrador'])->group(function () {
 });
 // Solo secretario
 Route::middleware(['auth', 'rol:secretario'])->group(function () {
-    Route::get('/secretario/dashboard', function () {
-        return view('secretario.dashboards');
-    })->name('secretario.dashboard');
+    Route::get('/secretario/dashboard',[SecretarioController::class,'index'])->name('secretario.dashboard');
 
     Route::resource('pacientes', PacienteController::class);
 

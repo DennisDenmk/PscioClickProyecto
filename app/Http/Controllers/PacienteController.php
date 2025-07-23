@@ -63,6 +63,12 @@ class PacienteController extends Controller
 
     protected function validatePaciente(Request $request, $cedula = null)
     {
+        // Convertir nombres y apellidos a mayúsculas
+        $request->merge([
+            'pac_nombres' => strtoupper($request->input('pac_nombres')),
+            'pac_apellidos' => strtoupper($request->input('pac_apellidos')),
+        ]);
+
         $rules = [
             'pac_cedula' => ['required', 'string', 'size:10', new EcuadorianCedula(), $cedula ? 'unique:pacientes,pac_cedula,' . $cedula . ',pac_cedula' : 'unique:pacientes,pac_cedula'],
             'pac_nombres' => 'required|string|max:75',

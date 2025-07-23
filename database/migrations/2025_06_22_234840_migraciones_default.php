@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->string('rememberToken', 100)->default('');
             $table->timestamps();
         });
-        
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -34,13 +34,19 @@ return new class extends Migration {
         });
 
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->constrained('users')->default(0);
-            $table->string('ip_address', 45)->default('');
-            $table->text('user_agent')->default('');
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+    $table->string('id')->primary();
+
+    // Cambiar foreignId por string ya que cedula es string
+    $table->string('user_id')->nullable(); // nullable para usuarios no autenticados
+
+    $table->string('ip_address', 45)->nullable(); // también nullable
+    $table->text('user_agent')->nullable(); // también nullable
+    $table->longText('payload');
+    $table->integer('last_activity')->index();
+
+    // Foreign key hacia users.cedula (si lo necesitas)
+    $table->foreign('user_id')->references('cedula')->on('users')->onDelete('cascade');
+});
     }
     public function down(): void
     {

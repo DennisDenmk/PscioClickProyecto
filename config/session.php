@@ -167,9 +167,9 @@ return [
     | to the server if the browser has a HTTPS connection. This will keep
     | the cookie from being sent to you when it can't be done securely.
     |
-    */
+    */  
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -199,7 +199,7 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
+    'same_site' => null,
 
     /*
     |--------------------------------------------------------------------------

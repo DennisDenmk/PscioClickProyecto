@@ -39,10 +39,10 @@
                     </div>
 
                     <div class="form-actions flex flex-col items-center space-y-4">
-                        <a class="forgot-password" href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                        <a  type="submit" class="btn-primary" href="{{ route('home.home') }}">Volver</a>
                         <button type="submit" class="btn-primary">Iniciar Sesión</button>
 
-                        <a class="forgot-password mt-4" href="{{ route('home.home') }}">Volver</a>
+
                     </div>
             </div>
             </form>

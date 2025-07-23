@@ -149,7 +149,7 @@
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold text-white">
-                                Bienvenido, Doctor
+                                Bienvenido, {{ Auth::user()->name }}
                             </h3>
                             <p class="text-white/80 text-lg">
                                 {{ Auth::user()->email }}

@@ -12,6 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'cedula';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
     /**
      * The attributes that are mass assignable.
      *
@@ -51,8 +56,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
-    public function getAuthIdentifierName()
+     public function getAuthIdentifier()
     {
-        return 'cedula';
+        return $this->getAttribute($this->getAuthIdentifierName());
+    }
+    public static function totalUsuariosActivos()
+    {
+        return self::where('estado', true)->count();
     }
 }

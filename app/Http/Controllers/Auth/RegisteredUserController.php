@@ -36,15 +36,8 @@ class RegisteredUserController extends Controller
             [
                 'name' => ['required', 'string', 'max:30'],
                 'apellido' => ['required', 'string', 'max:30'],
-                'cedula' => [
-                    'required',
-                    'string',
-                    'size:10',
-                    new EcuadorianCedula,
-                    'unique:users,cedula',
-                    'unique:doctores,doc_cedula',
-                ],
-                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email',new EmailValido],
+                'cedula' => ['required', 'string', 'size:10', new EcuadorianCedula(), 'unique:users,cedula', 'unique:doctores,doc_cedula'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email', new EmailValido()],
                 'telefono' => ['required', 'string', 'size:10', 'unique:users,telefono'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 'role_id' => ['required', 'exists:roles,id'],
@@ -57,8 +50,8 @@ class RegisteredUserController extends Controller
         );
 
         $user = User::create([
-            'name' => $request->name,
-            'apellido' => $request->apellido,
+            'name' => strtoupper($request->name),
+            'apellido' => strtoupper($request->apellido),
             'cedula' => $request->cedula,
             'email' => $request->email,
             'telefono' => $request->telefono,
@@ -71,8 +64,8 @@ class RegisteredUserController extends Controller
 
             if (!$doctorExistente) {
                 Doctor::create([
-                    'doc_nombres' => $request->name,
-                    'doc_apellidos' => $request->apellido,
+                    'doc_nombres' => strtoupper($request->name),
+                    'doc_apellidos' => strtoupper($request->apellido),
                     'doc_cedula' => $request->cedula,
                     'doc_email' => $request->email,
                     'doc_telefono' => $request->telefono,

@@ -52,7 +52,7 @@
                         </div>
                         <div>
                             <h3 class="text-2xl font-bold text-white">
-                                Bienvenido, Secretario
+                                Bienvenido, {{ Auth::user()->name }}
                             </h3>
                             <p class="text-white/80 text-lg">
                                 {{ Auth::user()->email }}
@@ -80,7 +80,7 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent"></p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent"> {{$citasHoy}}</p>
                             </div>
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Citas Hoy</h4>
@@ -103,7 +103,7 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent"></p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">{{$totalPacientes}}</p>
                             </div>
                         </div>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Pacientes Registrados</h4>
@@ -127,10 +127,10 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">$4,250</p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">{{$personalActivo}}</p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personal Disponible</h4>
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personal Disponible </h4>
                         <div class="flex items-center text-sm">
                             <span class="text-green-500 font-medium">100%</span>
                             <span class="text-gray-500 dark:text-gray-400 ml-2">disponibles</span>
@@ -150,10 +150,10 @@
                                 </svg>
                             </div>
                             <div class="text-right">
-                                <p class="text-3xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"></p>
+                                <p class="text-3xl font-black bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">{{$totalDoctores}}</p>
                             </div>
                         </div>
-                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fisioterapeutas</h4>
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fisioterapeutas </h4>
                         <div class="flex items-center text-sm">
                             <span class="text-blue-500 font-medium">100%</span>
                             <span class="text-gray-500 dark:text-gray-400 ml-2">disponibles</span>

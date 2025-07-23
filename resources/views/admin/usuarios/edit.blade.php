@@ -24,13 +24,13 @@
                             <div>
                                 <x-input-label for="name" value="Nombre" />
                                 <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
-                                    value="{{ old('name', $user->name) }}" />
+                                    value="{{ old('name', $user->name) }}" style="text-transform: uppercase;" />
                                 <x-input-error :messages="$errors->get('name')" />
                             </div>
 
                             <div>
                                 <x-input-label for="apellido" value="Apellido" />
-                                <x-text-input id="apellido" name="apellido" type="text" class="mt-1 block w-full"
+                                <x-text-input id="apellido" name="apellido" type="text" class="mt-1 block w-full" style="text-transform: uppercase;"
                                     value="{{ old('apellido', $user->apellido) }}" />
                                 <x-input-error :messages="$errors->get('apellido')" />
                             </div>
