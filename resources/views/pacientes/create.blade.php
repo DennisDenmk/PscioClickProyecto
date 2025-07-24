@@ -252,7 +252,7 @@
         </div>
     </form>
     </div>
- <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
+    <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
             @csrf
     <!-- Vista compacta para móviles -->
     <div class="block md:hidden">
