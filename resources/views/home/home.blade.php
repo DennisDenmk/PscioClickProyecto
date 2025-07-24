@@ -813,7 +813,7 @@
                                 <h4
                                     class="font-semibold text-gray-800 group-hover:text-primary transition-colors duration-300">
                                     Email</h4>
-                                <p class="text-gray-600">info@fisioterapiaibarra.com</p>
+                                <p class="text-gray-600">dayjulife@gmail.com</p>
                             </div>
                         </div>
 
