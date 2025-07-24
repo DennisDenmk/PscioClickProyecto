@@ -140,7 +140,10 @@
                         Guardar
                     </button>
                 </div>
+        </form>
                 <div class="block lg:hidden hidden md:block">
+     <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
+            @csrf
         <div class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -247,8 +250,10 @@
                     required value="{{ old('pac_email', $paciente->pac_email ?? '') }}">
             </div>
         </div>
+    </form>
     </div>
-
+ <form method="POST" action="{{ route('pacientes.store') }}" class="space-y-6">
+            @csrf
     <!-- Vista compacta para móviles -->
     <div class="block md:hidden">
         <div class="space-y-4">
@@ -350,7 +355,7 @@
             </div>
         </div>
     </div>
-        </form>
+    </form>
         
 
     </div>
