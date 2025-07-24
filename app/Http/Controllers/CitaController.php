@@ -57,6 +57,7 @@ class CitaController extends Controller
             'paciente_id' => 'required|exists:pacientes,pac_cedula',
             'doctor_id' => 'required|exists:doctores,doc_cedula',
             'tipc_id' => 'required|exists:tipo_citas,tipc_id',
+            'estc_id' => 'required|exists:estado_citas,estc_id', // Agregado estado de cita
             'cit_fecha' => 'required|date|after_or_equal:today',
             'cit_hora_inicio' => 'required|date_format:H:i',
             'cit_motivo_consulta' => 'nullable|string|max:255',
@@ -66,7 +67,15 @@ class CitaController extends Controller
             $horaInicio = $request->cit_hora_inicio . ':00';
 
             // Ejecutar procedimiento almacenado que retorna tipo compuesto
-            $resultado = DB::selectOne('SELECT * FROM crear_cita(?, ?, ?, ?, ?, ?)', [$request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
+            $resultado = DB::selectOne('SELECT * FROM crear_cita(?, ?, ?, ?, ?, ?, ?)', [
+                $request->paciente_id, 
+                $request->doctor_id, 
+                $request->tipc_id, 
+                $request->estc_id, // Agregado estado de cita
+                $request->cit_fecha, 
+                $horaInicio, 
+                $request->cit_motivo_consulta
+            ]);
 
             $mensaje = $resultado->mensaje ?? null;
             $citId = $resultado->cit_id ?? null;
@@ -85,7 +94,7 @@ class CitaController extends Controller
             if ($doctorUser && $citId) {
                 $doctorUser->notify(
                     new CitaAsignada([
-                        'cita_id' => $citId, // Cambiado de 'id' a 'cita_id'
+                        'cita_id' => $citId,
                         'fecha' => $request->cit_fecha,
                         'hora' => $request->cit_hora_inicio,
                         'paciente' => $request->paciente_id,
@@ -134,8 +143,20 @@ class CitaController extends Controller
         try {
             $horaInicio = $request->cit_hora_inicio . ':00';
 
-            // Ejecutar procedimiento almacenado que retorna tipo compuesto
-            $resultado = DB::selectOne('SELECT * FROM actualizar_cita(?, ?, ?, ?, ?, ?, ?)', [$id, $request->paciente_id, $request->doctor_id, $request->tipc_id, $request->cit_fecha, $horaInicio, $request->cit_motivo_consulta]);
+            // Obtener los datos de la cita anterior para comparar
+            $citaAnterior = DB::selectOne('SELECT cit_fecha, estc_id FROM citas WHERE cit_id = ?', [$id]);
+
+            // Ejecutar procedimiento almacenado que retorna tipo compuesto (CORREGIDO: agregado estc_id)
+            $resultado = DB::selectOne('SELECT * FROM actualizar_cita(?, ?, ?, ?, ?, ?, ?, ?)', [
+                $id, 
+                $request->paciente_id, 
+                $request->doctor_id, 
+                $request->tipc_id, 
+                $request->estc_id,  // AGREGADO: parámetro faltante
+                $request->cit_fecha, 
+                $horaInicio, 
+                $request->cit_motivo_consulta
+            ]);
 
             $mensaje = $resultado->mensaje ?? null;
             $citId = $resultado->cit_id ?? null;
@@ -147,13 +168,36 @@ class CitaController extends Controller
                     ->withInput();
             }
 
-            // Obtener los datos de la cita anterior para comparar
-            $citaAnterior = DB::selectOne('SELECT cit_fecha FROM citas WHERE cit_id = ?', [$id]);
-
             // Determinar la acción según los cambios
             $accion = 'editada'; // Por defecto
-            if ($citaAnterior && $citaAnterior->cit_fecha !== $request->cit_fecha) {
-                $accion = 'reprogramada'; // Si cambió la fecha
+            
+            if ($citaAnterior) {
+                // Si cambió la fecha
+                if ($citaAnterior->cit_fecha !== $request->cit_fecha) {
+                    $accion = 'reprogramada';
+                }
+                // Si cambió el estado
+                elseif ($citaAnterior->estc_id != $request->estc_id) {
+                    // Obtener el nombre del nuevo estado para personalizar el mensaje
+                    $nuevoEstado = DB::selectOne('SELECT estc_nombre FROM estado_citas WHERE estc_id = ?', [$request->estc_id]);
+                    
+                    if ($nuevoEstado) {
+                        switch (strtolower($nuevoEstado->estc_nombre)) {
+                            case 'cancelado':
+                                $accion = 'cancelada';
+                                break;
+                            case 'completado':
+                                $accion = 'completada';
+                                break;
+                            case 'confirmado':
+                                $accion = 'confirmada';
+                                break;
+                            default:
+                                $accion = 'actualizada';
+                                break;
+                        }
+                    }
+                }
             }
 
             // Buscar el usuario doctor para enviar notificación
@@ -161,6 +205,14 @@ class CitaController extends Controller
 
             // Enviar notificación al doctor si se actualizó la cita exitosamente
             if ($doctorUser && $citId) {
+                $tipoNotificacion = match($accion) {
+                    'reprogramada' => 'reprogramacion',
+                    'cancelada' => 'cancelacion',
+                    'completada' => 'completado',
+                    'confirmada' => 'confirmacion',
+                    default => 'edicion'
+                };
+
                 $doctorUser->notify(
                     new CitaActualizada([
                         'cita_id' => $citId,
@@ -168,15 +220,25 @@ class CitaController extends Controller
                         'hora' => $request->cit_hora_inicio,
                         'paciente' => $request->paciente_id,
                         'motivo' => $request->cit_motivo_consulta,
-                        'accion' => $accion, // Usar la acción determinada automáticamente
-                        'tipo_notificacion' => $accion === 'reprogramada' ? 'reprogramacion' : 'edicion',
+                        'accion' => $accion,
+                        'tipo_notificacion' => $tipoNotificacion,
                     ]),
                 );
             }
 
+            // Personalizar mensaje de éxito según la acción
+            $mensajeExito = match($accion) {
+                'reprogramada' => 'Cita reprogramada exitosamente',
+                'cancelada' => 'Cita cancelada exitosamente',
+                'completada' => 'Cita marcada como completada',
+                'confirmada' => 'Cita confirmada exitosamente',
+                default => 'Cita actualizada exitosamente'
+            };
+
             return redirect()
                 ->route('citas.index')
-                ->with('success', $mensaje ?: 'Cita actualizada exitosamente');
+                ->with('success', $mensaje ?: $mensajeExito);
+                
         } catch (\Illuminate\Database\QueryException $e) {
             return back()
                 ->withErrors(['general' => 'Ocurrió un error al intentar actualizar la cita. Por favor, intente de nuevo.'])
