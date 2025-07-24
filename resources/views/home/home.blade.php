@@ -861,6 +861,7 @@
                                 <option>Enfermería - Administración de medicamentos</option>
                                 <option>Enfermería - Sueros Vitamínicos</option>
                                 <option>Enfermería - Curación de Heridas</option>
+                                <option>Otros</option>
                             </select>
                         </div>
                         <div class="group">
@@ -877,8 +878,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-16 relative overflow-hidden">
         <div class="container mx-auto px-6 relative z-10">
@@ -1079,7 +1078,8 @@
 
             const numero = "593986868908";
             const texto =
-                `Hola, quiero reservar una cita: *Nombre:* ${nombre} </br> *Email:* ${email} </br> *Teléfono:* ${telefono} </br> *Servicio:* ${servicio} </br> *Mensaje:* ${mensaje || 'Sin mensaje adicional'}`;
+                `Hola, quiero reservar una cita:\n\n*Nombre:* ${nombre}\n*Email:* ${email}\n*Teléfono:* ${telefono}\n*Servicio:* ${servicio}\n*Mensaje:* ${mensaje || 'Sin mensaje adicional'}`;
+
 
             const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
 
