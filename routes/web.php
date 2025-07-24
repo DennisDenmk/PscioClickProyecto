@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
 use App\Http\Controllers\CitaController;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\SecretarioController;
 
 Route::get('/', function () {
@@ -37,6 +36,7 @@ Route::middleware(['auth', 'rol:administrador'])->group(function () {
         Route::get('/usuarios', [AdminController::class, 'indexUser'])->name('usuarios.index');
         Route::get('/{cedula}/edit', [AdminController::class, 'editUser'])->name('usuarios.edit');
         Route::put('/{cedula}', [AdminController::class, 'updateUser'])->name('usuarios.update');
+        Route::get('/sesiones', [AdminController::class, 'indexSesion'])->name('sesiones.index');
     });
 });
 // Solo secretario
