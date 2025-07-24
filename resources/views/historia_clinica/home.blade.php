@@ -140,7 +140,9 @@
                     <div class="bg-gradient-to-r bg-[#09494e] to-emerald-500 px-6 py-4">
                         <h3 class="text-lg font-semibold text-white flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                </path>
                             </svg>
                             Última Enfermedad Actual
                         </h3>
@@ -148,31 +150,13 @@
                     <div class="p-6">
                         @if ($ultimaEnfermedadActual)
                             <div class="space-y-3">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <div>
-                                        <span class="font-medium text-gray-600">Motivo:</span>
-                                        <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_motivo }}</p>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-600">Tiempo:</span>
-                                        <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_tiempo }}</p>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-600">Frecuencia:</span>
-                                        <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_frecuencia }}</p>
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-gray-600">Intensidad:</span>
-                                        <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_intensidad }}</p>
-                                    </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Tipo:</span>
+                                    <p class="text-gray-900">{{ $ultimaEnfermedadActual->tipoEnfermedad->tipo_enf_nombre ?? 'No especificado' }}</p>
                                 </div>
                                 <div>
-                                    <span class="font-medium text-gray-600">Localización:</span>
-                                    <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_localizacion }}</p>
-                                </div>
-                                <div>
-                                    <span class="font-medium text-gray-600">Observación:</span>
-                                    <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_observacion }}</p>
+                                    <span class="font-medium text-gray-600">Descripción:</span>
+                                    <p class="text-gray-900">{{ $ultimaEnfermedadActual->enf_descripcion }}</p>
                                 </div>
                             </div>
                         @else
@@ -181,12 +165,15 @@
                     </div>
                 </div>
 
+
                 <!-- Estado Reproductivo -->
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <div class="bg-gradient-to-r bg-[#09494e] to-emerald-500 px-6 py-4">
                         <h3 class="text-lg font-semibold text-white flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                </path>
                             </svg>
                             Estado Reproductivo
                         </h3>
@@ -195,20 +182,14 @@
                         @if ($ultimoEstadoReproductivo)
                             <div class="space-y-3">
                                 <div class="flex justify-between">
-                                    <span class="font-medium text-gray-600">Menarquía:</span>
-                                    <span class="text-gray-900 font-semibold">{{ $ultimoEstadoReproductivo->est_menarquia }}</span>
+                                    <span class="font-medium text-gray-600">¿Está embarazada?</span>
+                                    <span class="text-gray-900 font-semibold">
+                                        {{ $ultimoEstadoReproductivo->est_esta_embarazada ? 'Sí' : 'No' }}
+                                    </span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="font-medium text-gray-600">Menopausia:</span>
-                                    <span class="text-gray-900 font-semibold">{{ $ultimoEstadoReproductivo->est_menopausia }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="font-medium text-gray-600">FUM:</span>
-                                    <span class="text-gray-900 font-semibold">{{ $ultimoEstadoReproductivo->est_fum }}</span>
-                                </div>
-                                <div>
-                                    <span class="font-medium text-gray-600">Observaciones:</span>
-                                    <p class="text-gray-900 mt-1">{{ $ultimoEstadoReproductivo->est_observacion }}</p>
+                                    <span class="font-medium text-gray-600">Cantidad de hijos:</span>
+                                    <span class="text-gray-900 font-semibold">{{ $ultimoEstadoReproductivo->est_cantidad_hijos }}</span>
                                 </div>
                             </div>
                         @else
@@ -217,12 +198,14 @@
                     </div>
                 </div>
 
+
                 <!-- Última Evaluación -->
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
                     <div class="bg-gradient-to-r bg-[#09494e] to-emerald-500 px-6 py-4">
                         <h3 class="text-lg font-semibold text-white flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                             </svg>
                             Última Evaluación
                         </h3>
@@ -231,11 +214,19 @@
                         @if ($ultimaEvaluacion)
                             <div class="space-y-3">
                                 <div>
-                                    <span class="font-medium text-gray-600">Evaluación:</span>
-                                    <p class="text-gray-900 mt-1">{{ $ultimaEvaluacion->eva_descripcion }}</p>
+                                    <span class="font-medium text-gray-600">Evaluación del dolor:</span>
+                                    <p class="text-gray-900 mt-1">{{ $ultimaEvaluacion->eva_evaluacion_dolor }}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Escala del dolor:</span>
+                                    <p class="text-gray-900 mt-1">{{ $ultimaEvaluacion->eva_escala_dolor }}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Exámenes complementarios:</span>
+                                    <p class="text-gray-900 mt-1">{{ $ultimaEvaluacion->eva_examenes_complementarios }}</p>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <span class="font-medium text-gray-600">Fecha:</span>
+                                    <span class="font-medium text-gray-600">Fecha de registro:</span>
                                     <span class="text-gray-900 font-semibold bg-gray-100 px-3 py-1 rounded-full text-sm">
                                         {{ $ultimaEvaluacion->created_at->format('d/m/Y H:i') }}
                                     </span>
@@ -252,7 +243,8 @@
                     <div class="bg-gradient-to-r bg-[#09494e] to-emerald-500 px-6 py-4">
                         <h3 class="text-lg font-semibold text-white flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                             </svg>
                             Último Plan de Tratamiento
                         </h3>
@@ -265,8 +257,12 @@
                                     <p class="text-gray-900 mt-1">{{ $ultimoPlanTratamiento->pla_diagnostico }}</p>
                                 </div>
                                 <div>
-                                    <span class="font-medium text-gray-600">Plan:</span>
-                                    <p class="text-gray-900 mt-1">{{ $ultimoPlanTratamiento->pla_plan }}</p>
+                                    <span class="font-medium text-gray-600">Objetivo del Tratamiento:</span>
+                                    <p class="text-gray-900 mt-1">{{ $ultimoPlanTratamiento->pla_objetivo_tratamiento }}</p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Tratamiento:</span>
+                                    <p class="text-gray-900 mt-1">{{ $ultimoPlanTratamiento->pla_tratamiento }}</p>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="font-medium text-gray-600">Fecha:</span>
@@ -280,6 +276,7 @@
                         @endif
                     </div>
                 </div>
+
 
             </div>
         </div>
